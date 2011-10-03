@@ -1,4 +1,4 @@
-**Prime Numbers and Cryptosystems**
+*Prime Numbers and Cryptosystems*
 
 =====================
 Aim
@@ -21,3 +21,23 @@ dealing with prime numbers and then building cryptographic applications using th
 
 The project may be developed into several directions: modern algorithms for dealing with 
 prime numbers, integration with symmetric techniques such as DES or AES, or cryptographic attacks.
+
+=====================
+Software
+=====================
+
+**Development**
+
+MacVim
+Java
+
+**Admin**
+
+Git
+phpEasyProject
+
+**Documentation**
+
+MediaWiki
+Lyx + TeX Maker
+BibDesk
