@@ -1,0 +1,95 @@
+/**
+ * 
+ */
+package com.adammulligan.uni;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.KeyException;
+import java.util.Random;
+import java.util.Scanner;
+
+/**
+ * An interactive console application that generates and stores a pair of RSA keys.
+ * 
+ * @author adammulligan
+ *
+ */
+public class GenerateKeys {
+	int length;
+	String output_file;
+	
+	BigInteger p,q;
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		System.out.println("Generating public/private RSA key pair.");
+		
+		Scanner kb = new Scanner(System.in);
+		
+		System.out.print("Key length (bits): ");
+		int length = kb.nextInt();
+		
+		System.out.print("Output to [~/id_rsa]: ");
+		String output_file = kb.next();
+		
+		if (output_file=="") { output_file = "~/id_rsa"; }
+		
+		GenerateKeys gk = new GenerateKeys(length, output_file);
+		
+		gk.generateKeys();
+	}
+	
+	public GenerateKeys(int length,String output_file) {
+		this.length      = length;
+		this.output_file = output_file;
+	}
+	
+	/**
+	 * Tries to generate the key pair, and cleans up any files if one half of the pair fails to generate.
+	 */
+	private void generateKeys() {
+		try {
+			this.generatePrimes(4);
+			BigInteger N, r, E, D;
+			
+			// N = pq
+			N = this.p.multiply(this.q);
+			
+			// r = (p-1)*(q-1)
+			r = p.subtract(BigInteger.valueOf(1));
+			r = r.multiply(q.subtract(BigInteger.valueOf(1)));
+			 
+			// E = coprime of r
+		    do {
+		    	E = new BigInteger(2 * this.length, new Random());
+			} while((E.compareTo(r) != -1) ||
+					(E.gcd(r).compareTo(BigInteger.valueOf(1)) != 0));
+
+		    // D = 1/E mod r
+			D = E.modInverse(r);
+			
+			System.out.println(N);
+			System.out.println(E);
+			System.out.println(D);
+			writeFile("",this.output_file);
+			writeFile("",this.output_file);
+		} catch (IOException ioe) {
+			System.out.println('File IO error '+ioe);
+			System.out.println('Cleaning up..');
+		}
+	}
+	
+	private void writeFile(String content, String filename) throws IOException {
+		
+	}
+	
+	private void generatePrimes(int certainty) {
+		this.p = new BigInteger(this.length,certainty,new Random());
+		this.q = new BigInteger(this.length,certainty,new Random());
+		
+		if (this.p == this.q) this.generatePrimes(certainty);
+	}
+}

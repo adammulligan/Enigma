@@ -1,0 +1,25 @@
+/**
+ * 
+ */
+package com.adammulligan.uni;
+
+/**
+ * An interactive console application that generates and stores a pair of RSA keys.
+ * 
+ * @author adammulligan
+ *
+ */
+public class GenerateKeys {
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		
+	}
+	
+	public int generatePrime(int bits) {
+		return 0;
+	}
+	
+	
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;output_folder&apos; in &apos;com.adammulligan.uni.GenerateKeys.main(...)&apos; to &apos;output_file&apos;&#x0A;- Original project: &apos;RSAUtils&apos;&#x0A;- Original element: &apos;com.adammulligan.uni.GenerateKeys.main(String[]).output_folder&apos;&#x0A;- Renamed element: &apos;output_folder&apos;&#x0A;- Update references to refactored element" description="Rename local variable &apos;output_folder&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;com.adammulligan.uni{GenerateKeys.java[GenerateKeys~main~\[QString;@output_folder!552!584!559!571!QString;!0!false" name="output_file" references="true" stamp="1317687581990" version="1.0"/>
+</session>

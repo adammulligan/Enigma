@@ -1,0 +1,61 @@
+Purpose
+=============================
+
+A set of command line utilities that generate RSA keys and
+encrypt/decrypt data using them.
+
+Files
+=============================
+
+* generate_keys
+* encrypt
+* decrypt
+
+Input
+=============================
+
+* generate_keys
+** Key bit length
+** Filename to output to
+** Passphrase
+
+* encrypt
+** Public key file
+** Data to be encrypted (STDIN?)
+
+* decrypt
+** Private key file
+** Passphrase
+** Data to be decrypted
+
+Output
+=============================
+
+* generate_keys
+** Writes public and private keys to specified files
+
+* encrypt
+** Encrypted data (possibly write to file, or STDOUT, or both)
+
+* decrypt
+** Same as encrypt, but decrypted data
+
+Possible interaction
+=============================
+
+$ generate_keys
+What key length (bits): 2048
+Where to output keys [~/]:
+What passphrase []: password
+
+$ encrypt -k keyfile.pub -f file_to_encrypt -o file_to_output_to
+
+$ decrypt -k keyfile.priv -f file_to_decrypt -o file_to_output_to
+
+Pseudocode/Program flow
+=============================
+
+* generate_key
+
+Generate two primes, p & q using BigInteger and Miller-Rabin
+

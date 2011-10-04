@@ -1,0 +1,28 @@
+/**
+ * 
+ */
+package com.adammulligan.uni;
+
+/**
+ * @author adammulligan
+ *
+ */
+public class GenerateKeys {
+
+	public GenerateKeys() {
+	}
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		int i=0;
+		
+		// Find each argument that is a flag
+		while (i < args.length && args[i].startsWith("-")) {
+			String arg = args[i++]; // The actual argument
+			
+			
+		}
+	}
+}

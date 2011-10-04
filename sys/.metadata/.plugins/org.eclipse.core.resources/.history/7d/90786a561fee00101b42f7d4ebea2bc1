@@ -1,0 +1,67 @@
+/**
+ * 
+ */
+package com.adammulligan.uni;
+
+import java.io.IOException;
+import java.util.Scanner;
+
+/**
+ * An interactive console application that generates and stores a pair of RSA keys.
+ * 
+ * @author adammulligan
+ *
+ */
+public class GenerateKeys {
+	int length;
+	String output_file;
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		System.out.println("Generating public/private RSA key pair.");
+		
+		Scanner kb = new Scanner(System.in);
+		
+		System.out.print("Key length (bits): ");
+		int length = kb.nextInt();
+		
+		System.out.print("Output to [~/]: ");
+		String output_file = kb.next();
+		
+		GenerateKeys gk = new GenerateKeys(length, output_file);
+		
+		gk.generateKeys();
+	}
+	
+	public GenerateKeys(int length,String output_file) {
+		this.length      = length;
+		this.output_file = output_file;
+	}
+	
+	private int generatePrime(int bits) {
+		return 1;
+	}
+	
+	private void generateKeys() {
+		try {
+			this.generatePrivateKey();
+			this.generatePublicKey();
+		} catch (IOException e) {
+			// Remove keys, cleanup
+		}
+	}
+	
+	private String generatePrivateKey() throws KeyException {
+		return "1";
+	}
+	
+	private String generatePublicKey() {
+		return "1";
+	}
+	
+	private void writeFile(String content, String filename) {
+	
+	}
+}
