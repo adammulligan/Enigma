@@ -1,0 +1,11 @@
+Report Structure
+=============================
+
+* Basic Number Theory
+* Asymmetric Encryption
+** RSA
+** Other Asymmetric
+* Symmetric
+* Using Asymmetric and Symmetric
+* Discussion of Implementation
+* Flaws and attacks
