@@ -10,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.math.BigInteger;
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.Scanner;
 
 /**
@@ -24,6 +24,7 @@ public class GenerateKeys {
 	private String output_file;
 	
 	private BigInteger p,q;
+	private BigInteger N, phi, E, D;
 	
 	/**
 	 * @param args
@@ -47,6 +48,7 @@ public class GenerateKeys {
 	}
 	
 	/**
+	 * Constructor
 	 * 
 	 * @param length The length of the key in bits
 	 * @param output_file The absolute path to the file to output the key to
@@ -57,36 +59,39 @@ public class GenerateKeys {
 	}
 	
 	/**
-	 * Tries to generate the key pair, and cleans up any files if one half of the pair fails to generate.
+	 * Tries to generate the key pair, and cleans up any files if any of the key pair fails to generate.
 	 */
 	private void generateKeys() {
 		try {
 			System.out.println("Generating...");
 			
-			this.generatePrimes(4);
-			BigInteger N, r, E, D;
+			this.generatePrimes(100);
 			
 			// N = pq
 			N = this.p.multiply(this.q);
 			
 			// r = (p-1)*(q-1)
-			r = p.subtract(BigInteger.valueOf(1));
-			r = r.multiply(q.subtract(BigInteger.valueOf(1)));
-			 
+			phi = p.subtract(BigInteger.valueOf(1));
+			phi = phi.multiply(q.subtract(BigInteger.valueOf(1)));
+			
 			// E = coprime of r
-		    do {
-		    	E = new BigInteger(this.length, new Random());
-			} while((E.compareTo(r) != -1) ||
-					(E.gcd(r).compareTo(BigInteger.valueOf(1)) != 0));
-
+			// Chosen by fair dice roll, guaranteed to be random
+			// http://xkcd.com/221/
+		    /*E = new BigInteger("3");
+			while((E.compareTo(phi) != -1) ||
+				  (E.gcd(phi).compareTo(BigInteger.valueOf(1)) != 0)) {
+				E = E.add(new BigInteger("2")); // Increase E until we get a valid value
+			}*/
+		    do
+			{
+				E = new BigInteger( this.length/2, new SecureRandom() ) ;
+			}
+			while( ( E.compareTo( phi ) != -1 ) || ( E.gcd( phi ).compareTo( BigInteger.valueOf( 1 ) ) != 0 ) ) ;
 		    // D = 1/E mod r
-			D = E.modInverse(r);
+			D = E.modInverse(phi);
 			
-			String pub_key  = E.toString()+","+N.toString();
-			String priv_key = D.toString()+","+N.toString();
-			
-			writeFile(priv_key,new File(this.output_file));
-			writeFile(pub_key,new File(this.output_file+".pub"));
+			writeFile(this.generateRSAFormat(false),new File(this.output_file));
+			writeFile(this.generateRSAFormat(true),new File(this.output_file+".pub"));
 		} catch (IOException ioe) {
 			System.out.println("File IO Error: "+ioe);
 			System.out.println("Cleaning up..");
@@ -102,12 +107,50 @@ public class GenerateKeys {
 	}
 	
 	/**
+	 * Returns public or private key arrays in a string format
+	 * TODO: Possibly to be changed to a toString() overload
+	 * 
+	 * @param public_key Which format is desired - true for public key, false for private
+	 * @return Imploded array of String values, depending on which type of key is selected
+	 */
+	private String generateRSAFormat(boolean public_key) {
+		StringBuilder content = new StringBuilder();
+		String[] components = new String[6];
+		String glue = ",";
+		
+		if (public_key) {
+			components[0] = Integer.toString(this.length);
+			components[1] = this.N.toString();
+			components[2] = this.E.toString();
+		} else {
+			components[0] = Integer.toString(this.length);
+			components[1] = this.N.toString();
+			components[2] = this.E.toString();
+			components[3] = this.D.toString();
+			components[4] = this.p.toString();
+			components[5] = this.q.toString();
+		}
+		
+		// Implode the array of strings together using the specified glue
+		content.append(components[0]);
+		for (int i=1;i<components.length;i++) {
+			if (components[i]!=null) {
+				content.append(glue);
+				content.append(components[i]);
+			}
+		}
+		
+		return content.toString();
+	}
+	
+	/**Uses BigInteger to generate two large primes of length length/2 with a certainty provided
+	 * 
 	 * 
 	 * @param certainty 
 	 */
 	private void generatePrimes(int certainty) {
-		this.p = new BigInteger(this.length,certainty,new Random());
-		this.q = new BigInteger(this.length,certainty,new Random());
+		this.p = new BigInteger(this.length/2,certainty,new SecureRandom());
+		this.q = new BigInteger(this.length/2,certainty,new SecureRandom());
 		
 		if (this.p == this.q) this.generatePrimes(certainty);
 	}

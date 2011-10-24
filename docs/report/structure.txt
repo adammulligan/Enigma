@@ -2,10 +2,18 @@ Report Structure
 =============================
 
 * Basic Number Theory
+** Discussion of prime numbers etc, basic tests
+** Finding prime numbers in polynomial time!
 * Asymmetric Encryption
 ** RSA
+** PKCS
+** Improve RSA
 ** Other Asymmetric
 * Symmetric
-* Using Asymmetric and Symmetric
-* Discussion of Implementation
+** DES using RSA
+** AES using RSA
+* Discussion textbook compared to real life
+* Final application
+** Concept
+** Discussion of Implementation
 * Flaws and attacks

@@ -7,8 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.Scanner;
+import java.util.zip.DataFormatException;
 
 /**
  * An interactive console application that encrypts a file based on a provided RSA key pair.
@@ -19,6 +21,8 @@ import java.util.Scanner;
 public class Encrypt {
 	private String key_file, input, output;
 	
+	private int length;
+	
 	private BigInteger E,N;
 	private BigInteger[] ciphertext;
 	
@@ -28,9 +32,67 @@ public class Encrypt {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		/* TEST */
+		String msg = "Hello";
+		//System.out.println(msg.getBytes());
+		
 		Encrypt e = new Encrypt("/Users/adammulligan/id_rsa.pub","/Users/adammulligan/input","/Users/adammulligan/output");
 		
+		byte[] tmp;
+		try {
+			tmp = e.I2OSP(new BigInteger("125"), 10);
+			for (byte b : tmp) {
+				System.out.println(b);
+			}
+		} catch (DataFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		e.save();
+	}
+	
+	/**
+	 * 
+	 * @param mgfSeed Octet String - Seed from which the output mask is generated
+	 * @param maskLen Desired length of the mask in octets
+	 * 
+	 * @return mask Octet string mask from seed
+	 */
+	/*public String mgf1(String mgfSeed,int maskLen) throws DataFormatException {
+		
+	}*/
+	
+	/**
+	 * Converts a nonnegative integer to an octet string of a specified length.
+	 * 
+	 * See section 4.1 of RFC2437 PKCS#1v2.0
+	 * 
+	 * @param x Non-negative integer to be converted
+	 * @param xLen Intended length of the output string
+	 * 
+	 * @return
+	 */
+	public byte[] I2OSP(BigInteger x, int size) throws DataFormatException {
+		if (x.signum() == -1) {
+			throw new DataFormatException("Integer too large");
+		}
+	
+		BigInteger[] xCalc = new BigInteger[size];
+		byte[] xBytes      = new byte[size];
+		BigInteger xResult = x;
+		
+		for (int i=0;i<size;i++) {
+			xCalc[i] = xResult.remainder(new BigInteger("256"));
+			
+			byte[] xCalcBytes = xCalc[i].toByteArray();
+			xBytes[i] = xCalcBytes[0];
+			
+			xResult = xResult.divide(new BigInteger("10"));
+			log("xCalc["+i+"]:"+xCalc[i]);
+		}
+		
+		return xBytes;
 	}
 	
 	/**
@@ -73,17 +135,21 @@ public class Encrypt {
 		
 		bytes = message.getBytes();
 
-		BigInteger[] bigdigits = new BigInteger[bytes.length];
+		BigInteger[] converted_bytes = new BigInteger[bytes.length];
 
-		for(int i=0; i<bigdigits.length;i++) {
+		// Convert each byte of the message into a bigint
+		for(int i=0; i<converted_bytes.length;i++) {
 			temp[0] = bytes[i];
-			bigdigits[i] = new BigInteger( temp );
+			converted_bytes[i] = new BigInteger(temp);
 		}
 
-		this.ciphertext = new BigInteger[bigdigits.length];
+		this.ciphertext = new BigInteger[converted_bytes.length];
 
-		for(int i=0;i<bigdigits.length;i++)
-			this.ciphertext[i] = bigdigits[i].modPow(this.E, this.N);
+		// The actual encryption!
+		// Loop through the array of bigint bytes m, and create an array making c = m
+		for(int i=0;i<converted_bytes.length;i++) {
+			this.ciphertext[i] = converted_bytes[i].modPow(this.E, this.N);
+		}
 	}
 	
 	/**
@@ -94,7 +160,7 @@ public class Encrypt {
 		
 		// Convert each byte into a hex value
 		for (BigInteger c : this.ciphertext) {
-			output += c.toString(16).toUpperCase();
+			output += c.toString(16).toUpperCase()+",";
 		}
 		
 		try {
@@ -144,8 +210,9 @@ public class Encrypt {
 			String key_string = this.readFile(this.key_file);
 			String[] keys     = key_string.split(",");
 			
-			this.E = new BigInteger(keys[0]);
+			this.length = Integer.parseInt(keys[0]);
 			this.N = new BigInteger(keys[1]);
+			this.E = new BigInteger(keys[2]);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
