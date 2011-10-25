@@ -119,16 +119,14 @@ public class GenerateKeys {
 		String glue = ",";
 		
 		if (public_key) {
-			components[0] = Integer.toString(this.length);
-			components[1] = this.N.toString();
-			components[2] = this.E.toString();
+			components[0] = this.N.toString();
+			components[1] = this.E.toString();
 		} else {
-			components[0] = Integer.toString(this.length);
-			components[1] = this.N.toString();
+			components[0] = this.N.toString();
+			components[1] = this.D.toString();
 			components[2] = this.E.toString();
-			components[3] = this.D.toString();
-			components[4] = this.p.toString();
-			components[5] = this.q.toString();
+			components[3] = this.p.toString();
+			components[4] = this.q.toString();
 		}
 		
 		// Implode the array of strings together using the specified glue

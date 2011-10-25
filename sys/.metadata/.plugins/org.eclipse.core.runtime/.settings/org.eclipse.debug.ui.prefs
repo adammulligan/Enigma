@@ -1,8 +1,10 @@
-#Sun Oct 23 14:55:54 BST 2011
-pref_state_memento.org.eclipse.debug.ui.VariableView=<?xml version\="1.0" encoding\="UTF-8"?>\n<VariablesViewMemento org.eclipse.debug.ui.SASH_DETAILS_PART\="315" org.eclipse.debug.ui.SASH_VIEW_PART\="684"/>
-eclipse.preferences.version=1
+#Tue Oct 25 11:35:51 BST 2011
+org.eclipse.debug.ui.PREF_LAUNCH_PERSPECTIVES=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<launchPerspectives/>\n
+org.eclipse.debug.ui.cancel_launch_with_compile_errors=always
+pref_state_memento.org.eclipse.debug.ui.VariableView=<?xml version\="1.0" encoding\="UTF-8"?>\n<VariablesViewMemento org.eclipse.debug.ui.SASH_DETAILS_PART\="52" org.eclipse.debug.ui.SASH_VIEW_PART\="941">\n<PRESENTATION_CONTEXT_PROPERTIES IMemento.internal.id\="org.eclipse.debug.ui.VariableView"/>\n</VariablesViewMemento>
+pref_state_memento.org.eclipse.debug.ui.ExpressionView=<?xml version\="1.0" encoding\="UTF-8"?>\n<VariablesViewMemento org.eclipse.debug.ui.SASH_DETAILS_PART\="315" org.eclipse.debug.ui.SASH_VIEW_PART\="684">\n<PRESENTATION_CONTEXT_PROPERTIES IMemento.internal.id\="org.eclipse.debug.ui.ExpressionView"/>\n</VariablesViewMemento>
+pref_state_memento.org.eclipse.debug.ui.DebugVieworg.eclipse.debug.ui.DebugView=<?xml version\="1.0" encoding\="UTF-8"?>\n<DebugViewMemento org.eclipse.debug.ui.BREADCRUMB_DROPDOWN_AUTO_EXPAND\="false"/>
 preferredDetailPanes=DefaultDetailPane\:DefaultDetailPane|
 preferredTargets=default\:default|
-pref_state_memento.org.eclipse.debug.ui.ExpressionView=<?xml version\="1.0" encoding\="UTF-8"?>\n<VariablesViewMemento org.eclipse.debug.ui.SASH_DETAILS_PART\="315" org.eclipse.debug.ui.SASH_VIEW_PART\="684">\n<PRESENTATION_CONTEXT_PROPERTIES IMemento.internal.id\="org.eclipse.debug.ui.ExpressionView"/>\n</VariablesViewMemento>
+eclipse.preferences.version=1
 org.eclipse.debug.ui.save_dirty_editors_before_launch=always
-org.eclipse.debug.ui.PREF_LAUNCH_PERSPECTIVES=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<launchPerspectives/>\n

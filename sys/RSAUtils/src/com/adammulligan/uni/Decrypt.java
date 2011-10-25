@@ -1,17 +1,15 @@
 package com.adammulligan.uni;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.math.BigInteger;
-import java.util.Scanner;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.zip.DataFormatException;
 
 /**
- * An interactive console application that encrypts a file based on a provided RSA key pair.
+ * An interactive console application that decrypts a file based on a provided RSA key pair.
  * 
  * @author adammulligan
  *
@@ -19,30 +17,57 @@ import java.util.Scanner;
 public class Decrypt {
 	private String key_file, input, output;
 	
-	private BigInteger E,N;
-	private BigInteger[] plaintext;
+	private BigInteger D,N;
+	private byte[] plaintext;
 	
-	private boolean verbose;
+	private MessageDigest md;
+	
+	private boolean verbose = false;
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Encrypt e = new Encrypt("/Users/adammulligan/id_rsa","/Users/adammulligan/output","/Users/adammulligan/plaintext");
+		String keyfile,input,output;
+		keyfile = input = output = null;
+		boolean verbose = false;
 		
-		e.save();
+		for (int i=0;i<args.length;i++) {
+			if (args[i].equals("-k")) {
+				keyfile = args[i+1];
+			} else if (args[i].equals("-f")) {
+				input = args[i+1];
+			} else if (args[i].equals("-o")) {
+				output = args[i+1];
+			} else if (args[i].equals("-v")) {
+				verbose = true;
+			}
+		}
+
+		Decrypt d = new Decrypt(keyfile,input,output,verbose);
 	}
 	
 	/**
 	 * 
 	 * @param key_file The public key file for encryption
-	 * @param input_file The file to be decrypted
-	 * @param output_file The location for the plaintext to be written
+	 * @param input_file The file to be encrypted
+	 * @param output_file The location for the ciphertext to be written
 	 */
-	public Decrypt(String key_file,String input_file,String output_file) {
+	public Decrypt(String key_file,String input_file,String output_file,boolean verbose) {		
 		this.key_file = key_file; // TODO check validity
 		
-		this.verbose = true;
+		this.verbose = verbose;
+		
+		log("Keyfile:"+key_file);
+		log("Input File:"+input_file);
+		log("Output File:"+output_file);
+		log("Verbosity:"+verbose);
+		
+		try {
+			this.md = MessageDigest.getInstance("sha1");
+		} catch (NoSuchAlgorithmException e1) {
+			e1.printStackTrace();
+		}
 		
 		this.log("Validating and storing input/output");
 		try {
@@ -55,55 +80,99 @@ public class Decrypt {
 		this.log("Parsing key file");
 		this.parseKeyFile();
 		
-		this.log("Reading input and decryptin");
+		
+		this.log("Reading input and encrypting");
 		try {
-			this.decrypt(this.readFile(this.input));
+			BigInteger intCipher = new BigInteger(FileIO.readFile(this.input));
+			this.plaintext = this.decrypt(intCipher.toByteArray());
+			for (byte b : this.plaintext) {
+				System.out.println(new String(new byte[]{b}));
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		} catch (DataFormatException e) {
+			e.printStackTrace();
 		}
-		this.log("Success!");
 	}
 	
 	/**
-	 * Takes a String, encrypts using RSA Basic and stores locally
+	 * Implementation of RSAES-OAEP-ENCRYPT
+	 * As in RFC2437 PKCS#1 v2.0
 	 * 
-	 * @param message Ciphertext to be decrypted
+	 * @param m
+	 * @return
+	 * @throws DataFormatException 
 	 */
-	private void decrypt(String message) {
-		byte[] temp = new byte[1], bytes;
+	private byte[] decrypt(byte[] C) throws DataFormatException {
+		int k = (this.N.bitLength()+7)/8;
 		
-		bytes = message.getBytes();
-
-		BigInteger[] converted_bytes = new BigInteger[bytes.length];
-
-		// Convert each byte of the message into a bigint
-		for(int i=0; i<converted_bytes.length;i++) {
-			temp[0] = bytes[i];
-			converted_bytes[i] = new BigInteger(temp);
+		log("k:"+k);
+		log("C.length:"+C.length);
+		
+		if(C.length != k) {
+			throw new DataFormatException();
 		}
 
-		this.plaintext = new BigInteger[converted_bytes.length];
+		BigInteger c = new BigInteger(1, C);
 
-		// The actual encryption!
-		// Loop through the array of bigint bytes m, and create an array making c = m
-		for(int i=0;i<converted_bytes.length;i++) {
-			this.plaintext[i] = converted_bytes[i].modPow(this.E, this.N);
+		BigInteger m = c.modPow(this.D,this.N);
+
+		byte[] EM = Bytes.toFixedLenByteArray(m, k);
+		if(EM.length != k) {
+		    throw new DataFormatException();
 		}
+	
+		if(EM[0] != 0x00)
+		    throw new DataFormatException();
+	
+		byte[] maskedSeed = new byte[this.md.getDigestLength()];
+		System.arraycopy(EM, 1, maskedSeed, 0, maskedSeed.length);
+	
+		byte[] maskedDB = new byte[k - this.md.getDigestLength() -1];
+		System.arraycopy(EM, 1 + this.md.getDigestLength(), maskedDB, 0, maskedDB.length);
+		
+		MGF1 mgf1 = new MGF1(this.md);
+		
+		//  c. Let seedMask = MGF (maskedDB, hLen).
+		byte[] seedMask = mgf1.generateMask(maskedDB, this.md.getDigestLength());
+	
+		//  d. Let seed = maskedSeed ^ seedMask.
+		byte[] seed = Bytes.xor(maskedSeed, seedMask);
+	
+		//  e. Let dbMask = MGF (seed, k - hLen - 1).
+		byte[] dbMask = mgf1.generateMask(seed, k - this.md.getDigestLength() -1);
+	
+		//  f. Let DB = maskedDB ^ dbMask.
+		byte[] DB = Bytes.xor(maskedDB, dbMask);
+	
+		byte[] lHash1 = new byte[this.md.getDigestLength()];
+		System.arraycopy(DB, 0, lHash1, 0, lHash1.length);
+		if(!Bytes.equals(this.md.digest(), lHash1))
+		    throw new DataFormatException();
+	
+		int i = this.md.getDigestLength();
+		for( ; i < DB.length; i++)
+		    if(DB[i] != 0x00)
+		        break;
+	
+		if(DB[i++] != 0x01)
+		    throw new DataFormatException();
+	
+		int mLen = DB.length - i;
+		byte[] M = new byte[mLen];
+		System.arraycopy(DB, i, M, 0, mLen);
+		return M;
 	}
 	
 	/**
 	 * Converts the BigInteger ciphertext bytes to hex and writes them to the output file
 	 */
 	public void save() {
-		String output="";
-		
-		// Convert each byte into a hex value
-		for (BigInteger c : this.plaintext) {
-			output += c.toString(16).toUpperCase();
-		}
+		String output = String.format("%x", new BigInteger(this.plaintext));
+		log(output);
 		
 		try {
-			this.writeFile(output,new File(this.output));
+			FileIO.writeFile(output,new File(this.output));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -146,67 +215,14 @@ public class Decrypt {
 	 */
 	private void parseKeyFile() {
 		try {
-			String key_string = this.readFile(this.key_file);
+			String key_string = FileIO.readFile(this.key_file);
 			String[] keys     = key_string.split(",");
 			
-			this.E = new BigInteger(keys[0]);
 			this.N = new BigInteger(keys[1]);
+			this.D = new BigInteger(keys[3]);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Reads a file and returns the contents, minus new lines
-	 * 
-	 * @param filename String path to the file to be read
-	 * @return String contents of the file read
-	 * @throws FileNotFoundException
-	 */
-	private String readFile(String filename) throws FileNotFoundException {
-	    StringBuilder text = new StringBuilder();
-	    Scanner scanner = new Scanner(new FileInputStream(filename));
-	    try {
-	      while (scanner.hasNextLine()){
-	    	// We're not adding new lines because our files should not have them
-	        text.append(scanner.nextLine());
-	      }
-	    }
-	    finally{
-	      scanner.close();
-	    }
-	    
-	    return text.toString();
-	}
-	
-	/**
-	 * Uses BufferedWrite to generically write a String to a file
-	 * 
-	 * @param content File content to be written
-	 * @param filename Absolute path to file to be written
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	private void writeFile(String content, File filename) throws FileNotFoundException, IOException {
-	    if (filename == null) {
-	      throw new IllegalArgumentException("File should not be null.");
-	    }
-	    if (!filename.exists()) {
-	      filename.createNewFile();
-	    }
-	    if (!filename.isFile()) {
-	      throw new IllegalArgumentException("Should not be a directory: " + filename);
-	    }
-	    if (!filename.canWrite()) {
-	      throw new IllegalArgumentException("File cannot be written: " + filename);
-	    }
-
-	    Writer output = new BufferedWriter(new FileWriter(filename));
-	    try {
-	      output.write(content);
-	    } finally {
-	      output.close();
-	    }
 	}
 	
 	private void log(String msg) {
