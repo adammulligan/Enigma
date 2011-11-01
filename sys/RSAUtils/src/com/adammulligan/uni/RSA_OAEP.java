@@ -1,6 +1,5 @@
 package com.adammulligan.uni;
 
-import java.io.File;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -34,7 +33,7 @@ public class RSA_OAEP {
 	 * @return byte[] C byte array of encrypted values
 	 * @throws DataFormatException
 	 */
-	public byte[] encrypt(byte[] M) throws DataFormatException {
+	public byte[] encrypt(byte[] M) throws DataFormatException, InternalError {
 		if (this.key instanceof PrivateKey) {
 			throw new InternalError("A public key must be passed for encryption");
 		}
@@ -138,7 +137,7 @@ public class RSA_OAEP {
 	 * @return byte[] M Array of decrypted values
 	 * @throws DataFormatException
 	 */
-	public byte[] decrypt(byte[] C) throws DataFormatException {
+	public byte[] decrypt(byte[] C) throws DataFormatException, InternalError {
 		if (this.key instanceof PublicKey) {
 			throw new InternalError("A private key must be passed for decryption");
 		}
@@ -243,15 +242,14 @@ public class RSA_OAEP {
 		byte[] lHash1 = new byte[this.md.getDigestLength()];
 		System.arraycopy(DB, 0, lHash1, 0, lHash1.length);
 		if(!Bytes.equals(this.md.digest(), lHash1))
-		    throw new DataFormatException();
+		    throw new DataFormatException("Decryption error");
 	
 		int i = this.md.getDigestLength();
-		for( ; i < DB.length; i++)
-		    if(DB[i] != 0x00)
-		        break;
+		for( ; i < DB.length; i++) {
+		    if(DB[i] != 0x00) break;
+		}
 	
-		if(DB[i++] != 0x01)
-		    throw new DataFormatException();
+		if(DB[i++] != 0x01) throw new DataFormatException();
 	
 		// 4. Output the message M.
 		int mLen = DB.length - i;
