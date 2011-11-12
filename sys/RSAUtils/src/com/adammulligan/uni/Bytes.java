@@ -110,8 +110,6 @@ public final class Bytes {
 	/**
 	 * Taken from http://www.docjar.com/html/api/cryptix/jce/provider/util/Util.java.html
 	 * 
-	 * 
-	 * 
 	 * @param x
 	 * @param resultByteLen
 	 * @return
