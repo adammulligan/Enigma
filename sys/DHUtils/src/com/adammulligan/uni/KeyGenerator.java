@@ -1,0 +1,107 @@
+/**
+ * 
+ */
+package com.adammulligan.uni;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
+/**
+ * Diffie-Hellman Public/Private Key Pair generator
+ * 
+ * See http://www.ietf.org/rfc/rfc2631.txt
+ * 
+ * @author adammulligan
+ *
+ */
+public class KeyGenerator {
+	public static int SIZE_DEFAULT = 256, SIZE_MAX = 16384, SIZE_MIN = 256;
+	
+	private int keysize = SIZE_DEFAULT;
+	
+	public static void main(String[] args) {
+		KeyGenerator kg = new KeyGenerator(256);
+	}
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param size Size of the keys in bits
+	 */
+	public KeyGenerator(int size) throws InternalError {
+		if (size<SIZE_MAX) {
+			this.keysize = size;
+		} else {
+			throw new InternalError("Key size must adhere to "+SIZE_MIN+" < k < "+SIZE_MAX);
+		}
+	}
+	
+	/**
+	 * Generates a pair of priv/pub keys for a Diffie-Hellman key exchange
+	 * 
+	 * See section 2.1.1 RFC 2631
+	 * 
+	 * @return {x,y} - Private/Public DH Key Pair
+	 */
+	public Key[] generatePair() {
+		BigInteger[] pq = this.generatePrimes(80);
+		
+		/*
+		 * p is a large prime
+		 * q is a large prime
+		 */
+		BigInteger p = pq[0];
+		BigInteger q = pq[1];
+		
+		// Private key exponent
+		// xa is party a's private key
+		BigInteger x;
+		do {
+			x = new BigInteger(p.bitLength()-1,new SecureRandom());
+		} while(x.compareTo(BigInteger.ZERO)!=1 ||
+				x.compareTo(p.subtract(BigInteger.ONE))!=-1);
+		
+		/*
+		 * h is any integer with 1 < h < p-1 such
+		 * that h{(p-1)/q} mod p > 1
+		 */
+		BigInteger h,g;
+		do {
+			h = new BigInteger(p.bitLength()-1,new SecureRandom());
+			g = h.modPow((p.subtract(BigInteger.ONE)).divide(q),p); // h{(p-1)/q} mod p
+		} while (h.compareTo(BigInteger.ONE)!=1 || // 1 < h
+				 h.compareTo(p.subtract(BigInteger.ONE))!=-1 || // h < p-1
+				 g.compareTo(BigInteger.ONE)!=1); // h{(p-1)/q} mod p > 1
+		
+		// Public key
+		// public key; ya = g ^ xa mod p
+		BigInteger y = g.modPow(x,p);
+		
+		Key priv = new PrivateKey(x);
+		Key pub  = new PublicKey(y);
+		
+		// {Priv,Pub}
+		return new Key[]{priv,pub};
+	}
+	
+	/**
+	 * Generates a pair of prime numbers using java.math.BigInteger
+	 * 
+	 * @param certainty - Prime certainty
+	 * @return {p,q} - Prime pair
+	 */
+	private BigInteger[] generatePrimes(int certainty) {
+		BigInteger p,q;
+		
+		p = new BigInteger(this.keysize/2,certainty,new SecureRandom());
+		q = new BigInteger(this.keysize/2,certainty,new SecureRandom());
+		
+		if (p == q) this.generatePrimes(certainty);
+		
+		BigInteger[] pq = new BigInteger[2];
+		pq[0] = p;
+		pq[1] = q;
+		
+		return pq; 
+	}
+}
