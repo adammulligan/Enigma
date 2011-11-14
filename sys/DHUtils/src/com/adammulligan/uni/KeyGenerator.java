@@ -19,8 +19,18 @@ public class KeyGenerator {
 	
 	private int keysize = SIZE_DEFAULT;
 	
+	private BigInteger g,p;
+	
 	public static void main(String[] args) {
 		KeyGenerator kg = new KeyGenerator(256);
+		Key[] init_keys = kg.generatePair();
+		PublicKey init_pub_key = (PublicKey)init_keys[1];
+		System.out.println(init_pub_key.getY());
+		
+		KeyGenerator kg_receive = new KeyGenerator(256,init_pub_key);
+		Key[] receive_keys = kg_receive.generatePair();
+		PublicKey receive_pub_key = (PublicKey)receive_keys[1];
+		System.out.println(receive_pub_key.getY());
 	}
 	
 	/**
@@ -29,11 +39,14 @@ public class KeyGenerator {
 	 * @param size Size of the keys in bits
 	 */
 	public KeyGenerator(int size) throws InternalError {
-		if (size<SIZE_MAX) {
-			this.keysize = size;
-		} else {
-			throw new InternalError("Key size must adhere to "+SIZE_MIN+" < k < "+SIZE_MAX);
-		}
+		this.setKeySize(size);
+	}
+	
+	public KeyGenerator(int size,PublicKey key) {
+		this.setKeySize(size);
+		
+		this.g = key.getG();
+		this.p = key.getP();
 	}
 	
 	/**
@@ -50,7 +63,7 @@ public class KeyGenerator {
 		 * p is a large prime
 		 * q is a large prime
 		 */
-		BigInteger p = pq[0];
+		this.p = (this.p == null || this.p.compareTo(BigInteger.ONE)==-1) ? pq[0] : this.p;
 		BigInteger q = pq[1];
 		
 		// Private key exponent
@@ -61,24 +74,26 @@ public class KeyGenerator {
 		} while(x.compareTo(BigInteger.ZERO)!=1 ||
 				x.compareTo(p.subtract(BigInteger.ONE))!=-1);
 		
-		/*
-		 * h is any integer with 1 < h < p-1 such
-		 * that h{(p-1)/q} mod p > 1
-		 */
-		BigInteger h,g;
-		do {
-			h = new BigInteger(p.bitLength()-1,new SecureRandom());
-			g = h.modPow((p.subtract(BigInteger.ONE)).divide(q),p); // h{(p-1)/q} mod p
-		} while (h.compareTo(BigInteger.ONE)!=1 || // 1 < h
-				 h.compareTo(p.subtract(BigInteger.ONE))!=-1 || // h < p-1
-				 g.compareTo(BigInteger.ONE)!=1); // h{(p-1)/q} mod p > 1
+		if (this.g == null || this.g.compareTo(BigInteger.ZERO)==0) {
+			/*
+			 * h is any integer with 1 < h < p-1 such
+			 * that h{(p-1)/q} mod p > 1
+			 */
+			BigInteger h;
+			do {
+				h = new BigInteger(p.bitLength()-1,new SecureRandom());
+				g = h.modPow((p.subtract(BigInteger.ONE)).divide(q),p); // h{(p-1)/q} mod p
+			} while (h.compareTo(BigInteger.ONE)!=1 || // 1 < h
+					 h.compareTo(p.subtract(BigInteger.ONE))!=-1 || // h < p-1
+					 g.compareTo(BigInteger.ONE)!=1); // h{(p-1)/q} mod p > 1
+		}
 		
 		// Public key
 		// public key; ya = g ^ xa mod p
-		BigInteger y = g.modPow(x,p);
+		BigInteger y = this.g.modPow(x,p);
 		
 		Key priv = new PrivateKey(x);
-		Key pub  = new PublicKey(y);
+		Key pub  = new PublicKey(y,this.g,this.p);
 		
 		// {Priv,Pub}
 		return new Key[]{priv,pub};
@@ -103,5 +118,13 @@ public class KeyGenerator {
 		pq[1] = q;
 		
 		return pq; 
+	}
+	
+	private void setKeySize(int size) throws InternalError {
+		if (size<SIZE_MAX) {
+			this.keysize = size;
+		} else {
+			throw new InternalError("Key size must adhere to "+SIZE_MIN+" < k < "+SIZE_MAX);
+		}
 	}
 }
