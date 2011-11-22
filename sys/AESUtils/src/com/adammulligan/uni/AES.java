@@ -69,4 +69,10 @@ public class AES {
 		
 		return iv;
 	}
+
+	/*
+	 * public byte[] cipher() {}
+	 * public byte[] invCipher() {}
+	 * 
+	 */
 }

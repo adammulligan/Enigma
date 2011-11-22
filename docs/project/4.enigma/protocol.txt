@@ -1,0 +1,103 @@
+# Random notes
+
+* Client to client
+*
+
+# Commands
+
+## Connection setup
+
+SEND: HELLO -v x.x
+
+Possible receipt:
+
+Failure:
+
+Client refused request
+RECV: NEIN error="Refused"
+
+Version mismatch
+RECV: NEIN error="Version mismatch"
+
+Or, no response received within 60 seconds.
+
+Success:
+
+RECV: OK
+
+If an OK command is sent and received in response to a HELLO, both clients MUST accept future
+commands from the previously received IP addresses.
+
+## Connection check
+
+SEND: PING
+RECV: PONG
+
+If the response is not received within 120 seconds, then the client is
+assumed to be offline and messages cannot be delivered.
+
+## Connection close
+
+SEND: BYE
+
+## Identification
+
+This concerns the sending of usernames and bio details, NOT
+authentication of identity.
+
+SEND: IDENT name="Adam" img="[base64 encoded image]"
+
+Some protocols to not accept messages over a certain length, in which
+case buddy images are not transmitted.
+
+## Authentication setup 
+
+### Rough idea
+
+Person A sends their choice of key agreement protocol: RSA or DH.
+For DH: A and B calculate shared secret.
+For RSA: A calculates shared secret, and shares with B using B's public
+key. Public keys should be verified using certificates.
+We need to compute:
+* An AES key
+
+A hashing protocol is agreed upon, and so:
+H = Hash(secret)
+
+The first n bits of H are taken for an n-bit AES key.
+
+### Initiation
+
+SEND: AUTH-AGREE type="[RSA|DH]"
+RECV: AUTH-AGREE OK type="[RSA|DH]"
+RECV: AUTH-AGREE NEIN
+
+### DH Protocol
+
+SEND: AUTH-AGREE type="DH" g="1234" p="1234"
+RECV: AUTH-AGREE OK type="DH"
+
+A shared secret can now be calculated, meaning the next message will be
+encrypted with AES/Twofish
+
+### RSA
+
+SEND: AUTH-AGREE type="RSA" pub_key="[base64 pub_key]" cert="[base64
+cert]"
+RECV: AUTH-AGREE OK type="RSA" key="[pub_key encrypted key]"
+
+--- At this point, both parties should have a shared secret
+
+## Algorithm decision
+
+SEND: AUTH-SYMTYPE type="[AES|TWOFISH]"
+RECV: AUTH-SYMTYPE OK type="[AES|TWOFISH]"
+
+## Messages transmission
+
+There is NO acknowledgement of messages being received. All messages
+must be encrypted using the agreed symmetric cipher method.
+
+### Send
+
+SEND: SEND type="[AES|TWOFISH]" msg="[message]"

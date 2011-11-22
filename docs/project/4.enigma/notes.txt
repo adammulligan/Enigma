@@ -1,0 +1,15 @@
+== Notes on Enigma ==
+
+Overall plan
+
+  
+
+Basic flow
+
+Alice and Bob have Enigma clients; 
+
+Implementation
+
+
+* XMPP protocol for communication?
+
