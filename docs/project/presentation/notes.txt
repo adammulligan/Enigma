@@ -1,0 +1,38 @@
+# Intro
+Hello, etc.
+My project is prime numbers and cryptosystems - implementing utilities dealing with prime numbers and cryptographic applications based on them.
+
+# Slide 2
+So, what does that actually mean?
+In secure communication these days, the standard is still to distribute a shared secret key and encrypt data using that. The problem, however, is doing that securely without eavesdropping or distributing the key to someone you shouldn't. This is where number theory and prime numbers come in: namely the intractability of certain problems involving prime numbers. Particularly, it is extremely difficult to factorise multiples of large primes within a reasonable amount of time. Because of this, we can use these multiples with a little bit of modulo arithmetic to generate secret information without ever having to share any sensitive data in the clear. My project is going to be based around secure communication.
+
+# Slide 3
+
+So there are three main "parts" to secure communications - key agreement, ciphers, authentication and identification, as well as a very necessary algorithm type: deterministic hashes. For comparison and interest, I will be implementing two of each, as you can see here. They are all standardised algorithms, with the exception of Twofish and Skein, which I've included purely for research interest as they are not commonly used, despite being effectively equivalent to their counterparts.
+
+# Slide 4
+
+But that's only half the project, what can we actually do with these algorithms to not only prove that they work, but conduct further research?
+My idea was a simple one that would allow me to display their use while creating statistics for later analysis. An instant messaging application, so direct text communication. A modern equivalent of why cryptography exists!
+
+# Slide 5
+
+But, I think that exists. According to Yuri, pretty much everyone in the past few years has done that for their project.
+So, instead of simply encrypting data and throwing it between ports on different machines, I will be creating a nicely tied up solution that not only involves research in using cryptography, but also acts as a testbed for further research. I will be developing, not only the algorithms and some simple client/server code, but a custom protocol and a great looking GUI wrapper to go on top.
+
+# Slide 6
+
+So, the bit you're interested in,  how far have I gotten?
+Well, I've implemented 6 of 8 algorithms, designed a protocol for the communication based on the Jabber IM standard, produced the client/server system, and also started developing the interface for the application.
+
+# Slide 7
+
+Now, the important part. Where are we going with this? The current plan is to finish the algorithms and application by January. However, it's all well and good to develop an application, but that's been done a hundred times over.
+
+From there, I will be conducting some research and experiments:
+1. Firstly, comparing my implementations with Java libraries and producing results based on speed, etc. and attempting to improve (if necessary) my own implementations.
+2. Secondly, putting on my white hat and trying to launch attacks on my system to see where I can improve, or where the core of the algorithms themselves may fall over.
+
+These would be written up in the report.
+
+So, if there are any questions I'd be happy to answer them.

@@ -130,4 +130,29 @@ public class AES_Transformations {
 		return AES_Utils.array4xToArray(AES_Utils.matrixMultiply(AES_Constants.INVMIXCOL,
 				 												 AES_Utils.arrayTo4xArray(state)));
 	}
+	
+	/**
+	 * Adds a round key to the supplied byte block
+	 * 
+	 * @param block - Current block being ciphered/invciphered
+	 * @param exp_key - Expanded key (in words)
+	 * @param round - Current round
+	 * @return block - The current block with the round key added
+	 */
+	public static byte[] addRoundKey(byte[] block, int[] exp_key, int round) {
+		int[] block_word = new int[4];
+		
+		for (int i=0;i<block_word.length;i++) {
+			block_word[i] = AES_Utils.byteToWord(block[4*i],
+												 block[4*i+1],
+												 block[4*i+2],
+												 block[4*i+3]);
+			
+			block_word[i] ^= exp_key[round*4+i];
+			
+			System.arraycopy(AES_Utils.wordToByte(block_word[i]),0,block,i*4,4);
+		}
+		
+		return block;
+	}
 }

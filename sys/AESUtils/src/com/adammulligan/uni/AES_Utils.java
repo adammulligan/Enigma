@@ -180,14 +180,14 @@ public class AES_Utils {
 	 */
 	public static byte[] unpad(byte[] bytes, Padding p) throws DataFormatException {
 
-		byte[] result = new byte[]{1};
+		byte[] result = bytes;
 		
 		if (p == Padding.PKCS5PADDING) {
 			// As we set the padding bytes to be the number of padding bytes,
 			// we can calculate how many to remove
 			int paddingLength = bytes[bytes.length-1];
 			
-			if (paddingLength < 1 || paddingLength > bytes.length) throw new DataFormatException("Padding byte length error");
+			//if (paddingLength < 1 || paddingLength > bytes.length) throw new DataFormatException("Padding byte length error");
 			
 			result = new byte[bytes.length - paddingLength];
 			System.arraycopy(bytes,0,result,0,result.length);

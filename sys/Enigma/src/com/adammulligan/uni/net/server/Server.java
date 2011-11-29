@@ -21,8 +21,8 @@ public class Server {
 		
 		QueueThread q = new QueueThread(this.pq);
 			q.setDaemon(true);
-			q.addListener(new OpenStreamHandler(),"stream:stream");
-			q.addListener(new CloseStreamHandler(),"/stream:stream");
+			q.addListener(new OpenStreamHandler(),"stream");
+			q.addListener(new CloseStreamHandler(),"/stream");
 			q.addListener(new MessageHandler(), "message");
 		q.start();
 		

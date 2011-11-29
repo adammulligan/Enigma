@@ -1,9 +1,12 @@
 package com.adammulligan.uni;
 
+import com.adammulligan.uni.KeySize;
+
 import java.security.SecureRandom;
 
 public class Key {
-	private byte[] key,expanded_key;
+	private byte[] key;
+	private int[] expanded_key;
 	
 	private KeySize ksize;
 	
@@ -29,54 +32,42 @@ public class Key {
 		return this.ksize;
 	}
 	
-	public byte[] getExpandedKey() {
+	public int[] getExpandedKey() {
 		if (expanded_key != null) return this.expanded_key;
 		
-		byte[] tmp = new byte[4];
-		byte[] output = new byte[this.ksize.getKeySizeBytes()];
+		this.expanded_key = new int[this.getKeySize().getExpandedKeyWords()];
 		
-		int Nk = this.ksize.getKeySizeWords();
-		int Nr = Nk + 6;
-		int Nb = 4; // Number of words in a block, always 4
+		byte[] rc_array = new byte[KeySize.K256B.getNumberOfRounds()];
+        rc_array[0] = (byte)1;
+
+        for (int i = 1; i < rc_array.length; i++) {
+            rc_array[i] = AES_Utils.gfProduct(rc_array[i - 1], (byte) 2);
+        }
 		
-		int j=0;
-		while (j<(4*Nk)) {
-			output[j] = this.key[j++];
+	    int[] roundConstant = new int[rc_array.length];
+
+        for (int i = 0; i < rc_array.length; i++) { roundConstant[i] = ((rc_array[i] << 24) & 0xff000000); }
+		
+		for (int i=0;i<4;i++) {
+			this.expanded_key[i] = AES_Utils.byteToWord(this.key[4*i],
+														this.key[4*i+1],
+														this.key[4*i+2],
+														this.key[4*i+3]);
 		}
 		
-		int i = 0;
-		while (j<(4*Nb*(Nr+1))) {
-			i = j/4;
+		int temp;
+		for (int i=4;i<this.getKeySize().getExpandedKeyWords();i++) {
+			temp = (0xffffffff & this.expanded_key[i-1]);
 			
-			for (int tmpI=0;tmpI<4;tmpI++) {
-				tmp[tmpI] = output[j-4+tmpI];
+			if (i%4==0) {
+				if (i/4 >= 1 || i/4 <= roundConstant.length) {
+					temp = AES_Transformations.subWord(AES_Transformations.rotWord(temp)) ^ roundConstant[(i/4)-1];
+				} else { throw new ArrayIndexOutOfBoundsException(); }
 			}
 			
-			if (i % Nk == 0) {
-				byte ttmp,tRcon,oldtmp0 = tmp[0];
-				
-				for (int tmpI=0;tmpI<4;tmpI++) {
-					if (tmpI==3) ttmp = oldtmp0;
-					else ttmp = tmp[tmpI+1];
-					
-					if (tmpI==0) tRcon = tab.Rcon(i/Nk);
-					else tRcon = 0;
-					
-					tmp[tmpI] = (byte)(AES_Transformations.getSBoxValue(ttmp) ^ tRcon);
-				}
-			} else if (Nk > 6 && (i%4)==4) {
-				for (int tmpI = 0; tmpI<4; tmpI++) {
-					tmp[tmpI] = AES_Transformations.getSBoxValue(tmp[tmpI]);
-				}
-			}
-			
-			for (int tmpI=0;tmpI<4;tmpI++) {
-				output[j+tmpI] = (byte)(output[j-4*Nk+tmpI] ^ tmp[tmpI]);
-			}
-			
-			j=j+4;
+			this.expanded_key[i] = this.expanded_key[i-4]^temp;
 		}
 		
-		return output;
+		return this.expanded_key;
 	}
 }
