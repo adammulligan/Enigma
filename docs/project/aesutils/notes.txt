@@ -1,0 +1,23 @@
+# Timing
+
+It might be interesting to time algorithms and/or individual functions
+for comparison later to built in capabilities.
+
+# Finite Field Arithmetic
+
+Need a function that multiplies to bytes together in the finite field
+2^8.
+
+Two sources for ideas:
+
+1. WatneAES
+  gfProduct()
+2. Laws of Crypto
+  FFMult
+  FFMult using pre-computed tables (much faster)
+  [Perhaps we can offer a choice?]
+
+# Other
+
+Might be interesting to include in report how S-boxes, etc are generated, 
+or perhaps in the project documentation

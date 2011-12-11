@@ -12,6 +12,13 @@ import org.xml.sax.Attributes;
 
 import com.adammulligan.uni.net.protocol.Session;
 
+/**
+ * Represents an XML node as a packet, with applicable attributes
+ * Parent-child relationships are used to represent nested XML nodes.
+ * 
+ * @author adammulligan
+ *
+ */
 public class Packet {
 	Packet parent;
 	
@@ -106,7 +113,19 @@ public class Packet {
 	    return null;
 	}
 
-	public String getAttribute(String attribute) { return attributes.get(attribute); }
+	/**
+	 * Returns the attribute value for the given key
+	 * 
+	 * @param attribute - attribute name
+	 * @return attribute value, or empty string if attribute doesn't exist
+	 */
+	public String getAttribute(String attribute) {
+		if (attributes.containsKey(attribute) && !attributes.get(attribute).isEmpty()) {
+			return attributes.get(attribute);
+		} else {
+			return "";
+		}
+	}
 	public void removeAttribute(String attribute) { attributes.remove(attribute); }
 	public void clearAttributes() { attributes.clear(); }
 	public void setAttribute(String attribute, String value) {
@@ -157,6 +176,7 @@ public class Packet {
 	    while (childIterator.hasNext()){
 	        Object child = childIterator.next();
 	        if (child instanceof String){
+	        	System.out.println((String)child);
 	            out.write((String)child);
 	        } else {
 	            ((Packet)child).writeXML(out);

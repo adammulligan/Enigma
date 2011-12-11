@@ -1,0 +1,10 @@
+<stream [authenticated="true|false"]>
+  if not authenticated
+    if non-auth conversations are off, drop packets
+  else
+    <auth stage="identification">certificate</auth>
+    <auth stage="agreement" type="DH|RSA">signed key</auth>
+  end
+
+  <message cipher="none|twofish|aes">msg</message>
+</stream>

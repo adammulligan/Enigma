@@ -15,6 +15,10 @@ public class AES_Constants {
             (byte) 0x01, (byte) 0x01, (byte) 0x02, (byte) 0x03 }, {
             (byte) 0x03, (byte) 0x01, (byte) 0x01, (byte) 0x02 }
         };
+    
+    public static void main(String[] args) {
+    	System.out.println(AES_Constants.FORWARDMIXCOL[1][0]);
+    }
 
     public static byte[][] INVMIXCOL = {
         {

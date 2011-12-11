@@ -43,6 +43,20 @@ public class Session {
 	    return statusListeners.remove(listener);
 	}
 	
+	boolean authenticated = true;
+	public void setAuthenticated(boolean a) {
+		this.authenticated = a;
+	}
+	
+	/**
+	 * Returns whether or not the session requires authentication
+	 * 
+	 * @return
+	 */
+	public boolean getAuthenticated() {
+		return this.authenticated;
+	}
+	
 	public static final int DISCONNECTED  = 1;
 	public static final int CONNECTED     = 2;
 	public static final int STREAMING     = 3;
@@ -61,7 +75,7 @@ public class Session {
 	}
 
 	public void closeStream() throws IOException {
-	    getWriter().write("</stream:stream>");
+	    getWriter().write("</stream>");
 	    out.flush();
 	    setStatus(CONNECTED);
 	}

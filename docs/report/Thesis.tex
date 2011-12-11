@@ -1,0 +1,169 @@
+%% ----------------------------------------------------------------
+%% Project Report - Adam Mulligan
+%%
+%% Template based on http://www.sunilpatel.co.uk/thesis-template/
+%% ---------------------------------------------------------------- 
+
+\documentclass[a4paper, 11pt, oneside]{Thesis}  % Use the "Thesis" style, based on the ECS Thesis style by Steve Gunn
+\graphicspath{{Figures/}}  % Location of the graphics files (set up for graphics to be in PDF format)
+
+\usepackage[square, numbers, comma, sort&compress]{natbib}  % Use the "Natbib" style for the references in the Bibliography
+\usepackage{verbatim}  % Needed for the "comment" environment to make LaTeX comments
+\usepackage{vector}  % Allows "\bvec{}" and "\buvec{}" for "blackboard" style bold vectors in maths
+\hypersetup{urlcolor=black, colorlinks=false}
+
+%% =====================
+% SETUP & TITLE PAGE
+
+\begin{document}
+\frontmatter
+
+\title  {Enigma: Prime Numbers and Cryptosystems}
+\authors  {\texorpdfstring
+            {\href{http://cyanoryx.com}{Adam Mulligan}}
+            {Adam Mulligan}
+            }
+\addresses  {\groupname\\\deptname\\\univname} 
+\date       {\today}
+\subject    {}
+\keywords   {}
+
+\maketitle
+
+%% =====================
+% STYLES
+
+\setstretch{1.3}  
+
+\fancyhead{}  
+\rhead{\thepage}  
+\lhead{}  
+
+\pagestyle{fancy}  
+
+
+%% =====================
+% QUOTE
+
+\pagestyle{empty} 
+
+\null\vfill
+\textit{``Anyone can design a security system that he cannot break. So when someone announces, “Here’s my security system, and I can’t break it,” your first reaction should be, “Who are you?” If he’s someone who has broken dozens of similar systems, his system is worth looking at. If he’s never broken anything, the chance is zero that it will be any good.''}
+
+\begin{flushright}
+Bruce Schneier, \textit{The Ethics of Vulnerability Research}
+\end{flushright}
+
+\vfill\vfill\vfill\vfill\vfill\vfill\null
+\clearpage 
+
+%% =====================
+% ABSTRACT
+
+\addtotoc{Abstract} 
+
+\abstract{
+	\addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
+
+	Modern cryptography allows us to perform many types of information exchange over insecure 
+	channels. One of these tasks is to agree on a secret key over a channel where messages can 
+	be overheard. This is achieved by Diffe-Hellman protocol. Other tasks include public key 
+	and digital signature schemes; RSA key exchange can be used for them. These protocols are 
+	of great importance for bank networks.
+
+	Most such algorithms are based upon number theory, namely, the intractability of certain 
+	problems involving prime numbers. The project involves implementing basic routines for 
+	dealing with prime numbers and then building cryptographic applications using them.
+}
+
+\clearpage 
+
+%% =====================
+% ACKNOWLEDGMENTS
+
+\setstretch{1.3}  % Reset the line-spacing to 1.3 for body text (if it has changed)
+
+% The Acknowledgements page, for thanking everyone
+\acknowledgements{
+\addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
+
+With thanks to my project advisor Yuri Kalnishkan, and the RHUL Department of Computer Science for three years worth of knowledge and experience.
+
+}
+\clearpage  % End of the Acknowledgements
+
+%% =====================
+
+\pagestyle{fancy} 
+
+%% =====================
+
+\lhead{\emph{Contents}}  
+\tableofcontents  % Write out the Table of Contents
+
+%% =====================
+
+\lhead{\emph{List of Figures}} 
+\listoffigures  % Write out the List of Figures
+
+%% =====================
+
+\lhead{\emph{List of Tables}}  
+\listoftables  % Write out the List of Tables
+
+%% =====================
+% ABBREVIATIONS
+
+\setstretch{1.5}  
+\clearpage  
+
+\lhead{\emph{Abbreviations}}  
+
+\listofsymbols{ll}  {
+	\textbf{AES} & \textbf{A}dvanced \textbf{E}ncryption \textbf{S}tandard \\
+}
+
+%% =====================
+% CHAPTERS
+
+\mainmatter
+\pagestyle{fancy}  
+
+\input{./Chapters/Chapter1}
+
+\input{./Chapters/Chapter2} 
+
+\input{./Chapters/Chapter3} 
+
+\input{./Chapters/Chapter4} 
+
+\input{./Chapters/Chapter5} 
+
+\input{./Chapters/Chapter6} 
+
+\input{./Chapters/Chapter7}
+
+%% =====================
+% APPENDICES
+
+\addtocontents{toc}{\vspace{2em}} 
+
+\appendix 
+
+\input{./Appendices/AppendixA}
+
+\input{./Appendices/AppendixB} 
+
+\addtocontents{toc}{\vspace{2em}} 
+\backmatter
+
+%% =====================
+% BIBLIOGRAPHY
+
+\label{Bibliography}
+\lhead{\emph{Bibliography}}  
+\bibliographystyle{unsrtnat}  
+\bibliography{Project}  % The references (bibliography) information are stored in the file named "Bibliography.bib"
+
+\end{document}  % The End
+%% ----------------------------------------------------------------

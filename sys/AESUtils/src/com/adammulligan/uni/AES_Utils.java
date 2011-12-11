@@ -218,7 +218,7 @@ public class AES_Utils {
 				output[i][j]=0;
 				
 				for (int k=0;k<h;k++) {
-					output[i][j] ^= AES_Utils.gfProduct(a[i][k], b[i][k]);
+					output[i][j] ^= AES_Utils.FFMul(a[i][k], b[i][k]);
 				}
 			}
 		}
@@ -227,41 +227,25 @@ public class AES_Utils {
 	}
 	
 	/**
-	 * Sources:
-	 * 	watne.seis720.project
-	 *  http://www.partow.net/projects/galois/#Download
 	 * 
 	 * @param n
 	 * @param o
 	 * @return
 	 */
-	public static byte gfProduct(byte n, byte o) {
-		/*
-		 * Convert the given bytes into integers to make calculations easier
-		 * Also and with 0xff for positive values
-		 */
-		int ni = n & 0xff;
-		int oi = o & 0xff;
+	public static byte FFMul(byte a, byte b) {
+		byte aa = a, bb = b, r = 0, t;
 		
-		int result = 0;
-		for (int i=0,j=1;i<8;i++,j*=2) {
-			if ((ni & j & 0xff) > 0) {
-                result ^= (oi << i);
-            }
-		}
-		
-		while (result > 0xff) {
-			int divisor = AES_Constants.GF_POLYNOMIAL;
-			int m = 0x100;
+		while (aa != 0) {
+			if ((aa & 1) != 0) r = (byte)(r ^ bb);
 			
-			while ((result/m)>1) {
-				divisor <<= 1;
-				m <<= 1;
-			}
+			t = (byte)(bb & 0x80);
+			bb = (byte)(bb << 1);
 			
-			result ^= divisor;
+			if (t != 0) bb = (byte)(bb ^ 0x1b);
+			
+			aa = (byte)((aa & 0xff) >> 1);
 		}
-		
-		return (byte)result;
+	      
+	    return r;
 	}
 }

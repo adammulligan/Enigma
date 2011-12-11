@@ -1,0 +1,46 @@
+\contentsline {chapter}{Abstract}{ii}{dummy.1}
+\vspace {1em}
+\contentsline {chapter}{Acknowledgements}{iii}{dummy.2}
+\vspace {1em}
+\contentsline {chapter}{List of Figures}{vi}{dummy.4}
+\contentsline {chapter}{List of Tables}{vii}{dummy.6}
+\contentsline {chapter}{Abbreviations}{viii}{dummy.8}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.11}
+\contentsline {section}{\numberline {1.1}What it's about}{1}{section.12}
+\contentsline {chapter}{\numberline {2}Mathematical Basis}{2}{chapter.13}
+\contentsline {section}{\numberline {2.1}Number Theory}{2}{section.14}
+\contentsline {section}{\numberline {2.2}Prime Numbers}{2}{section.15}
+\contentsline {subsection}{\numberline {2.2.1}Finding Prime Numbers}{2}{subsection.16}
+\contentsline {chapter}{\numberline {3}Cryptographic Primitives}{3}{chapter.17}
+\contentsline {section}{\numberline {3.1}Cryptography Basics}{3}{section.18}
+\contentsline {section}{\numberline {3.2}Real Life Cryptography}{3}{section.19}
+\contentsline {section}{\numberline {3.3}Primitives}{3}{section.20}
+\contentsline {subsection}{\numberline {3.3.1}Key Agreement}{3}{subsection.21}
+\contentsline {subsection}{\numberline {3.3.2}Encryption}{3}{subsection.22}
+\contentsline {subsection}{\numberline {3.3.3}Authentication and Identification}{3}{subsection.23}
+\contentsline {subsection}{\numberline {3.3.4}Hashing}{3}{subsection.24}
+\contentsline {chapter}{\numberline {4}Algorithm Implementations}{4}{chapter.25}
+\contentsline {section}{\numberline {4.1}Command Line Implementations}{4}{section.26}
+\contentsline {section}{\numberline {4.2}Key Agreement}{5}{section.27}
+\contentsline {subsection}{\numberline {4.2.1}RSA}{5}{subsection.28}
+\contentsline {subsection}{\numberline {4.2.2}Diffie-Hellman}{5}{subsection.29}
+\contentsline {section}{\numberline {4.3}Encryption and Symmetric Ciphers}{5}{section.30}
+\contentsline {subsection}{\numberline {4.3.1}AES}{5}{subsection.31}
+\contentsline {subsection}{\numberline {4.3.2}Twofish}{5}{subsection.32}
+\contentsline {section}{\numberline {4.4}Authentication and Identification}{5}{section.33}
+\contentsline {subsection}{\numberline {4.4.1}RSA Signing}{5}{subsection.34}
+\contentsline {subsection}{\numberline {4.4.2}Digital Certificates}{5}{subsection.35}
+\contentsline {section}{\numberline {4.5}Hashing}{5}{section.36}
+\contentsline {section}{\numberline {4.6}SHA Family}{5}{section.37}
+\contentsline {section}{\numberline {4.7}Skein}{5}{section.38}
+\contentsline {chapter}{\numberline {5}Enigma: A Testbed}{6}{chapter.39}
+\contentsline {section}{\numberline {5.1}Description}{6}{section.40}
+\contentsline {section}{\numberline {5.2}Protocol}{6}{section.41}
+\contentsline {section}{\numberline {5.3}Interface}{6}{section.42}
+\contentsline {chapter}{\numberline {6}Attacks and Flaws}{7}{chapter.43}
+\contentsline {chapter}{\numberline {7}Further Research}{8}{chapter.44}
+\vspace {2em}
+\contentsline {chapter}{\numberline {A}Enigma Application Specification}{9}{appendix.45}
+\contentsline {chapter}{\numberline {B}Enigma Protocol Specification}{10}{appendix.46}
+\vspace {2em}
+\contentsline {chapter}{Bibliography}{11}{dummy.47}

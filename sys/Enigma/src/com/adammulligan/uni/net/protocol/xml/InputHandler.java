@@ -35,14 +35,14 @@ public class InputHandler extends DefaultHandler {
     public void startElement(String namespaceURI,String localName,String qName,Attributes atts) throws SAXException {
     	switch (depth++){
     		case 0:   // Only stream:stream allowed... all others is error
-    			if (qName.equals("stream:stream")){
+    			if (qName.equals("stream")){
     				Packet openPacket = new Packet(null,qName,namespaceURI,atts);
     				openPacket.setSession(session);
     				packet_queue.push(openPacket);
     				return;
     			}
-    			throw new SAXException("Root element must be <stream:stream>");
-    		case 1:   // Only message, presence, iq
+    			throw new SAXException("Root element must be <stream>");
+    		case 1:
     			packet = new Packet(null,qName,namespaceURI,atts);
     			packet.setSession(session);
     			break;
@@ -61,7 +61,7 @@ public class InputHandler extends DefaultHandler {
     public void endElement(java.lang.String uri,java.lang.String localName,java.lang.String qName) throws SAXException {
     	switch(--depth){
     		case 0:   // We're back at the end of the root
-    			Packet closePacket = new Packet("/stream:stream");
+    			Packet closePacket = new Packet("/stream");
     			closePacket.setSession(session);
     			packet_queue.push(closePacket);
     			break;

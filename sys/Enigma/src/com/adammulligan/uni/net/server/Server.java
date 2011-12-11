@@ -23,6 +23,7 @@ public class Server {
 			q.setDaemon(true);
 			q.addListener(new OpenStreamHandler(),"stream");
 			q.addListener(new CloseStreamHandler(),"/stream");
+			q.addListener(new AuthHandler(),"auth");
 			q.addListener(new MessageHandler(), "message");
 		q.start();
 		
