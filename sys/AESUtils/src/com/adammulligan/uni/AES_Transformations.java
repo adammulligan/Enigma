@@ -50,9 +50,11 @@ public class AES_Transformations {
 		return block;
 	}
 	
-	public static byte[] invSubBytes(byte[] block) {
+	public static byte[][] invSubBytes(byte[][] block) {
 		for (int i=0;i<block.length;i++) {
-			block[i] = AES_Transformations.getInverseSBoxValue(block[i]);
+			for (int j=0;j<4;j++) {
+				block[i][j] = AES_Transformations.getInverseSBoxValue(block[i][j]);
+			}
 		}
 		
 		return block;
@@ -169,6 +171,19 @@ public class AES_Transformations {
 		// According to FIPS-197, number of columns should always equals 4
 		for (int col=0;col<4;col++) {
 			for (int row=0;row<4;row++) {
+				state[row][col] = (byte)(block[row][col]^exp_key[round_byte_count]);
+			}
+		}
+		
+		return state;
+	}
+	
+	public static byte[][] inverseAddRoundKey(byte[][] block, byte[] exp_key, int round_byte_count) {
+		byte[][] state = new byte[4][4];
+		
+		// According to FIPS-197, number of columns should always equals 4
+		for (int col=3;col>=0;col--) {
+			for (int row=3;row>=0;row--) {
 				state[row][col] = (byte)(block[row][col]^exp_key[round_byte_count]);
 			}
 		}

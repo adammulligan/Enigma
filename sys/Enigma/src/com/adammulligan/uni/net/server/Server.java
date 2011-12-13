@@ -3,6 +3,7 @@ package com.adammulligan.uni.net.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 
 import com.adammulligan.uni.net.protocol.Session;
 import com.adammulligan.uni.net.protocol.xml.PacketQueue;
@@ -34,11 +35,14 @@ public class Server {
 			ioe.printStackTrace();
 		}
 		
+		System.out.println("Starting server on port "+port+"...");
+		
 		while (true) {
-			System.out.println("Waiting for client...");
 			try {
 				Socket clientSock = ss.accept();
 				Session s = new Session(clientSock);
+				
+				System.out.println("Client connected ("+clientSock.getInetAddress()+":"+clientSock.getPort()+")");
 				
 				ProcessThread p = new ProcessThread(s,this.pq);
 				p.start();
@@ -49,6 +53,9 @@ public class Server {
 	}
 	
 	public static void main(String[] args) {
-		new Server(6055,"localhost");
+		Random rng = new Random();
+		int port = rng.nextInt(65535) + 1100;
+		
+		new Server(port,"localhost");
 	}
 }
