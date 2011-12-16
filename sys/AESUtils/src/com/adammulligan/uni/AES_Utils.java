@@ -1,7 +1,6 @@
 package com.adammulligan.uni;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.zip.DataFormatException;
 
 import sun.misc.BASE64Decoder;
@@ -9,8 +8,6 @@ import sun.misc.BASE64Encoder;
 
 /**
  * Utilities for AES implementations
- * 
- * Effectively an improved and updated version of watne.seis720.project.AES_Utilities 
  * 
  * @author adammulligan
  *
@@ -41,62 +38,12 @@ public class AES_Utils {
 	}
 	
 	/**
-	 * Converts a byte array into a hexadecimal string
-	 * 
-	 * @param bytes - Array of bytes
-	 * @return hex - Hexadecimal string value for each byte cocatenated into a string
-	 */
-	public static String byteToHex(byte[] bytes) {
-		BigInteger bInt = new BigInteger(bytes);
-		String hex = bInt.toString(16);
-		
-		// Pad with a 0 if we get a non-even number of characters
-		return (hex.length()%2!=0) ? "0"+hex : hex;
-	}
-	
-	/**
-	 * Converts a hexadecimal string into a byte array
-	 * 
-	 * @param hex - Hexadecimal string
-	 * @return array - byte array
-	 */
-	public static byte[] hexToByte(String hex) {
-		return new BigInteger(hex, 16).toByteArray();
-	}
-	
-	/**
-	 * Create an int word from 4 given bytes
-	 * 
-	 * @param b1
-	 * @param b2
-	 * @param b3
-	 * @param b4
-	 * @return word - word version of the 4 given bytes cocatenated togeter
-	 */
-	public static int byteToWord(byte b1, byte b2, byte b3, byte b4) {
-		return (0xff000000 & ((0xff & b1) << 24)) | 
-			   (0x00ff0000 & ((0xff & b2) << 16)) |
-			   (0x0000ff00 & ((0xff & b3) << 8)) | 
-			   (0x000000ff & b4);
-	}
-	
-	/**
-	 * Takes a int word, and returns a byte array of the bytes inside
-	 * 
-	 * @param w - integer word
-	 * @return byte array
-	 */
-	public static byte[] wordToByte(int w) {
-		// Do the exact opposite of byteToWord()
-		return new byte[]{(byte)((w & 0xff000000) >> 24),
-				  		  (byte)((w & 0xff0000) >> 16),
-						  (byte)((w & 0xff00) >> 8),
-						  (byte)(w & 0xff)};
-	}
-	
-	/**
 	 * Takes a linear array of size 16 and converts it into a 4x4 state array
 	 * As defined in FIPS197
+	 * 
+	 * Idea of linearising/squaring arrays taken from watne.seis720.project.AES_Utilities
+	 * Watne uses array indexes and some unpleasant looking maths, so I've rewritten it
+	 * to use arraycopy instead, which is much more efficient.
 	 * 
 	 * @param array - Linear byte array of length 16
 	 * @return array - 4x4 2D byte array
@@ -117,6 +64,10 @@ public class AES_Utils {
 	/**
 	 * Converts a 4x4 2D byte array to a cocatenated linear byte array
 	 * As defined in FIPS197
+	 * 
+	 * Idea of linearising/squaring arrays taken from watne.seis720.project.AES_Utilities
+	 * Watne uses array indexes and some unpleasant looking maths, so I've rewritten it
+	 * to use arraycopy instead, which is much more efficient.
 	 * 
 	 * @param array - 4x4 2D byte array
 	 * @return array - linearised byte array
@@ -141,92 +92,28 @@ public class AES_Utils {
 	 * @return bytes - Padding array of bytes
 	 * @throws DataFormatException
 	 */
-	public static byte[] pad(byte[] bytes, KeySize k, Padding p) throws DataFormatException {
-		byte[] result;
-		
+	public static byte[] pad(byte[] bytes, KeySize k) throws DataFormatException {
 		// PKCS#5 Padding
 		// See RFC 2898
-		if (p == Padding.PKCS5PADDING) {
-			// Figure out how many bytes to append by working out:
-			//   KeyLength - (Array mod KeyLength)
-			int paddingLength = k.getBlockSizeBytes() - (bytes.length % k.getBlockSizeBytes());
-			
-			result = new byte[bytes.length + paddingLength];
-			System.arraycopy(bytes,0,result,0,bytes.length);
-			
-			// As defined in PKCS#5
-			// Each of the padding bytes are set to the value of the number of padding bytes
-			// rather than the usual 0, so that when we unpad we can figure out how many
-			// bytes to remove
-			for (int i=0;i<paddingLength;i++)
-				result[i+bytes.length] = (byte)paddingLength;
-		} else if (p == Padding.NONE) {
-			result = bytes;
-		} else {
-			throw new DataFormatException("Invalid padding type");
-		}
 		
-		return result;
+		// Figure out how many bytes to append by working out:
+		//   Block Size - (bytes length mod block size) 
+		byte[] new_plaintext = new byte[bytes.length + (16-(bytes.length%16))];
+		System.arraycopy(bytes, 0, new_plaintext, 0, bytes.length);
+		
+		// As defined in PKCS#5
+		// Each of the padding bytes are set to the value of the number of padding bytes
+		// rather than the usual 0, so that when we unpad we can figure out how many
+		// bytes to remove
+		for (int i=bytes.length;i<new_plaintext.length;i++) new_plaintext[i] = (byte)(16-(bytes.length%16));
+		
+		return new_plaintext;
 	}
 	
 	/**
-	 * Removes padding from an array of bytes, given the paddign scheme
-	 * Currently only supports PKCS#5
+	 * Finite Field multiplication of two bytes over the field GF(2^8)
 	 * 
-	 * @param bytes - Padded array of bytes to remove padding from
-	 * @param p - Padding type
-	 * @return bytes - Bytes array minus padding
-	 * @throws DataFormatException
-	 */
-	public static byte[] unpad(byte[] bytes, Padding p) throws DataFormatException {
-
-		byte[] result = bytes;
-		
-		if (p == Padding.PKCS5PADDING) {
-			// As we set the padding bytes to be the number of padding bytes,
-			// we can calculate how many to remove
-			int paddingLength = bytes[bytes.length-1];
-			
-			//if (paddingLength < 1 || paddingLength > bytes.length) throw new DataFormatException("Padding byte length error");
-			
-			result = new byte[bytes.length - paddingLength];
-			System.arraycopy(bytes,0,result,0,result.length);
-		} else if (p == Padding.NONE) {
-			result = bytes;
-		} else {
-			throw new DataFormatException("Invalid padding type");
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * Multiply two matrices, though not in the traditional manner
-	 * 
-	 * @param a
-	 * @param b
-	 * @return
-	 */
-	public static byte[][] matrixMultiply(byte[][] a, byte[][] b) {
-		if ((a.length!=b.length) || (a[0].length!=b[0].length)) throw new ArithmeticException("Matrix dimensions must be equal");
-		
-		int h = a.length,w = a[0].length;
-		byte[][] output = new byte[h][w];
-		
-		for (int i=0;i<h;i++) {
-			for (int j=0;j<w;j++) {
-				output[i][j]=0;
-				
-				for (int k=0;k<h;k++) {
-					output[i][j] ^= AES_Utils.FFMul(a[i][k], b[i][k]);
-				}
-			}
-		}
-		
-		return output;
-	}
-	
-	/**
+	 * TODO comment this
 	 * 
 	 * @param n
 	 * @param o

@@ -9,7 +9,7 @@ package com.adammulligan.uni;
  *
  */
 public enum KeySize {
-	K128B(128, 10, 176),K192B(192,12,208),K256B(256,14,240);
+	K128(128, 10, 176),K192(192,12,208),K256(256,14,240);
 	
 	private int blockSize,
 				roundKeySize,

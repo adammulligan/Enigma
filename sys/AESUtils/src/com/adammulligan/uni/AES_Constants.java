@@ -1,14 +1,25 @@
 package com.adammulligan.uni;
 
+/**
+ * Pre-computer AES constants, defined in FIPS-197, to be used in the 
+ * AES Transformations.
+ * 
+ * @author adammulligan
+ *
+ */
 public class AES_Constants {
+	/**
+	 * Rcon table
+	 */
+	public static byte[] RCON = { (byte)1, (byte)2, (byte)4, (byte)8, 
+								  (byte)16, (byte)32, (byte)64, (byte)-128, 
+								  (byte)27, (byte)54, (byte)108, (byte)-40, 
+								  (byte)-85, (byte)77, (byte)-102 };
+	
     /**
-     * The irreducible polynomial x^8 + x^4 + x^3 + x + 1
+     * AES mix column matrices as defined in FIPS-197, page 18
      */
-    public static final int GF_POLYNOMIAL = 0x11B;
-    
-    public static final int MAX_BYTE_VAL = 0xff;
-
-    public static byte[][] FORWARDMIXCOL = {
+    public static byte[][] MIXCOL = {
     	{
             (byte) 0x02, (byte) 0x03, (byte) 0x01, (byte) 0x01 }, {
             (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x01 }, {
@@ -25,7 +36,8 @@ public class AES_Constants {
         };
 
     /**
-     * S-Box pre-computed and taken from http://www.cs.utsa.edu/~wagner/laws/SBoxes.html
+     * Pre-computed S-Boxes
+     * See http://en.wikipedia.org/wiki/Rijndael_S-box
      */
     public static byte[][] SBOX =
         {
