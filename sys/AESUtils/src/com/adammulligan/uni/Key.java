@@ -83,9 +83,16 @@ public class Key {
 		// Wi XOR Wi-1
 	}*/
 	
+	// TODO change this
 	public byte[] getExpandedKey() {
-		if (expanded_key != null) return this.expanded_key;
+		//System.out.println("*************\nKEY EXPANSION");
+		//System.out.println("Trying to retrieve expanded key...");
+		if (expanded_key != null) { 
+			//AES.printByteArray("Expanded key: ",this.expanded_key);
+			return this.expanded_key;
+		}
 	
+		//System.out.println("No prior expansion found, expanding...");
 		int Nk = this.getKeySize().getKeySizeWords();
 		int Nb = 4;
 		int Nr = this.getKeySize().getNumberOfRounds();
@@ -96,7 +103,7 @@ public class Key {
 	      // first just copy key to w
 	      int j = 0;
 	      while (j < 4*Nk) {
-	         this.expanded_key[j] = this.expanded_key[j++];
+	         this.expanded_key[j] = this.key[j++];
 	      }
 	      // here j == 4*Nk;
 	      int i;  
@@ -125,6 +132,7 @@ public class Key {
 	         j = j + 4;
 	      }
 	      
+	    //AES.printByteArray("Expanded key",this.expanded_key);
         return this.expanded_key;
 	}
 	public byte Rcon(int i) {

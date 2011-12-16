@@ -87,7 +87,7 @@ public class AES {
 		
 		AES aes = new AES();
 		aes.setPlainText(new byte[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16});
-		aes.setKey(new Key(KeySize.K128B));
+		aes.setKey(new Key(KeySize.K256B));
 		aes.setMode(Mode.ECB);
 		aes.setPadding(Padding.PKCS5PADDING);
 		
@@ -96,8 +96,6 @@ public class AES {
 			 encrypted = aes.cipher();
 			 aes.setCipherText(encrypted);
 			 decrypted = aes.invcipher();
-			 
-			 System.out.println("ok");
 		} catch (DataFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,44 +103,104 @@ public class AES {
 	}
 
 	public byte[] cipher() throws DataFormatException {
-		int wCount=0;
+		System.out.println("\n\n\n\n\n CIPHER");
+		
+		AES.printByteArray("Key: ",this.getKey().getKey());
 		
 		byte[][] state = AES_Utils.arrayTo4xArray(this.getPlainText());
 		
-		state = AES_Transformations.addRoundKey(state, this.getKey().getExpandedKey(), wCount++);
+		AES.printByteArray("Initial state: ", state);
+		
+		state = AES_Transformations.addRoundKey(state, this.getKey(), 0);
+		
+		AES.printByteArray("Add round key: ",state);
 		
 		for (int r=1;r<this.getKey().getKeySize().getNumberOfRounds();r++) {
+			System.out.println("*********");
+			AES.printByteArray("Round "+r+": ", state);
 			state = AES_Transformations.subBytes(state);
+			AES.printByteArray("After subBytes: ", state);
 			state = AES_Transformations.shiftRows(state);
+			AES.printByteArray("After shiftRows: ", state);
 			state = AES_Transformations.mixColumns(state);
-			state = AES_Transformations.addRoundKey(state, this.getKey().getExpandedKey(), wCount++);
+			AES.printByteArray("After mixColumns: ", state);
+			state = AES_Transformations.addRoundKey(state, this.getKey(), r);
+			AES.printByteArray("After addRoundKey: ", state);
 		}
 		
+		System.out.println("*********");
+		AES.printByteArray("Round "+this.getKey().getKeySize().getNumberOfRounds()+": ", state);
 		state = AES_Transformations.subBytes(state);
+		AES.printByteArray("After subBytes: ", state);
 		state = AES_Transformations.shiftRows(state);
-		state = AES_Transformations.addRoundKey(state, this.getKey().getExpandedKey(), wCount++);
+		AES.printByteArray("After shiftRows: ", state);
+		state = AES_Transformations.addRoundKey(state, this.getKey(), this.getKey().getKeySize().getNumberOfRounds());
+		AES.printByteArray("After addRoundKey: ", state);
 		
 		return AES_Utils.array4xToArray(state);
 	}
 	
 	public byte[] invcipher() throws DataFormatException {
-		int wCount=4*4*(this.getKey().getKeySize().getNumberOfRounds()+1);
+		System.out.println("\n\n\n\n\n INVCIPHER");
+		
+		AES.printByteArray("Key: ",this.getKey().getKey());
 		
 		byte[][] state = AES_Utils.arrayTo4xArray(this.getCipherText());
 		
-		state = AES_Transformations.inverseAddRoundKey(state, this.getKey().getExpandedKey(), --wCount);
+		AES.printByteArray("Initial state: ", state);
 		
-		for (int r=1;r<this.getKey().getKeySize().getNumberOfRounds();r++) {
-			state = AES_Transformations.invSubBytes(state);
+		state = AES_Transformations.inverseAddRoundKey(state, this.getKey(), this.getKey().getKeySize().getNumberOfRounds()+1);
+		
+		AES.printByteArray("Inverse add round key: ",state);
+		
+		for (int r=this.getKey().getKeySize().getNumberOfRounds();r>1;r--) {
+			System.out.println("*********");
+			AES.printByteArray("Round "+r+": ", state);
+			
 			state = AES_Transformations.invShiftRows(state);
+			AES.printByteArray("After invShiftRows: ", state);
+			state = AES_Transformations.invSubBytes(state);
+			AES.printByteArray("After invSubBytes: ", state);
+			state = AES_Transformations.inverseAddRoundKey(state, this.getKey(), r);
+			AES.printByteArray("After invAddRoundKey: ", state);
 			state = AES_Transformations.inverseMixColumns(state);
-			state = AES_Transformations.inverseAddRoundKey(state, this.getKey().getExpandedKey(), --wCount);
+			AES.printByteArray("After invMixColumns: ", state);
 		}
 		
-		state = AES_Transformations.invSubBytes(state);
+		System.out.println("*********");
+		AES.printByteArray("Round 1: ", state);
 		state = AES_Transformations.invShiftRows(state);
-		state = AES_Transformations.inverseAddRoundKey(state, this.getKey().getExpandedKey(), --wCount);
+		AES.printByteArray("After invShiftRows: ", state);
+		state = AES_Transformations.invSubBytes(state);
+		AES.printByteArray("After invSubBytes: ", state);
+		state = AES_Transformations.inverseAddRoundKey(state, this.getKey(), 1);
+		AES.printByteArray("After invAddRoundKey: ", state);
 		
 		return AES_Utils.array4xToArray(state);
+	}
+	
+	private static String[] hex_digits = {"0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"};
+	public static void printByteArray(String prefix,byte[] a) {
+		System.out.print(prefix+" ");
+		
+		for (int i=0;i<a.length;i++) {
+			System.out.print(hex_digits[(a[i] & 0xff) >> 4]+hex_digits[a[i] & 0x0f] + " ");
+		}
+		
+		System.out.println();
+	}
+	
+	public static void printByteArray(String prefix,byte[][] a) {
+		System.out.print(prefix+" ");
+		
+		for (int i=0;i<4;i++) {
+			System.out.print("[");
+			for (int j=0;j<4;j++) {
+				System.out.print(hex_digits[(a[j][i] & 0xff) >> 4]+hex_digits[a[j][i] & 0x0f] + " ");
+			}
+			System.out.print("]");
+		}
+		
+		System.out.println();
 	}
 }

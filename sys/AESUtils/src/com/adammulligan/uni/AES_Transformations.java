@@ -165,26 +165,41 @@ public class AES_Transformations {
 	 * @param round - Current byte number for given round (should be 4*round)
 	 * @return block - The current block with the round key added
 	 */
-	public static byte[][] addRoundKey(byte[][] block, byte[] exp_key, int round_byte_count) {
+	public static byte[][] addRoundKey(byte[][] block, Key k, int r) {
 		byte[][] state = new byte[4][4];
+		
+		byte[] exp_key = k.getExpandedKey();
+		System.out.println("Expanded key length: "+exp_key.length);
+		
+		// Initial round starts from index 0
+		// All further rounds start from 16 bits * round, i.e. 16 bits ahead of the last round
+		int index = r==0 ? 0 : (r*16); 
+		
+		System.out.println("Working from "+index+" to "+(int)(index+16));
 		
 		// According to FIPS-197, number of columns should always equals 4
 		for (int col=0;col<4;col++) {
 			for (int row=0;row<4;row++) {
-				state[row][col] = (byte)(block[row][col]^exp_key[round_byte_count]);
+				state[row][col] = (byte)(block[row][col]^exp_key[index++]);
 			}
 		}
 		
 		return state;
 	}
 	
-	public static byte[][] inverseAddRoundKey(byte[][] block, byte[] exp_key, int round_byte_count) {
+	public static byte[][] inverseAddRoundKey(byte[][] block, Key k, int r) {
 		byte[][] state = new byte[4][4];
+		
+		byte[] exp_key = k.getExpandedKey();
+		System.out.println("Expanded key length: "+exp_key.length);
+		int index = r==k.getKeySize().getNumberOfRounds()+1 ? 16*(k.getKeySize().getNumberOfRounds()+1) : (r*16) ;
+		
+		System.out.println("Working from "+index+" to "+(int)(index-16));
 		
 		// According to FIPS-197, number of columns should always equals 4
 		for (int col=3;col>=0;col--) {
 			for (int row=3;row>=0;row--) {
-				state[row][col] = (byte)(block[row][col]^exp_key[round_byte_count]);
+				state[row][col] = (byte)(block[row][col]^exp_key[--index]);
 			}
 		}
 		
