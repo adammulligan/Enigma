@@ -1,61 +1,32 @@
-== Algorithms ==
+# Algorithms
 
-+-------------------+-------------------+-------------------+-------------------+
-| Key Sharing       | Symmetric Ciphers | Authentication    | Hashing           |
-+-------------------+-------------------+-------------------+-------------------+
-| RSA               | AES               | Digital Certs     | SHA-256           |
-| DH                | Twofish           | RSA Signing       | Skein (?)         |
-+-------------------+-------------------+-------------------+-------------------+
++-------------------+-------------------+-------------------+
+| Key Sharing       | Symmetric Ciphers | Authentication    |
++-------------------+-------------------+-------------------+
+| RSA               | AES               | Digital Certs     |
+| DH                |                   | RSA Signing       |
++-------------------+-------------------+-------------------+
 
-== Core Utilities  ==
+## Fully implemented and usable algorithms:
 
-* RSA Utils
-** Key generator
-** Encryption
-** Decryption
-** Signing
+* PK
+** DH
+** RSA [with signing]
 
-* AES Utils
-** Key generator
-** Encryption
-** Decryption
+* Symmetric
+** AES
 
-* Twofish Utils
-** Key generator
-** Encryption
-** Decryption
+* Identification
+** Certificates
+** More?
 
-* DH Utils
-** Key generator
-** Encryption
-** Decryption
-** Authentication
+## Test implementations for discussion and comparison
 
-* Hashing Utilities
-** SHA-256
-** Skein
+* PK
 
-* Digital Certificates
-** Generation
-** Validation
-** CA stuff
 
-== Enigma Application ==
-
-Direct connect chat - IP to IP
-
-* Protocol
-** Protocol type send/req
-** Public key send/req
-** Key agreement
-** Message send
-** User info send/req
-** Error
-
-* Security
-** Convo initiator (CI) generates AES/Twofish keys
-** Share public keys/DH stuff
-** CI and receiver verify identities using certificates
-** CI shares symmetric key using RSA/DH
-** All messages encrypted using symm. key
-** Secure logs?
+# Server
+    - Client
+    - Design protocol
+    
+# Application
