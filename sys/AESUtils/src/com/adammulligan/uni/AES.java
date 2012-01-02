@@ -71,6 +71,10 @@ public class AES {
 		return iv;
 	}
 	
+	public static void main(String[] args) {
+		
+	}
+	
 	/**
 	 * 
 	 * @return
