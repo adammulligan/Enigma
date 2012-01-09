@@ -1,14 +1,55 @@
-% Chapter 1
-
-\chapter{Introduction} % Write in your own chapter title
+\chapter{Introduction}
 \label{Chapter1}
-\lhead{Chapter 1. \emph{Introduction}} % Write in your own chapter title to set the page header
-
+\lhead{Chapter 1. \emph{Introduction}}
 
 \section{What it's about}
 
+Secrecy has always been of great importance, not just in modern society, but throughout history. Until very recently, Cryptography was consigned to the sending and receiving of messages, generally using pen and paper. However, increasingly cryptography -- the study and implementation of techniques for secure communication\footnote{http://en.wikipedia.org/wiki/Cryptography} -- is becoming more vital to the smooth running of even basic systems, whether it's the clich\'{e} example of military secrets or simply a micro-payment for an online service. Initially, the usage of provably secure and efficient cryptographic algorithms was limited to governments and related contractors, however the advent of encryption standards, and more relevantly, the creation of public-key cryptography mechanisms, has pushed it in to a wider field of use as researchers gained a better understanding of the area. 
+
 \section{Goals and Intentions}
 
-\section{How will the project be structured?}
+The primary goal of this project can be found in the title and abstract: to research, discuss and create algorithms within or related to the field of prime numbers. To complete this task I will be developing my thoughts and discoveries regarding prime numbers as this report progresses, as well as producing a number of deliverables in the form of software applications, test results and statistics.The topic of number theory is in itself fascinating, and extraordinarily vast, however I will only be scratching the surface. Nonetheless, I hope to explain throughout this project how prime numbers have become such an important part of modern cryptography, and what they can be used for.
 
-Despite the usefulness of PKI, it is not the be-all, end-all of cryptography, and other aspects must be considered in creating a fully-fledged, secure messaging application. Such as symmetric, identification, verification, etc
+\section{Project Structure}
+
+I will be splitting the project in to four main parts, excluding this report:
+
+\begin{enumerate}
+	\item \textbf{Prime numbers in software} \\
+		A discussion of how prime numbers can be efficiently produced programmatically, and software to prove it.
+	\item \textbf{Algorithms} \\
+		The development of algorithms using prime numbers, such as RSA, and complementary cryptographic algorithms such as AES. Alongside this, the development of non-major algorithms in the field of prime number based cryptography that still present an academically interesting concept.
+	\item \textbf{Final Application} \\
+		The production of a software program that utilises the implemented cryptographic algorithms in section 2 to display their efficacy in a real world application.
+	\item \textbf{Cryptanalysis} \\
+		Taking the algorithms created and comparing them with official implementations for statistical analysis, alongside researching and performing "attacks" on them to prove or disprove the implementation's cryptographic security.
+\end{enumerate}
+
+The primary algorithms to develop are:
+
+\begin{itemize}
+	\item Asymmetric
+		\begin{itemize}
+			\item RSA
+			\item Diffie-Hellman
+		\end{itemize}
+	\item Symmetric
+		\begin{itemize}
+			\item AES
+		\end{itemize}
+	\item Identification and Authentication
+		\begin{itemize}
+			\item RSA Signing
+			\item Digital Certificates
+		\end{itemize}
+\end{itemize}
+
+Other algorithms will be discussed and produced alongside these, however they will not be used in the final application testbed and are purely for research interest. These can be found listed in the contents in the relevant sections.
+		
+\section{Other Information}
+
+This document was written and composed with \LaTeX using \emph{Taco Software's \href{http://tacosw.com/latexian/}{Latexian}}. The \LaTeX source code for this report should have come bundled with the project documentation and files, however if you are unable to retrieve it please see section~\ref{sec:repo}.
+
+\subsection{Project Repository} \label{sec:repo}
+
+\textbf{If: any part of this report is missing, you believe that you do not have a full access to the source code discussed in this document, or if any files have been lost, it is available for full download at \url{http://cyanoryx.com/files/project.zip} (SHA-1 Sum: x)}.
