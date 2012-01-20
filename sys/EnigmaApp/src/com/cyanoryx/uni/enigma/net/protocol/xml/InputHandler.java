@@ -34,7 +34,7 @@ public class InputHandler extends DefaultHandler {
 
     public void startElement(String namespaceURI,String localName,String qName,Attributes atts) throws SAXException {
     	switch (depth++){
-    		case 0:   // Only stream:stream allowed... all others is error
+    		case 0:
     			if (qName.equals("stream")){
     				Packet openPacket = new Packet(null,qName,namespaceURI,atts);
     				openPacket.setSession(session);
@@ -46,7 +46,7 @@ public class InputHandler extends DefaultHandler {
     			packet = new Packet(null,qName,namespaceURI,atts);
     			packet.setSession(session);
     			break;
-    		default:  // Inside packet
+    		default:
     			Packet child = new Packet(packet,qName,namespaceURI,atts);
     			packet = child;
     	}

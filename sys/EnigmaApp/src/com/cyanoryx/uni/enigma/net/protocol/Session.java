@@ -14,9 +14,13 @@ import com.cyanoryx.uni.enigma.net.io.XercesReader;
 public class Session {
 	Socket socket;
 	User user;
+	String ID;
 	
 	public Session(Socket s) {
 		this.setSocket(s);
+	}
+	public Session() {
+		this.setStatus(Session.DISCONNECTED);
 	}
 	
 	public void setSocket(Socket s) {
@@ -34,6 +38,9 @@ public class Session {
 	public void setUser(User u) {
 		this.user = u;
 	}
+	
+	public String getID() { return this.ID; }
+	public void setID(String ID) { this.ID = ID; }
 	
 	LinkedList<StatusListener> statusListeners = new LinkedList<StatusListener>();
 	public boolean addStatusListener(StatusListener listener){

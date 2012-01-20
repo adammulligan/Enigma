@@ -1,15 +1,138 @@
 % Chapter 2
 
-\chapter{Mathematical Basis}
+\chapter{Cryptographic Primitives} % Write in your own chapter title
 \label{Chapter2}
-\lhead{Chapter 2. \emph{Mathematical Basis}}
+\lhead{Chapter 2. \emph{Cryptographic Primitives}} % Write in your own chapter title to set the page header
+
+\section{Basics of Information Security}
+
+Despite how it is portrayed or colloquially used, Information Security is an entirely different concept and area of study compared to Cryptography. It might seem simple enough to implement a basic cryptographic protocol involving encryption and decryption, however to introduce this into a system and expect the information to be secure, is foolhardy. Cryptography is a \emph{means} to providing information security when following certain rules and guidelines not the be all, end all solution. An understanding of information security, and the related issues, is necessary. 
+
+This can be proven using historical evidence: throughout history many complex systems of mechanisms, rules, and protocols have been developed to introduce information security to a system. As with modern day security, this cannot be achieved entirely through mathematical and cryptographic means -- it is more than just computational intractability.
+
+As such, stringent criteria for developing secure systems and protocol have been introduced. While institutes such as \emph{The British Computing Society} and \emph{Association for Computing Machinery} ensure their members follow a professional code of ethics, just as a doctor might, these information security criteria are of separate and equal importance. Indeed, there are now several international organisations that exist solely for the overseeing of cryptographic research and development (See: \emph{International Association for Cryptologic Research}).
+
+Often, as we will see, cryptographic systems are simplified for the purposes of presentation particularly for textbooks. This will be discussed further later, with regards to the differences and difficulties involved in developing systems that do not just follow a mathematical "recipe," but also include information security values and other subtleties.
+
+The overall method of dealing with, and ensuring, information security is known as risk management. This encapsulates a large number of countermeasures (including cryptography) that reduce the risk of vulnerabilities in, and threats to, systems. We will only be encountering and discussing the technological areas of mitigation, however some of the solutions include\footnote{For an excellent resource regarding information security, both technical and non-technical, see \href{http://www.cl.cam.ac.uk/~rja14/book.html}{\emph{Security Engineering}, Ross Anderson}}: access control, security policy, physical security, and asset management.
+
+\section{Objectives}
+
+As said, secure systems should follow a guideline, or set of criteria, that ensure the security and integrity of data stored and input. A clear and concise specification should be developed, that will aid the designer in selecting the correct cryptographic primitives, but also help the engineer implement the protocol correctly. There are many of these criteria, however each is derived from four primary objectives:
+
+\begin{enumerate}
+	\item \textbf{Confidentiality} is the ability to ensure data is only accessed by those who are allowed to. Maintaining confidentiality of data is an obligation to protect someone else's secret information if you have been entrusted with it.
+	\item \textbf{Authentication} involves identifying both entities and data. Two or more entities wishing to communicate or transmit information to one another must identify each participant to ensure they are who they claim to be - this is known as entity authentication. Data received must be authenticated to ensure the validity of the origin, date sent, contents, etc - this is known as data origin authentication.
+	\item \textbf{Non-repudiation} prevents an entity from denying previous actions they have committed.
+	\item \textbf{Data Integrity} is how faithfully data compares to it's true state, i.e. proving that a data object has not been altered.
+\end{enumerate}
+
+\section{Key Concepts}
+
+As with any discipline, there are a number of fundamental concepts that need to be thoroughly defined. This section will cover the definitions of basic information security and cryptography related concepts. While Computer Scientists and Mathematicians, unlike Biologists, tend to abstract ideas using existing words such as \emph{normal} which ultimately cause confusion to those trying to understand the area of study, the field of Information Security fortunately uses phrases that are succinct and aptly describe notions.
+
+\subsection{Information Security}
+
+Forward secrecy
+Interchangeably using data, message, etc
+
+\section{Primitives}
+
+As we discussed in the Objectives, there are certain criteria that must be met for an application to be considered as secure under Information Security guidelines. Excluding physical and psychological measures, there are a number of methods to be implemented cryptographically to guarantee security.
+
+\subsection{Encryption}
+
+Being what is seen as the very 'core' of cryptography, we have defined encryption many times already and what the term means in terms of a process should be apparent. However encryption takes many forms, with each having an appropriate situation for it to be used.
+
+\subsubsection{Symmetric Key Encryption}
+
+Primarily, we will use symmetric key encryption algorithms to encipher data that is to be transmitted between entities.
+
+Mathematically we can formally define symmetric encryption as:
+
+For a message $M$, algorithm $A$ and key $K$,
+
+$M'  = A(K,M)$
+
+and thus:
+
+$M = A'(K',A(K,M))$
+
+where $A' = A$, $K' = K$ in a symmetric algorithm.
+
+\subsection{Key Agreement}
+
+Key agreement, or key exchange, primarily ensures data integrity and confidentiality. By preventing an attacker from discovering encryption keys used on transmitted data, the attacker should be unable to feasibly read confidential information or modify it (the latter is not entirely true, it may be possible in some cases to modify encrypted data, however we will discuss that later in \emph{Symmetric Cryptography}).
+
+While it might be easier to use asymmetric techniques to encrypt data for transmission, thus allowing us to distribute keys as cleartext, it is slow and inefficient for large quantities of data, such as in an instant messaging application. Because of this, it is prudent to implement an efficient symmetric key encryption algorithm, and share the key (known as a session key) with other entities. However, it would be trivial for an attacker to launch a man-in-the-middle attack and gain access to the encryption keys during the initiation of the conversation, allowing the easy and undetectable decryption of all transmitted messages. As such, session keys will need to be distributed using a key exchange protocol.
+
+\subsubsection{Key Distribution Centre}
+
+The simplest solution is known as a Key Distribution Centre (KDC), which involves the use of a trusted third party (TTP). It is easiest to explain using an example. Alice and Bob are users of a system, attempting to securely communicate. Each share a key securely with third-party Trent (somewhat amusingly, this algorithm does not include how these keys should be shared. We can assume that it was perhaps conducted through an in-person meeting of entities, or other means), who stores each key. 
+
+\begin{enumerate}
+	\item Alice initiates a conversation with Bob.
+	\item Alice requests a session key from Trent, who makes two copies of an identical key and encrypts one with Alice's stored key, and another with Bob's.
+	\item Alice receives both encrypted keys, and sends the appropriate one to Bob.
+	\item Alice and Bob decrypt their session keys, leaving both with a shared key.
+	\item Alice and Bob can now encrypt and decrypt data using the same key.
+\end{enumerate}
+
+\subsubsection{Asymmetric Cryptography}
+
+As can be obviously seen, using a KDC is dependent entirely on the ability of two entities to have previously, and securely, shared an encryption key with a TTP that is known to both entities. A solution to this is to eliminate the third party, and use an asymmetric algorithm to share keys directly. As defined in the \emph{Key Concepts} section, asymmetric cryptography allows Alice to share a public-key, with which any entity can encrypt data that can only be decrypted using Alice's private key.
+
+\begin{enumerate}
+	\item Alice and Bob share their public keys using a readily available database.
+	\item Alice downloads Bob's key, and vice versa.
+	\item Alice generates a session key, encrypts it using Bob's public key and sends it to Bob.
+	\item Bob can now decrypt the session key using his private key, resulting in both parties being in possession of a secure session key.
+\end{enumerate}
+
+There is a security risk: how can you verify that the entity that sent the encrypted key is indeed the one with which you are trying to communicate? It would be easy for an attacker to encrypt their own session key with Alice's public key, and claim that the key is from Bob. The attacker would then be able to decrypt any messages intended for Bob. The solution to this issue is the use of digital certificates, and signatures, which will be discussed in \emph{Authentication}.
+
+We will discuss specific algorithms further on, however it is worth pointing out that the current public-key algorithms used for these purposes are \emph{RSA} (Rivest, Shamir, Adleman) and the\emph{Diffie-Hellman Key Exchange} (not defined as a public-key algorithm, however it uses the sharing of public cleartext values). There exist a number of interesting algorithms that implement the public key architecture which will also be considered later.
+
+There are other considerations in key management to ensure confidentiality and integrity. Some provisos exist such as changing the key for each session to ensure perfect forward secrecy, however these are trivial to implement and can be considered as part of the overall application security development.
+
+\subsection{Authentication}
+
+There are two types of authentication that are required in a secure application
+
+\begin{enumerate}
+	\item Message authentication
+	\item Entity authentication
+\end{enumerate}
+
+both of which require different protocols and algorithms. These terms have been defined in \emph{Objectives}.
+
+The methods of entity authentication are an interesting topic in themselves, with many, many protocols having been researched and created as the community tries to find a method that is both secure and easy for an entity to use. Some examples are: passwords, two-factor authentication, PINs, smart cards, biometrics, and so on. These are outside of the scope of this project -- we will be implementing two broad, yet specific methods of authentication.
+
+\subsection{Digital Signatures}
+
+Digital signatures, as we will see, encompass three of the information security criteria: authentication, data integrity and non-repudiation (a sender cannot claim they did not send the message).
+
+\subsection{Certificates}
 
 
-\section{Number Theory}
 
+\subsection{Hashing}
 
+While not of direct relevance in information security, hashing plays a significant part in cryptographic systems and thus is included as a concept to be implemented. Formally, we can define a hash function as mapping a large domain to a smaller range - in the case of data, mapping a set of bytes to a unique identifier with a set length. A hash function, at the very basics, takes as input a message and produces a fingerprint, or digest, of the input. Within the field of cryptography, they are used for message authentication and data integrity.
 
-\section{Prime Numbers}
+This is to say, given a domain $D$ and range $R$ for $f : D \rightarrow R, then |D| > |R|$. This is a many-to-one relationship, the downside of which means that collisions can occur -- two input strings resulting with the same output string -- however, this varies between algorithms, the more modern of which are less likely to result in collisions.
 
-\subsection{Finding Prime Numbers}
+A hash function can be classed into two categories: keyed and unkeyed, taking both a message and secret key and taking just a message, respectively. Two conditions are necessary for a hash function to be effective:
 
+\begin{enumerate}
+	\item compression -- the function $f$ maps input $a$ of arbitrary length to an output of fixed length, $n$.
+	\item complexity -- it must be easy to compute $f(a)$
+\end{enumerate}
+
+Most commonly used are unkeyed, one-way hash functions. Some examples of which are: SHA-1, and MD5. In cryptography, hashes are commonly used for data integrity in combination with digital signatures. A message is hashed, and the fingerprint produced is signed by the entity. There are some algorithms designed specifically for this purpose, known generally as Message Authentication Codes (MACs) and Manipulation Detection Codes (MDCs).
+
+A sample of each of these four primitives will be implemented further in the report.
+
+\section{Mathematics}
+
+\subsection{Functions}

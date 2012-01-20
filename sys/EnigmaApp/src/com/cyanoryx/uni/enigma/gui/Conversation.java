@@ -45,7 +45,7 @@ public class Conversation {
 	 * Create the application.
 	 */
 	public Conversation() {
-		Strings.initialise();
+		//Strings.initialise();
 		initialize();
 	}
 

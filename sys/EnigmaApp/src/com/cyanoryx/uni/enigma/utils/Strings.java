@@ -13,7 +13,8 @@ public class Strings {
     private static MessageFormat formatter;
 
     public static String translate(String messageName) {
-        return resourceBundle.getString(messageName);
+//        return resourceBundle.getString(messageName);
+    	return messageName;
     }
 
 

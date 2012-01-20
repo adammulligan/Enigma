@@ -53,8 +53,7 @@ public class Server {
 	}
 	
 	public static void main(String[] args) {
-		Random rng = new Random();
-		int port = rng.nextInt(65535) + 1100;
+		int port = 65000;
 		
 		new Server(port,"localhost");
 	}

@@ -1,14 +1,25 @@
-package com.cyanoryx.uni.enigma.net.server;
+/**
+ * 
+ */
+package com.cyanoryx.uni.enigma.net.client;
 
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 import com.cyanoryx.uni.enigma.net.protocol.Session;
 import com.cyanoryx.uni.enigma.net.protocol.xml.Packet;
 import com.cyanoryx.uni.enigma.net.protocol.xml.PacketListener;
 import com.cyanoryx.uni.enigma.utils.AppPrefs;
-import java.util.prefs.Preferences;
 
+/**
+ * @author adammulligan
+ *
+ */
 public class AuthHandler implements PacketListener {
+
+	/* (non-Javadoc)
+	 * @see com.cyanoryx.uni.enigma.net.protocol.xml.PacketListener#notify(com.cyanoryx.uni.enigma.net.protocol.xml.Packet)
+	 */
 	@Override
 	public void notify(Packet packet) {
 		Session s = packet.getSession();
@@ -23,9 +34,11 @@ public class AuthHandler implements PacketListener {
 			
 			if (method.equalsIgnoreCase("agreement")) {
 				// FOR: <auth stage="agreement">signed key</auth>
-				if (type.equalsIgnoreCase("RSA")) {
+				if (type.equalsIgnoreCase("certificate")) {
 					
-				} else if (type.equalsIgnoreCase("DH")) {
+				} else if (type.equalsIgnoreCase("key")) {
+					
+				} else if (type.equalsIgnoreCase("error")) {
 					
 				}
 			} else if (method.equalsIgnoreCase("identification")) {

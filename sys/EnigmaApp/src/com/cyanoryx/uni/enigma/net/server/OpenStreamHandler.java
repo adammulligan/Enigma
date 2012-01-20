@@ -37,6 +37,7 @@ public class OpenStreamHandler implements PacketListener{
       			"xmlns='enigma:client' " +
       			"from='xxx' " +
       			"id='x' " +
+      			"xmlns='enigma:server'" +
       			"xmlns:stream='http://cyanoryx.com' " +
       			"authenticated='"+session.getAuthenticated()+"'>");
       
