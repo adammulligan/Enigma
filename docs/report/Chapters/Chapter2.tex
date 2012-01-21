@@ -31,10 +31,7 @@ As said, secure systems should follow a guideline, or set of criteria, that ensu
 
 As with any discipline, there are a number of fundamental concepts that need to be thoroughly defined. This section will cover the definitions of basic information security and cryptography related concepts. While Computer Scientists and Mathematicians, unlike Biologists, tend to abstract ideas using existing words such as \emph{normal} which ultimately cause confusion to those trying to understand the area of study, the field of Information Security fortunately uses phrases that are succinct and aptly describe notions.
 
-\subsection{Information Security}
-
-Forward secrecy
-Interchangeably using data, message, etc
+TODO: er, do this bit.
 
 \section{Primitives}
 
@@ -110,11 +107,28 @@ The methods of entity authentication are an interesting topic in themselves, wit
 
 \subsection{Digital Signatures}
 
-Digital signatures, as we will see, encompass three of the information security criteria: authentication, data integrity and non-repudiation (a sender cannot claim they did not send the message).
+Digital signatures, as we will see, encompass three of the information security criteria: authentication, data integrity and non-repudiation (a sender cannot claim they did not send the message). A digital signature is a string that connects a message with its originating entity.
 
-\subsection{Certificates}
+When transmitting a message, the sender signs the message with their private key which can then be verified with their public key, which should be available to the receiver.
 
+\begin{enumerate}
+	\item Alice signs her message $A$ with her private key.
+	\item Alice sends message $A$ with signature $S$ to Bob ($A|S$)
+	\item Bob retrieves Alice's public key from an available database, and verifies signature $S$
+\end{enumerate}
 
+The first and most common implementation of digital signatures is RSA.
+
+\subsection{Public-key Certificates}
+
+Digital signatures and a public-key infrastructure, however, are not enough by themselves. A very simple attack can be orchestrated similar to that during key agreement: Mallory, the attacker, could sign a modified message $A$ with her own private-key and then distribute her public-key, claiming it to be Alice's. To counter this, we can introduce a trusted third-party, known as a Certificate Authority (CA), who signs Alice's public-key with their own private-key. Most trusted CA's public keys come bundled with software such as browsers and operating systems.
+
+\begin{enumerate}
+	\item Certificate Authority signs Alice's public key with their private key.
+	\item The CA distributes its public key with major software.
+	\item Bob receives Alice's message and signature, as well as her public key and signature.
+	\item Bob verifies Alice's public key with the CA's public key, and then verifies the message.
+\end{enumerate}
 
 \subsection{Hashing}
 
