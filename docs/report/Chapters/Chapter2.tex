@@ -148,5 +148,98 @@ Most commonly used are unkeyed, one-way hash functions. Some examples of which a
 A sample of each of these four primitives will be implemented further in the report.
 
 \section{Mathematics}
+\newtheorem{mathdef}{Definition}[section]
+\newtheorem{mathexample}{Example}[section]
+\newtheorem{mathfact}{Fact}[section]
 
-\subsection{Functions}
+This section will cover some of the basic mathematical concepts that will be used throughout the report, and form a foundation of understanding for the more complex abstract methods that will be used.
+
+\subsection{Notation}
+
+\begin{enumerate}
+	\item $\mathbb{Z}$ is the set of all integers.
+	\item $\mathbb{R}$ is the set of all real numbers.
+	\item $[a,b]$ is the set of integers $n$ such that $a\le n \le b$.
+	\item $|A|$ is the cardinality of a finite set, i.e. the number of elements.
+	\item $n \in A$ denotes that an element $n$ exists in set $A$.
+	\item $A \subseteq B$ denotes that set $A$ is a subset of set $B$.
+	\item $A \subset B$ denotes that $A$ is a subset of $B$, but $A \neq B$.
+	\item $\lceil a \rceil$ is the smallest integer greater than or equal to $a$.
+	\item $\lfloor a \rfloor$ is the largest integer less than or equal to $a$.
+	\item A function (mapping) denoted as $f : A \rightarrow B$ signifies that every element $a$ in $A$ is mapped to exactly one element $b$ in $B$. This can also be written as $f(a) = b$.
+\end{enumerate}
+
+\subsection{Number Theory}
+
+We will begin by defining some fundamental rules of number theory. 
+
+\begin{mathdef}
+	Let $a,b$ be integers. $a$ divides $b$ if an integer $c$ exists such that $b = ac$. We define this as $a$ divides $b$, or $a|b$.
+\end{mathdef}
+
+\begin{mathdef}
+	An integer $c$ is a common divisor if $c|a$ and $c|b$.
+\end{mathdef}
+
+\begin{mathdef}
+	An integer $c$ is the greatest common divisor of $a$ and $b$, if:
+	\begin{enumerate}
+		\item $c$ is a common divisor of $a,b$.
+		\item when $d|a$ and $d|b$, $d|c$.
+		\item $c\ge0$
+	\end{enumerate}
+	This is denoted as $c = gcd(a,b)$.
+\end{mathdef}
+
+\begin{mathdef}
+	An integer $a$ is prime if:
+	\begin{enumerate}
+		\item $a\ge2$
+		\item the only positive divisors are $1$ and $a$.
+	\end{enumerate}
+	Otherwise, the number is referred to as composite.
+\end{mathdef}
+
+\begin{mathfact}
+	There are an infinite number of prime numbers.
+\end{mathfact}
+
+\begin{mathdef}
+	If $a$ is prime and $a|bc$, then $a|b$ and $a|c$.
+\end{mathdef}
+
+\begin{mathdef}
+	The function $\phi$ is known as the Euler Phi function. Where $n\ge1$, $\phi(n)$ is the number of integers in the interval $[1,n]$ that are relatively prime to $n$.
+	\begin{enumerate}
+		\item If $n$ is prime, then $\phi(n) = n - 1$.
+		\item $\phi(n)$ is multiplicative: if $gcd(m,n) = 1$, then $\phi(mn) = \phi(m) \cdot  \phi(n)$.
+	\end{enumerate}
+\end{mathdef}
+
+\subsubsection{Modulo Arithmetic}
+
+\begin{mathdef}
+	Where $a$ and $b$ are integers, $a$ is congruent to $b$ modulo $n$ (denoted as $a \equiv b (mod$ $n)$. $n$ is known as the modulus. Congruence is reflexive, transitive and and symmetric. That is to say, for every $a,b,c \in \mathbb{Z}$:
+	\begin{enumerate}
+		\item $a \equiv a (mod$ $n)$
+		\item if $a \equiv b (mod$ $n)$, then $b \equiv a (mod$ $n)$
+		\item if $a \equiv b (mod$ $n)$ and $c \equiv c (mod$ $n)$, then $a \equiv c (mod$ $n)$
+	\end{enumerate}
+	This is known as an equivalence relation.
+\end{mathdef}
+
+\begin{mathdef}
+	The set of all integers modulo $n$ is denoted as $\mathbb{Z}_n$.
+\end{mathdef}
+
+As you can see, there are a great number of theorems regarding prime numbers and modulo arithmetic (we have barely scratched the surface), some of which we will be using.
+
+\subsection{Abstract Algebra}
+
+\subsection{Complexity}
+
+Computational complexity is a vast subject, mostly out of the scope of this report, however we will use the notation occasionally to classify algorithms.
+
+\section{Moving On}
+
+This is just a basic overview of the cryptographic and mathematical primitives used in Information Security. As the report progresses, each concept will be explained in finer detail alongside their implementations. While it seems hard to apply these abstract definitions, the purpose of each within our algorithms will become quickly clear.
