@@ -1,5 +1,6 @@
 package com.cyanoryx.uni.enigma.net.client;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -36,6 +37,11 @@ public class ClientThread extends Thread {
 	}
 
 	public void run(){
+		try {
+			model.connect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	} // run()
 
 	Client model;
@@ -44,6 +50,7 @@ public class ClientThread extends Thread {
 	}
 
 	Packet waitFor(String element, String type){
+		System.out.println("Waiting for packet");
 		for( Packet packet = packetQueue.pull();
 				packet != null;
 				packet = packetQueue.pull()) {
@@ -62,6 +69,7 @@ public class ClientThread extends Thread {
 	}
 
 	void notifyHandlers(Packet packet){
+		System.out.println("received packet");
 		try {
 			Packet child;
 			String matchString;

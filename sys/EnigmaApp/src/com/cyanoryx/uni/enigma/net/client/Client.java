@@ -7,32 +7,27 @@ import java.io.Writer;
 import java.net.Socket;
 import java.util.zip.DataFormatException;
 
+import com.cyanoryx.uni.enigma.gui.Conversation;
 import com.cyanoryx.uni.enigma.net.protocol.Session;
 import com.cyanoryx.uni.enigma.net.protocol.StatusListener;
+import com.cyanoryx.uni.enigma.net.protocol.User;
 import com.cyanoryx.uni.enigma.net.protocol.xml.Packet;
 import com.cyanoryx.uni.enigma.net.protocol.xml.PacketQueue;
 import com.cyanoryx.uni.enigma.net.protocol.xml.ProcessThread;
 
-/**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:
- * @author
- * @version 1.0
- */
-
 public class Client {
-	Session session = new Session();
+	Session session, remote_session;
 	PacketQueue packetQueue;
 	private static final String version = "Enigma Protocol v0.1";
 	private String server_name,
 				   server_address,
 				   server_port,
-				   user,
 				   resource;
+	private User   user;
 	
-	Client(ClientThread qThread) {
+	private Conversation window;
+	
+	public Client(ClientThread qThread) {
 		packetQueue = qThread.getQueue();
 		qThread.addListener(new OpenStreamHandler(),"stream");
 		qThread.addListener(new CloseStreamHandler(),"/stream");
@@ -48,20 +43,23 @@ public class Client {
 	}
 
 	public void connect() throws IOException {
-
+		session = new Session();
 		// Create a socket
 		session.setSocket(new Socket(server_address,Integer.parseInt(server_port)));
 		session.setStatus(Session.CONNECTED);
+		
+		System.out.println("Client created for "+server_address+":"+server_port);
 
 		// Process incoming messages
 		(new ProcessThread(session,packetQueue)).start();
-
+		
 		Writer out = session.getWriter();
-		out.write("<?xml version='1.0' encoding='UTF-8' ?><stream to='");
+		out.write("<stream to='");
 		out.write(server_name);
 		out.write("' from='");
 		out.write(user + "@" + server_name);
-		out.write("' xmlns='enigma:client' xmlns:stream='http://cyanoryx.com'>");
+		out.write("' return-port='" + session.getLocalPort());
+		out.write("' xmlns='enigma:client'>");
 		out.flush();
 	}
 	public void disconnect() throws IOException { session.closeStream(); }
@@ -124,9 +122,15 @@ public class Client {
 	public String getPort() {return server_port;}
 	public void setPort(String port) {server_port = port;}
 
-	public String getUser() {return user;}
-	public void setUser(String usr) {user = usr; }
+	public User getUser() {return user;}
+	public void setUser(User usr) {user = usr; }
 
 	public String getResource() {return resource;}
 	public void setResource(String res) {resource = res;}
+	
+	public Conversation getWindow() {return this.window;}
+	public void setWindow(Conversation window) {this.window=window;}
+	
+	public Session getRemoteSession() {return this.remote_session;}
+	public void setRemoteSession(Session s){this.remote_session=s;}
 }

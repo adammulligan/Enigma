@@ -5,6 +5,7 @@ import java.util.prefs.Preferences;
 
 import com.cyanoryx.uni.enigma.utils.AppPrefs;
 import com.cyanoryx.uni.enigma.net.protocol.Session;
+import com.cyanoryx.uni.enigma.net.protocol.User;
 import com.cyanoryx.uni.enigma.net.protocol.xml.Packet;
 import com.cyanoryx.uni.enigma.net.protocol.xml.PacketListener;
 
@@ -29,16 +30,17 @@ public class OpenStreamHandler implements PacketListener{
       
       Writer out = session.getWriter();
       
+      System.out.println("Creating client for "+session.getSocket().getInetAddress().getHostAddress()+":"+packet.getAttribute("return-port"));
+      Server.createClient("test",session.getSocket().getInetAddress().getHostAddress(),packet.getAttribute("return-port"),new User("adam"),session);
+      
       out.write("<?xml " +
       			"version='1.0' " +
       		    "encoding='UTF-8' ?>");
       
       out.write("<stream " +
-      			"xmlns='enigma:client' " +
       			"from='xxx' " +
       			"id='x' " +
-      			"xmlns='enigma:server'" +
-      			"xmlns:stream='http://cyanoryx.com' " +
+      			"xmlns='enigma:server' " +
       			"authenticated='"+session.getAuthenticated()+"'>");
       
       out.flush();

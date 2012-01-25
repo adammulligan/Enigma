@@ -38,5 +38,4 @@ public class AuthHandler implements PacketListener {
 			e.printStackTrace();
 		}
 	}
-
 }

@@ -1,22 +1,14 @@
 package com.cyanoryx.uni.enigma.gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class LogWindow {
 
-	private JFrame frame;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		LogWindow window = new LogWindow();
-		window.frame.setVisible(true);
-	}
+	private JFrame      frame;
+	private JTextArea   logText;
+	private JScrollPane pane;
 
 	/**
 	 * Create the application.
@@ -31,12 +23,22 @@ public class LogWindow {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 550, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
-		JTextArea logText = new JTextArea();
-		JScrollPane pane  = new JScrollPane(logText);
+		logText = new JTextArea();
+		logText.setEnabled(false);
+		
+		pane  = new JScrollPane(logText);
 		
 		frame.getContentPane().add(pane);
 	}
+	
+	public void setState(boolean state) {
+		frame.setVisible(state);
+	}
 
+	public void log(String data) {
+	    logText.append(data);
+	    frame.getContentPane().validate();
+	}
 }

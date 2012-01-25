@@ -1,59 +1,92 @@
 package com.cyanoryx.uni.enigma.gui;
 
 import java.awt.Dimension;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import java.awt.GridBagLayout;
-import javax.swing.JToolBar;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Random;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.JToolBar;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
-import java.awt.Insets;
-import javax.swing.JTextArea;
-
+import com.cyanoryx.uni.enigma.net.client.Client;
+import com.cyanoryx.uni.enigma.net.protocol.User;
 import com.cyanoryx.uni.enigma.utils.Strings;
 
 public class Conversation {
-
 	private JFrame frame;
 	
-	private Strings strings;
+	private boolean    log_open;
+	private LogHandler handler;
+	private Logger     logger;
+	
+	private User user;
+	
+	private Client client;
+	
+	//private Strings strings;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Conversation window = new Conversation();
+					Conversation window = new Conversation(new User("Adam"));
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the application.
+	 * @throws IOException 
 	 */
-	public Conversation() {
+	public Conversation(Client c) throws IOException {
 		//Strings.initialise();
+		
+		handler = LogHandler.getInstance();
+		logger = Logger.getLogger(this.getClass().toString()+"."+c.getUser().getName());
+		logger.addHandler(handler);
+		
+		user   = c.getUser();
+		client = c;
+		
 		initialize();
+		
+		frame.setVisible(true);
 	}
+	
+	private JTextField messageInput;
+	private JTextPane  messages;
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws IOException 
 	 */
-	private void initialize() {
-		frame = new JFrame();
+	private void initialize() throws IOException {
+		frame = new JFrame("Conversation with "+user.getName());
 		frame.setBounds(100, 100, 450, 550);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setMinimumSize(new Dimension(350,350));
@@ -101,6 +134,13 @@ public class Conversation {
 		btnLog.setIcon(new ImageIcon("res/drawable/ic_menu_bug.png"));
 		btnLog.setBorder(BorderFactory.createEmptyBorder());
 		btnLog.setToolTipText(Strings.translate("conv.toolbar.view_log"));
+		btnLog.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				log_open=!log_open;
+				handler.getWindow().setState(log_open);
+			}
+		});
 		toolBar.add(btnLog);
 		
 		JButton btnBlock = new JButton();
@@ -125,9 +165,11 @@ public class Conversation {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         frame.getContentPane().add(new JSeparator(), gbc);
         
-        JTextArea textArea = new JTextArea();
-        textArea.setEnabled(false);
-        textArea.setText("No messages...");
+        messages = new JTextPane();
+        messages.setEnabled(false);
+        
+        messages.setText("Conversation started on "+new Date()+"\n\n");
+        
         GridBagConstraints gbc_textArea = new GridBagConstraints();
         gbc_textArea.gridx = 0;
         gbc_textArea.gridy = 2;
@@ -137,9 +179,23 @@ public class Conversation {
         gbc_textArea.weighty = 1;
         gbc_textArea.gridwidth = 3;
         gbc_textArea.fill = GridBagConstraints.BOTH;
-        frame.getContentPane().add(textArea, gbc_textArea);
+        frame.getContentPane().add(messages, gbc_textArea);
         
-        JTextField msgField = new JTextField();
+        messageInput = new JTextField();
+        messageInput.addKeyListener(new KeyListener(){
+        	@Override
+			public void keyReleased(KeyEvent k) {
+				if (k.getKeyCode()==KeyEvent.VK_ENTER) {
+					Conversation.this.handleMessageSend();
+				}
+			}
+
+			@Override
+			public void keyPressed(KeyEvent arg0) {}
+			@Override
+			public void keyTyped(KeyEvent arg0) {}
+        	
+        });
         GridBagConstraints gbc_msgField = new GridBagConstraints();
         gbc_msgField.gridx = 0;
         gbc_msgField.gridy = 3;
@@ -147,9 +203,16 @@ public class Conversation {
         gbc_msgField.insets = new Insets(0, 0, 5, 0);
         gbc_msgField.gridwidth = 2;
         gbc_msgField.fill = GridBagConstraints.HORIZONTAL;
-        frame.getContentPane().add(msgField, gbc_msgField);
+        frame.getContentPane().add(messageInput, gbc_msgField);
         
         JButton msgSend = new JButton("Send");
+        msgSend.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Conversation.this.handleMessageSend();
+			}
+        });
+        
         GridBagConstraints gbc_msgSend = new GridBagConstraints();
         gbc_msgSend.gridx = 2;
         gbc_msgSend.gridy = 3;
@@ -159,5 +222,40 @@ public class Conversation {
         gbc_msgSend.fill = GridBagConstraints.HORIZONTAL;
         frame.getContentPane().add(msgSend, gbc_msgSend);
 	}
+	
+	public void handleMessageSend() {
+		if (messageInput.getText().trim().equalsIgnoreCase("")) return;
+		
+		Random rng = new Random();
+		
+		try {
+			// TODO actually send the message
+			client.sendMessage("adam", "test", "1", null, "22", messageInput.getText());
+			Conversation.this.updateMessage("You",messageInput.getText());
+			logger.info("Sent message");
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		messageInput.setText("");
+		messageInput.requestFocusInWindow();
+	}
+	
+	public void update(String message) throws BadLocationException {
+		StyledDocument d = messages.getStyledDocument();
+		d.insertString(d.getLength(), message+"\n", new SimpleAttributeSet());
+	}
 
+	public synchronized void updateMessage(String name, String message) throws BadLocationException {
+		StyledDocument d = messages.getStyledDocument();
+        
+        SimpleAttributeSet kw = new SimpleAttributeSet();
+        StyleConstants.setBold(kw,true);
+        
+		d.insertString(d.getLength(),name+": ",kw);
+		d.insertString(d.getLength(), message+"\n", new SimpleAttributeSet());
+	}
 }

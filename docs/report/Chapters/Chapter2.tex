@@ -236,9 +236,17 @@ As you can see, there are a great number of theorems regarding prime numbers and
 
 \subsection{Abstract Algebra}
 
+Further on, particularly in the development of symmetric algorithms like AES, we will be using groups, fields and other abstract algebraic objects. Due to the complex nature of these concepts, they will be explained in tandem with the algorithms themselves.
+
 \subsection{Complexity}
 
-Computational complexity is a vast subject, mostly out of the scope of this report, however we will use the notation occasionally to classify algorithms.
+Computational complexity is a vast subject, mostly out of the scope of this report, however we will use the notation occasionally to classify algorithms. Big-oh notation, as it is known, will be used to represent the worst-case running time of an algorithm based on a standard input size. For example:
+
+\begin{mathdef}
+	A polynomial-time algorithm is an algorithm where the worst-case running time can be represented as $O(n^c)$, where $n$ is the input size, and $c$ is a constant. 
+\end{mathdef}
+
+An algorithm with a running time that cannot be bounded as such is known as an exponential-time algorithm. It is generally considered that polynomially-time algorithms are efficient, wheres exponential-time algorithms are inefficient.
 
 \section{Moving On}
 

@@ -6,9 +6,11 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.Socket;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import com.cyanoryx.uni.enigma.net.client.Client;
 import com.cyanoryx.uni.enigma.net.io.XercesReader;
 
 public class Session {
@@ -22,6 +24,10 @@ public class Session {
 	public Session() {
 		this.setStatus(Session.DISCONNECTED);
 	}
+	
+	Hashtable<String,Client> clients = new Hashtable<String,Client>();
+	public void addClient(String id, Client c) { this.clients.put(id,c); }
+	public Client getClient(String id) { return this.clients.get(id); }
 	
 	public void setSocket(Socket s) {
 		this.socket = s;
@@ -98,6 +104,7 @@ public class Session {
 			out = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
 	    }
 	    return out;
+		//return new BufferedWriter(new OutputStreamWriter(System.out))
 	}
 	
 	Reader in;
@@ -107,4 +114,8 @@ public class Session {
 	    }
 	    return in;
 	}
+	
+	private String local_port;
+	public void setLocalPort(String port) { this.local_port = port; }
+	public String getLocalPort() { return this.local_port; }
 }

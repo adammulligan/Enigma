@@ -18,10 +18,12 @@ public class ProcessThread extends Thread {
 		} catch (Exception e) {
 			try {
 				// TODO: send a proper message saying the input was malformed. E.g. sending <message> after </stream>
+				System.out.println("Malformed XML received, disconnecting session "+session.getID());
 				session.getWriter().write("Malformed XML received. Disconnecting you. \n");
 				session.getWriter().flush();
 				session.disconnect();
-			} catch (Exception e2) {}
+			} catch (Exception e2) {
+			}
 		}
 	}
 }

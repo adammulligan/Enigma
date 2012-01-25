@@ -176,7 +176,6 @@ public class Packet {
 	    while (childIterator.hasNext()){
 	        Object child = childIterator.next();
 	        if (child instanceof String){
-	        	System.out.println((String)child);
 	            out.write((String)child);
 	        } else {
 	            ((Packet)child).writeXML(out);
