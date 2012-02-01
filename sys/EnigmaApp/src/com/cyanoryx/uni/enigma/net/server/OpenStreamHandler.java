@@ -30,10 +30,12 @@ public class OpenStreamHandler implements PacketListener{
       
       Writer out = session.getWriter();
       
-      System.out.println("Creating client for "+session.getSocket().getInetAddress().getHostAddress()+":"+packet.getAttribute("return-port"));
-      Server.createClient("test",session.getSocket().getInetAddress().getHostAddress(),packet.getAttribute("return-port"),new User("adam"),session);
+      if (session.getClient(packet.getAttribute("id"))==null) {
+	      System.out.println("Creating client for "+session.getSocket().getInetAddress().getHostAddress()+":"+packet.getAttribute("return-port"));
+	      Server.createClient("test",session.getSocket().getInetAddress().getHostAddress(),packet.getAttribute("return-port"),new User("adam"),session);
+      }
       
-      out.write("<?xml " +
+      /*out.write("<?xml " +
       			"version='1.0' " +
       		    "encoding='UTF-8' ?>");
       
@@ -41,7 +43,7 @@ public class OpenStreamHandler implements PacketListener{
       			"from='xxx' " +
       			"id='x' " +
       			"xmlns='enigma:server' " +
-      			"authenticated='"+session.getAuthenticated()+"'>");
+      			"authenticated='"+session.getAuthenticated()+"'>");*/
       
       out.flush();
 

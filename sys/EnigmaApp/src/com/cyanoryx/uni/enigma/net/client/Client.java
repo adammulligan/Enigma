@@ -22,7 +22,8 @@ public class Client {
 	private String server_name,
 				   server_address,
 				   server_port,
-				   resource;
+				   resource,
+				   local_port;
 	private User   user;
 	
 	private Conversation window;
@@ -45,8 +46,10 @@ public class Client {
 	public void connect() throws IOException {
 		session = new Session();
 		// Create a socket
+		System.out.println(local_port);
 		session.setSocket(new Socket(server_address,Integer.parseInt(server_port)));
 		session.setStatus(Session.CONNECTED);
+		session.setLocalPort(local_port);
 		
 		System.out.println("Client created for "+server_address+":"+server_port);
 
@@ -133,4 +136,7 @@ public class Client {
 	
 	public Session getRemoteSession() {return this.remote_session;}
 	public void setRemoteSession(Session s){this.remote_session=s;}
+	
+	public String getLocalPort() { return this.local_port; }
+	public void setLocalPort(String port) {this.local_port=port;}
 }

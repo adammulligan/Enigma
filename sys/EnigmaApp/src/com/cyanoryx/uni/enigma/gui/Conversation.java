@@ -10,7 +10,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Random;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
@@ -225,8 +224,6 @@ public class Conversation {
 	
 	public void handleMessageSend() {
 		if (messageInput.getText().trim().equalsIgnoreCase("")) return;
-		
-		Random rng = new Random();
 		
 		try {
 			// TODO actually send the message

@@ -25,9 +25,10 @@ public class MessageHandler implements PacketListener {
 			
 			System.out.println(packet.getAttribute("id"));
 			System.out.println(packet.getSession().getClient("22").getUser().getName());
-			
+			System.out.println(packet.getChildValue("body"));
 			
 			Conversation window = s.getClient(packet.getAttribute("id")).getWindow();
+			
 			window.updateMessage(s.getUser().getName(),packet.getChildValue("body"));
 
 			Writer out = packet.getSession().getWriter();

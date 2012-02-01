@@ -1,73 +1,86 @@
 package com.cyanoryx.uni.enigma.gui;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.TabItem;
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.GridLayout;
 
-public class Preferences {
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.border.EmptyBorder;
 
-	protected Shell shlPreferences;
+public class Preferences extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7720258639613136149L;
+	private JPanel contentPane;
 
 	/**
 	 * Launch the application.
-	 * @param args
 	 */
 	public static void main(String[] args) {
-		try {
-			Preferences window = new Preferences();
-			window.open();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Open the window.
-	 */
-	public void open() {
-		Display display = Display.getDefault();
-		createContents();
-		shlPreferences.open();
-		shlPreferences.layout();
-		while (!shlPreferences.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Preferences frame = new Preferences();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
-		}
+		});
 	}
 
 	/**
-	 * Create contents of the window.
+	 * Create the frame.
 	 */
-	protected void createContents() {
-		shlPreferences = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
-		shlPreferences.setSize(600, 520);
-		shlPreferences.setText("Preferences");
-		shlPreferences.setLayout(new GridLayout(1, false));
+	public Preferences() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(contentPane);
 		
-		TabFolder tabFolder = new TabFolder(shlPreferences, SWT.NONE);
-		GridData gd_tabFolder = new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1);
-		gd_tabFolder.heightHint = 600;
-		gd_tabFolder.widthHint = 550;
-		tabFolder.setLayoutData(gd_tabFolder);
+		JTabbedPane preference_wrapper = new JTabbedPane();
+		preference_wrapper.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
-		TabItem tbtmGeneral = new TabItem(tabFolder, SWT.NONE);
-		tbtmGeneral.setText("General");
-		tbtmGeneral.setImage(null);
+		JComponent panel1 = makeTextPanel("General");
+		preference_wrapper.addTab("General", null, panel1, "");
 		
-		TabItem tbtmPersonal = new TabItem(tabFolder, SWT.NONE);
-		tbtmPersonal.setText("Personal");
-		
-		TabItem tbtmEncryption = new TabItem(tabFolder, SWT.NONE);
-		tbtmEncryption.setText("Security");
+		JComponent panel2 = makeTextPanel("Personal");
+		preference_wrapper.addTab("Personal", null, panel2, "");
 
+			JTabbedPane security_wrapper = new JTabbedPane();
+			security_wrapper.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+			
+			JComponent security_panel1 = makeTextPanel("General");
+			security_wrapper.addTab("General", null, security_panel1, "");
+			
+			JComponent security_panel2 = makeTextPanel("Key Agreement");
+			security_wrapper.addTab("Key Agreement", null, security_panel2, "");
+	
+			JComponent security_panel3 = makeTextPanel("Cipher");
+			security_wrapper.addTab("Cipher", null, security_panel3, "");
+		
+		preference_wrapper.addTab("Security", null, security_wrapper, "");
+		
+		contentPane.add(preference_wrapper);
 	}
 
-	protected void focus() {
-		System.out.println("Test");
-	}
+	private JComponent makeTextPanel(String text) {
+        JPanel panel = new JPanel(false);
+        
+        JLabel filler = new JLabel(text);
+        filler.setHorizontalAlignment(JLabel.CENTER);
+        
+        panel.setLayout(new GridLayout(1, 1));
+        panel.add(filler);
+        
+        return panel;
+    }
 }
