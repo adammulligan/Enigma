@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -25,6 +26,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.text.MaskFormatter;
 
+import com.cyanoryx.uni.enigma.net.client.Client;
+import com.cyanoryx.uni.enigma.net.protocol.User;
 import com.cyanoryx.uni.enigma.net.server.Server;
 
 public class Connect extends JFrame {
@@ -34,9 +37,11 @@ public class Connect extends JFrame {
 	 */
 	private static final long serialVersionUID = -8107133128033113815L;
 	private JPanel contentPane;
-	private JLabel loading;
 	private JTextField portField;
 	private JTextField addressField;
+	private int port;
+	
+	private Server server;
 
 	/**
 	 * Launch the application.
@@ -59,7 +64,12 @@ public class Connect extends JFrame {
 	 * @throws IOException 
 	 */
 	public Connect() throws ParseException, IOException {
-		new Thread(new Server(65000,"localhost"));
+		Random rng = new Random();
+		port = rng.nextInt(100) + 60000;
+		server = new Server(port,"localhost");
+		new Thread(server).start();
+		
+		System.out.println("Starting server on port "+port+"...");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 221, 181);
@@ -129,8 +139,16 @@ public class Connect extends JFrame {
 				try {
 					Connect.this.showLoading();
 					System.out.println(addressField.getText()+":"+portField.getText());
+					
+					Client c = Server.createClient(addressField.getText(), portField.getText(), ""+port, new User("adam"), ""+(new Random().nextInt(100)));
+					Connect.this.server.getSessionIndex().addSession(c.getSession());
+						
 					Connect.this.hideLoading();
 				} catch (ParseException e) {
+					e.printStackTrace();
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
@@ -176,7 +194,9 @@ public class Connect extends JFrame {
 	}
 	
 	private void hideLoading() throws ParseException {
-		loading.setVisible(false);
+		contentPane.removeAll();
+		contentPane.revalidate();
+		
 		this.createUI();
 		contentPane.revalidate();
 	}

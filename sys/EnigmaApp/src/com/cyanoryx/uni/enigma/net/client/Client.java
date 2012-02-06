@@ -16,68 +16,75 @@ import com.cyanoryx.uni.enigma.net.protocol.xml.PacketQueue;
 import com.cyanoryx.uni.enigma.net.protocol.xml.ProcessThread;
 
 public class Client {
-	Session session, remote_session;
+	private Session session;
+	Session remote_session;
 	PacketQueue packetQueue;
 	private static final String version = "Enigma Protocol v0.1";
 	private String server_name,
 				   server_address,
 				   server_port,
 				   resource,
-				   local_port;
+				   local_port,
+				   session_id;
 	private User   user;
 	
 	private Conversation window;
 	
 	public Client(ClientThread qThread) {
+		setSession(new Session());
+		System.out.println("Creating session");
+		
 		packetQueue = qThread.getQueue();
 		qThread.addListener(new OpenStreamHandler(),"stream");
 		qThread.addListener(new CloseStreamHandler(),"/stream");
 		qThread.addListener(new MessageHandler(),"message");
 	}
 
-	public int getSessionStatus() { return session.getStatus(); }
+	public int getSessionStatus() { return getSession().getStatus(); }
 	public void addStatusListener(StatusListener listener){
-		session.addStatusListener(listener);
+		getSession().addStatusListener(listener);
 	}
 	public void removeStatusListener(StatusListener listener){
-		session.removeStatusListener(listener);
+		getSession().removeStatusListener(listener);
 	}
 
 	public void connect() throws IOException {
-		session = new Session();
-		// Create a socket
-		System.out.println(local_port);
-		session.setSocket(new Socket(server_address,Integer.parseInt(server_port)));
-		session.setStatus(Session.CONNECTED);
-		session.setLocalPort(local_port);
-		
-		System.out.println("Client created for "+server_address+":"+server_port);
+		System.out.println("Setting session shit");
+		getSession().setSocket(new Socket(server_address,Integer.parseInt(server_port)));
+		getSession().setStatus(Session.CONNECTED);
+		getSession().setLocalPort(local_port);
+		getSession().setID(session_id);
 
 		// Process incoming messages
-		(new ProcessThread(session,packetQueue)).start();
+		(new ProcessThread(getSession(),packetQueue)).start();
 		
-		Writer out = session.getWriter();
-		out.write("<stream to='");
-		out.write(server_name);
-		out.write("' from='");
-		out.write(user + "@" + server_name);
-		out.write("' return-port='" + session.getLocalPort());
+		System.out.println("Client created for "+server_address+":"+server_port);
+		
+		Writer out = getSession().getWriter();
+		out.write("<stream ");
+		out.write(" to='server_name");
+		out.write("' from='"+ user);
+		out.write("' id='"+session_id);
+		out.write("' return-port='" + getSession().getLocalPort());
 		out.write("' xmlns='enigma:client'>");
 		out.flush();
+		
+		System.out.println("Opening stream with "+server_address+":"+server_port);
+		System.out.println("Session ID in client#connect is currently "+getSession().getID());
 	}
-	public void disconnect() throws IOException { session.closeStream(); }
+	public void disconnect() throws IOException { getSession().closeStream(); }
 
-	public void sendMessage(String recipient,String subject,String thread,String type,String id,String body)
+	public void sendMessage(String recipient,String subject,String thread,String type,String body)
 			throws IOException {
 		Packet packet = new Packet("message");
 
 		if (recipient != null) packet.setTo(recipient);
-		if (id != null) packet.setID(id);
+		packet.setID(this.session_id);
 		if (type != null) packet.setType(type);
 		if (thread != null) packet.getChildren().add(new Packet("thread",thread));
 		if (body != null) packet.getChildren().add(new Packet("body",body));
 		
-		packet.writeXML(session.getWriter());
+		packet.writeXML(getSession().getWriter());
 	}
 	
 	public void sendError(String packet, String stage, String error, String errnum, String recipient, String id) throws DataFormatException, IOException {
@@ -102,7 +109,7 @@ public class Client {
 		p.getChildren().add(e);
 		
 		p.writeXML(new BufferedWriter(new OutputStreamWriter(System.out)));
-		p.writeXML(session.getWriter());
+		p.writeXML(getSession().getWriter());
 	}
 	
 	public void sendAgreement() {
@@ -139,4 +146,15 @@ public class Client {
 	
 	public String getLocalPort() { return this.local_port; }
 	public void setLocalPort(String port) {this.local_port=port;}
+
+	public String getSessionID() { return this.session_id; }
+	public void setSessionID(String id) { this.session_id=id; System.out.println("Setting session ID to "+id); }
+
+	public Session getSession() {
+		return session;
+	}
+
+	public void setSession(Session session) {
+		this.session = session;
+	}
 }

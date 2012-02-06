@@ -3,7 +3,6 @@ package com.cyanoryx.uni.enigma.net.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
 import com.cyanoryx.uni.enigma.gui.Conversation;
 import com.cyanoryx.uni.enigma.net.client.Client;
@@ -16,45 +15,58 @@ import com.cyanoryx.uni.enigma.net.protocol.xml.QueueThread;
 
 public class Server implements Runnable {
 	private int port;
+	//private String server;
 	
 	PacketQueue pq = new PacketQueue();
 
 	private ServerSocket ss;
+	private SessionIndex index;
 	
 	public Server(int port,String server) throws IOException {
-		this.port = port;
-		
-		ss = null;
+		this.port   = port;
+		//this.server = server;
+		this.index  = new SessionIndex();
 		
 		QueueThread q = new QueueThread(this.pq);
 			q.setDaemon(true);
-			q.addListener(new OpenStreamHandler(),"stream");
-			q.addListener(new CloseStreamHandler(),"/stream");
+			q.addListener(new OpenStreamHandler(index),"stream");
+			q.addListener(new CloseStreamHandler(index),"/stream");
 			q.addListener(new AuthHandler(),"auth");
-			q.addListener(new MessageHandler(), "message");
+			q.addListener(new MessageHandler(index), "message");
 		q.start();
 		
 		ss = new ServerSocket(this.port);
 	}
 	
-	public static void createClient(String id, String server, String port, User u, Session s) throws IOException {
+	public SessionIndex getSessionIndex() {
+		return this.index;
+	}
+	
+	public static Client createClient(String server, String port, String local_port, User u, String id) throws IOException {
+		System.out.println("-----------------CLIENT CREATION---------------");
 		ClientThread client_thread = new ClientThread();
 		Client		 client		   = new Client(client_thread);
 		
-		client.setServerName(id);
+		client.setServerName(server);
 		client.setServerAddress(server);
-		System.out.println("Creating client to "+port);
 		client.setPort(port);
 		client.setResource("test");
 		client.setUser(u);
 		
-		s.addClient("22", client);
+		client.setSessionID(id);
+		client.setLocalPort(local_port);
+
+		System.out.println("Creating client to "+server+":"+port+"...");
 		
 		Conversation conv = new Conversation(client);
 		client.setWindow(conv);
 		
+		client.getSession().addClient(id, client);
+		
 		client_thread.setModel(client);
 		client_thread.start();
+		
+		return client;
 	}
 
 	@Override

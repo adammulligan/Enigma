@@ -7,6 +7,12 @@ import com.cyanoryx.uni.enigma.net.protocol.xml.Packet;
 import com.cyanoryx.uni.enigma.net.protocol.xml.PacketListener;
 
 public class CloseStreamHandler implements PacketListener {
+	private SessionIndex index;
+	
+	public CloseStreamHandler(SessionIndex index) {
+		this.index = index;
+	}
+
 	@Override
 	public void notify(Packet packet) {
 		Session s = packet.getSession();

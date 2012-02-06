@@ -227,7 +227,7 @@ public class Conversation {
 		
 		try {
 			// TODO actually send the message
-			client.sendMessage("adam", "test", "1", null, "22", messageInput.getText());
+			client.sendMessage("adam", "test", "1", null, messageInput.getText());
 			Conversation.this.updateMessage("You",messageInput.getText());
 			logger.info("Sent message");
 		} catch (BadLocationException e1) {

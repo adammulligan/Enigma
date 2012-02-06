@@ -26,7 +26,7 @@ public class Session {
 	}
 	
 	Hashtable<String,Client> clients = new Hashtable<String,Client>();
-	public void addClient(String id, Client c) { this.clients.put(id,c); }
+	public void addClient(String id, Client c) { System.out.println("Storing client with id "+id); this.clients.put(id,c); }
 	public Client getClient(String id) { return this.clients.get(id); }
 	
 	public void setSocket(Socket s) {
