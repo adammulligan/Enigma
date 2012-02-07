@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.Socket;
 import java.util.zip.DataFormatException;
 
 import com.cyanoryx.uni.enigma.gui.Conversation;
@@ -30,9 +29,10 @@ public class Client {
 	
 	private Conversation window;
 	
+	private Writer writer;
+	
 	public Client(ClientThread qThread) {
-		setSession(new Session());
-		System.out.println("Creating session");
+		//setSession(new Session());
 		
 		packetQueue = qThread.getQueue();
 		qThread.addListener(new OpenStreamHandler(),"stream");
@@ -49,28 +49,28 @@ public class Client {
 	}
 
 	public void connect() throws IOException {
-		System.out.println("Setting session shit");
+		/*System.out.println("Setting session shit");
 		getSession().setSocket(new Socket(server_address,Integer.parseInt(server_port)));
 		getSession().setStatus(Session.CONNECTED);
 		getSession().setLocalPort(local_port);
-		getSession().setID(session_id);
+		getSession().setID(session_id);*/
 
-		// Process incoming messages
+		// Process incoming messages 
 		(new ProcessThread(getSession(),packetQueue)).start();
 		
 		System.out.println("Client created for "+server_address+":"+server_port);
 		
-		Writer out = getSession().getWriter();
+		Writer out = writer;
 		out.write("<stream ");
 		out.write(" to='server_name");
 		out.write("' from='"+ user);
 		out.write("' id='"+session_id);
-		out.write("' return-port='" + getSession().getLocalPort());
+		out.write("' return-port='" + local_port);
 		out.write("' xmlns='enigma:client'>");
 		out.flush();
 		
 		System.out.println("Opening stream with "+server_address+":"+server_port);
-		System.out.println("Session ID in client#connect is currently "+getSession().getID());
+//		System.out.println("Session ID in client#connect is currently "+getSession().getID());
 	}
 	public void disconnect() throws IOException { getSession().closeStream(); }
 
@@ -84,7 +84,7 @@ public class Client {
 		if (thread != null) packet.getChildren().add(new Packet("thread",thread));
 		if (body != null) packet.getChildren().add(new Packet("body",body));
 		
-		packet.writeXML(getSession().getWriter());
+		packet.writeXML(writer);
 	}
 	
 	public void sendError(String packet, String stage, String error, String errnum, String recipient, String id) throws DataFormatException, IOException {
@@ -109,7 +109,7 @@ public class Client {
 		p.getChildren().add(e);
 		
 		p.writeXML(new BufferedWriter(new OutputStreamWriter(System.out)));
-		p.writeXML(getSession().getWriter());
+		p.writeXML(writer);
 	}
 	
 	public void sendAgreement() {
@@ -149,6 +149,9 @@ public class Client {
 
 	public String getSessionID() { return this.session_id; }
 	public void setSessionID(String id) { this.session_id=id; System.out.println("Setting session ID to "+id); }
+	
+	public Writer getWriter() { return this.writer; }
+	public void setWriter(Writer writer) { this.writer=writer; }
 
 	public Session getSession() {
 		return session;

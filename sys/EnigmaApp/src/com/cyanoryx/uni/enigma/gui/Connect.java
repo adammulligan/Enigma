@@ -21,12 +21,15 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.MaskFormatter;
 
-import com.cyanoryx.uni.enigma.net.client.Client;
+import com.cyanoryx.uni.enigma.net.protocol.Session;
 import com.cyanoryx.uni.enigma.net.protocol.User;
 import com.cyanoryx.uni.enigma.net.server.Server;
 
@@ -62,8 +65,14 @@ public class Connect extends JFrame {
 	 * Create the frame.
 	 * @throws ParseException 
 	 * @throws IOException 
+	 * @throws UnsupportedLookAndFeelException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
 	 */
-	public Connect() throws ParseException, IOException {
+	public Connect() throws ParseException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		
 		Random rng = new Random();
 		port = rng.nextInt(100) + 60000;
 		server = new Server(port,"localhost");
@@ -74,6 +83,7 @@ public class Connect extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 221, 181);
 		
+		this.setTitle(""+port);
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		
@@ -120,7 +130,7 @@ public class Connect extends JFrame {
         JLabel address_port_separator = new JLabel(":");
         input_panel.add(address_port_separator);
         
-        portField = new JFormattedTextField(new MaskFormatter("#####"));
+        portField = new JTextField();
         portField.setPreferredSize(new Dimension(60,30));
         input_panel.add(portField);
         
@@ -140,16 +150,12 @@ public class Connect extends JFrame {
 					Connect.this.showLoading();
 					System.out.println(addressField.getText()+":"+portField.getText());
 					
-					Client c = Server.createClient(addressField.getText(), portField.getText(), ""+port, new User("adam"), ""+(new Random().nextInt(100)));
-					Connect.this.server.getSessionIndex().addSession(c.getSession());
-						
+					Session s = Server.createClient(addressField.getText(), portField.getText(), ""+port, new User("adam"), ""+(new Random().nextInt(100)));
+					Connect.this.server.getSessionIndex().addSession(s);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(Connect.this, "Could not connect - "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				} finally {
 					Connect.this.hideLoading();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			}
         });
@@ -193,11 +199,15 @@ public class Connect extends JFrame {
         contentPane.add(filler);
 	}
 	
-	private void hideLoading() throws ParseException {
+	private void hideLoading() {
 		contentPane.removeAll();
 		contentPane.revalidate();
 		
-		this.createUI();
+		try {
+			this.createUI();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		contentPane.revalidate();
 	}
 }

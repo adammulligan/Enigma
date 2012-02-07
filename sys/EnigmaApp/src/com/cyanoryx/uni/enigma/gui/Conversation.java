@@ -85,7 +85,7 @@ public class Conversation {
 	 * @throws IOException 
 	 */
 	private void initialize() throws IOException {
-		frame = new JFrame("Conversation with "+user.getName());
+		frame = new JFrame("Conversation with "+user.getName()+" ("+client.getLocalPort()+")");
 		frame.setBounds(100, 100, 450, 550);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setMinimumSize(new Dimension(350,350));
@@ -247,6 +247,7 @@ public class Conversation {
 	}
 
 	public synchronized void updateMessage(String name, String message) throws BadLocationException {
+		System.out.println("Updating message ("+client.getLocalPort()+"): "+message);
 		StyledDocument d = messages.getStyledDocument();
         
         SimpleAttributeSet kw = new SimpleAttributeSet();

@@ -42,31 +42,38 @@ public class Server implements Runnable {
 		return this.index;
 	}
 	
-	public static Client createClient(String server, String port, String local_port, User u, String id) throws IOException {
+	public static Session createClient(String server, String port, String local_port, User u, String id) throws IOException {
 		System.out.println("-----------------CLIENT CREATION---------------");
 		ClientThread client_thread = new ClientThread();
 		Client		 client		   = new Client(client_thread);
+		Session		 session	   = new Session();
+		
+		session.setSocket(new Socket(server,Integer.parseInt(port)));
+		session.setStatus(Session.CONNECTED);
+		session.setLocalPort(local_port);
+		session.setID(id);
+		session.setUser(u);
 		
 		client.setServerName(server);
 		client.setServerAddress(server);
 		client.setPort(port);
-		client.setResource("test");
 		client.setUser(u);
 		
 		client.setSessionID(id);
 		client.setLocalPort(local_port);
+		client.setWriter(session.getWriter());
 
 		System.out.println("Creating client to "+server+":"+port+"...");
 		
 		Conversation conv = new Conversation(client);
 		client.setWindow(conv);
 		
-		client.getSession().addClient(id, client);
+		session.addClient(id, client);
 		
 		client_thread.setModel(client);
 		client_thread.start();
 		
-		return client;
+		return session;
 	}
 
 	@Override

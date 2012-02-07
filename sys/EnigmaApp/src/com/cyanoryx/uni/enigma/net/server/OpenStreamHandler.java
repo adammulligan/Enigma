@@ -41,12 +41,12 @@ public class OpenStreamHandler implements PacketListener{
 
 			Writer out = session.getWriter();
 
-			/*if (index.getSession(packet.getID())==null) {
+			if (index.getSession(packet.getID())==null) {
 				System.out.println("Creating client for "+session.getSocket().getInetAddress().getHostAddress()+":"+packet.getAttribute("return-port"));
-				Client c = Server.createClient(session.getSocket().getInetAddress().getHostAddress(),packet.getAttribute("return-port"),session.getLocalPort(),session.getUser(),session.getID());
-				System.out.println(c.getSession().getID());
-				index.addSession(c.getSession());
-			}*/
+				Session s = Server.createClient(session.getSocket().getInetAddress().getHostAddress(),packet.getAttribute("return-port"),session.getLocalPort(),session.getUser(),session.getID());
+				System.out.println(s.getID());
+				index.addSession(s);
+			}
 
 			/*out.write("<?xml " +
       			"version='1.0' " +
