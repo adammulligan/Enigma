@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -26,10 +28,11 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.cyanoryx.uni.enigma.net.client.Client;
+import com.cyanoryx.uni.enigma.net.protocol.Session;
 import com.cyanoryx.uni.enigma.net.protocol.User;
 import com.cyanoryx.uni.enigma.utils.Strings;
 
-public class Conversation {
+public class Conversation implements WindowListener{
 	private JFrame frame;
 	
 	private boolean    log_open;
@@ -40,31 +43,13 @@ public class Conversation {
 	
 	private Client client;
 	
-	//private Strings strings;
-
-	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Conversation window = new Conversation(new User("Adam"));
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
-
+	private Session session;
+	
 	/**
 	 * Create the application.
 	 * @throws IOException 
 	 */
-	public Conversation(Client c) throws IOException {
-		//Strings.initialise();
-		
+	public Conversation(Session s, Client c) throws IOException {
 		handler = LogHandler.getInstance();
 		logger = Logger.getLogger(this.getClass().toString()+"."+c.getUser().getName());
 		logger.addHandler(handler);
@@ -72,9 +57,13 @@ public class Conversation {
 		user   = c.getUser();
 		client = c;
 		
+		session = s;
+		
 		initialize();
 		
 		frame.setVisible(true);
+		frame.addWindowListener(this);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
 	private JTextField messageInput;
@@ -142,14 +131,7 @@ public class Conversation {
 		});
 		toolBar.add(btnLog);
 		
-		JButton btnBlock = new JButton();
-		btnBlock.setIcon(new ImageIcon("res/drawable/ic_menu_block.png"));
-		btnBlock.setBorder(BorderFactory.createEmptyBorder());
-		btnBlock.setToolTipText(Strings.translate("conv.toolbar.block_user"));
-		toolBar.add(btnBlock);
-		
 		frame.getContentPane().add(toolBar, gbc_toolBar);
-		//Keep the frame background color consistent
         frame.getContentPane().setBackground(toolBar.getBackground());
         
         //The seperator Row
@@ -181,6 +163,7 @@ public class Conversation {
         frame.getContentPane().add(messages, gbc_textArea);
         
         messageInput = new JTextField();
+        messageInput.requestFocus();
         messageInput.addKeyListener(new KeyListener(){
         	@Override
 			public void keyReleased(KeyEvent k) {
@@ -226,15 +209,11 @@ public class Conversation {
 		if (messageInput.getText().trim().equalsIgnoreCase("")) return;
 		
 		try {
-			// TODO actually send the message
-			client.sendMessage("adam", "test", "1", null, messageInput.getText());
+			client.sendMessage(client.getUser().getName(), null, session.getID(), null, messageInput.getText());
 			Conversation.this.updateMessage("You",messageInput.getText());
 			logger.info("Sent message");
-		} catch (BadLocationException e1) {
-			e1.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.info(e.getMessage());
 		}
 		
 		messageInput.setText("");
@@ -256,4 +235,20 @@ public class Conversation {
 		d.insertString(d.getLength(),name+": ",kw);
 		d.insertString(d.getLength(), message+"\n", new SimpleAttributeSet());
 	}
+
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		try {
+			session.closeStream();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void windowDeactivated(WindowEvent arg0) {}
+	public void windowDeiconified(WindowEvent arg0) {}
+	public void windowIconified(WindowEvent arg0) {}
+	public void windowOpened(WindowEvent arg0) {}
+	public void windowActivated(WindowEvent arg0) {}
+	public void windowClosed(WindowEvent arg0) {}
 }

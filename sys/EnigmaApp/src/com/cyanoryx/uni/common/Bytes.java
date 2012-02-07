@@ -40,7 +40,8 @@ import java.math.BigInteger;
  * According with the Cryptix Ltd. General License, the following code can be used
  * freely without limitation. Please see above, or visit http://www.cryptix.org/LICENSE.TXT
  * 
- * @author adammulligan/Cryptix
+ * @author adammulligan
+ * @author Cryptix
  */
 public final class Bytes {
 	

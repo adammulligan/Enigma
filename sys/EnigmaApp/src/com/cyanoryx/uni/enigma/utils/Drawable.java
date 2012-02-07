@@ -1,6 +1,5 @@
 package com.cyanoryx.uni.enigma.utils;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.rmi.CORBA.Util;

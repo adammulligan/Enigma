@@ -28,27 +28,27 @@ public class FileIO {
 	 * @throws IOException
 	 */
 	public static void writeFile(String content, File filename) throws FileNotFoundException, IOException {
-	    if (filename == null) {
-		      throw new IllegalArgumentException("File should not be null.");
-		    }
-		    if (!filename.exists()) {
-		      filename.createNewFile();
-		    }
-		    if (!filename.isFile()) {
-		      throw new IllegalArgumentException("Should not be a directory: " + filename);
-		    }
-		    if (!filename.canWrite()) {
-		      throw new IllegalArgumentException("File cannot be written: " + filename);
-		    }
-
-		    Writer output = new BufferedWriter(new FileWriter(filename));
-		    try {
-		      output.write(content);
-		    } finally {
-		      output.close();
-		    }
+		if (filename == null) {
+			throw new IllegalArgumentException("File should not be null.");
 		}
-	
+		if (!filename.exists()) {
+			filename.createNewFile();
+		}
+		if (!filename.isFile()) {
+			throw new IllegalArgumentException("Should not be a directory: " + filename);
+		}
+		if (!filename.canWrite()) {
+			throw new IllegalArgumentException("File cannot be written: " + filename);
+		}
+
+		Writer output = new BufferedWriter(new FileWriter(filename));
+		try {
+			output.write(content);
+		} finally {
+			output.close();
+		}
+	}
+
 	/**
 	 * Reads a file and returns the contents, minus new lines
 	 * 
@@ -57,18 +57,18 @@ public class FileIO {
 	 * @throws FileNotFoundException
 	 */
 	public static String readFile(String filename) throws FileNotFoundException {
-	    StringBuilder text = new StringBuilder();
-	    Scanner scanner = new Scanner(new FileInputStream(filename));
-	    try {
-	      while (scanner.hasNextLine()){
-	    	// We're not adding new lines because our files should not have them
-	        text.append(scanner.nextLine());
-	      }
-	    }
-	    finally{
-	      scanner.close();
-	    }
-	    
-	    return text.toString();
+		StringBuilder text = new StringBuilder();
+		Scanner scanner = new Scanner(new FileInputStream(filename));
+		try {
+			while (scanner.hasNextLine()){
+				// We're not adding new lines because our files should not have them
+				text.append(scanner.nextLine());
+			}
+		}
+		finally{
+			scanner.close();
+		}
+
+		return text.toString();
 	}
 }

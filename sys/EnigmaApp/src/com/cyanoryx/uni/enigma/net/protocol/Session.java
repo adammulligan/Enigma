@@ -104,7 +104,6 @@ public class Session {
 			out = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
 	    }
 	    return out;
-		//return new BufferedWriter(new OutputStreamWriter(System.out))
 	}
 	
 	Reader in;

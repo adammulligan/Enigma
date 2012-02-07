@@ -16,29 +16,24 @@ import com.cyanoryx.uni.enigma.net.protocol.xml.ProcessThread;
 
 public class Client {
 	private Session session;
-	Session remote_session;
-	PacketQueue packetQueue;
+	
+	private PacketQueue packetQueue;
+	
 	private static final String version = "Enigma Protocol v0.1";
+	
 	private String server_name,
 				   server_address,
 				   server_port,
-				   resource,
 				   local_port,
 				   session_id;
+	
 	private User   user;
 	
 	private Conversation window;
 	
 	private Writer writer;
 	
-	public Client(ClientThread qThread) {
-		//setSession(new Session());
-		
-		packetQueue = qThread.getQueue();
-		qThread.addListener(new OpenStreamHandler(),"stream");
-		qThread.addListener(new CloseStreamHandler(),"/stream");
-		qThread.addListener(new MessageHandler(),"message");
-	}
+	public Client() {}
 
 	public int getSessionStatus() { return getSession().getStatus(); }
 	public void addStatusListener(StatusListener listener){
@@ -49,12 +44,6 @@ public class Client {
 	}
 
 	public void connect() throws IOException {
-		/*System.out.println("Setting session shit");
-		getSession().setSocket(new Socket(server_address,Integer.parseInt(server_port)));
-		getSession().setStatus(Session.CONNECTED);
-		getSession().setLocalPort(local_port);
-		getSession().setID(session_id);*/
-
 		// Process incoming messages 
 		(new ProcessThread(getSession(),packetQueue)).start();
 		
@@ -70,7 +59,6 @@ public class Client {
 		out.flush();
 		
 		System.out.println("Opening stream with "+server_address+":"+server_port);
-//		System.out.println("Session ID in client#connect is currently "+getSession().getID());
 	}
 	public void disconnect() throws IOException { getSession().closeStream(); }
 
@@ -133,16 +121,10 @@ public class Client {
 	public void setPort(String port) {server_port = port;}
 
 	public User getUser() {return user;}
-	public void setUser(User usr) {user = usr; }
-
-	public String getResource() {return resource;}
-	public void setResource(String res) {resource = res;}
+	public void setUser(User usr) {user = usr;}
 	
-	public Conversation getWindow() {return this.window;}
-	public void setWindow(Conversation window) {this.window=window;}
-	
-	public Session getRemoteSession() {return this.remote_session;}
-	public void setRemoteSession(Session s){this.remote_session=s;}
+	public Conversation getWindow() { return this.window; }
+	public void setWindow(Conversation window) { this.window=window; }
 	
 	public String getLocalPort() { return this.local_port; }
 	public void setLocalPort(String port) {this.local_port=port;}
@@ -153,11 +135,7 @@ public class Client {
 	public Writer getWriter() { return this.writer; }
 	public void setWriter(Writer writer) { this.writer=writer; }
 
-	public Session getSession() {
-		return session;
-	}
+	public Session getSession() { return session; }
 
-	public void setSession(Session session) {
-		this.session = session;
-	}
+	public void setSession(Session session) { this.session = session; }
 }

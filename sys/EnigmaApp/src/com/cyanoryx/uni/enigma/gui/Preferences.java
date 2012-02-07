@@ -70,6 +70,8 @@ public class Preferences extends JFrame {
 		preference_wrapper.addTab("Security", null, security_wrapper, "");
 		
 		contentPane.add(preference_wrapper);
+		
+		setVisible(true);
 	}
 
 	private JComponent makeTextPanel(String text) {

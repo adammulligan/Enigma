@@ -6,7 +6,6 @@ import java.net.Socket;
 
 import com.cyanoryx.uni.enigma.gui.Conversation;
 import com.cyanoryx.uni.enigma.net.client.Client;
-import com.cyanoryx.uni.enigma.net.client.ClientThread;
 import com.cyanoryx.uni.enigma.net.protocol.Session;
 import com.cyanoryx.uni.enigma.net.protocol.User;
 import com.cyanoryx.uni.enigma.net.protocol.xml.PacketQueue;
@@ -15,7 +14,6 @@ import com.cyanoryx.uni.enigma.net.protocol.xml.QueueThread;
 
 public class Server implements Runnable {
 	private int port;
-	//private String server;
 	
 	PacketQueue pq = new PacketQueue();
 
@@ -24,7 +22,6 @@ public class Server implements Runnable {
 	
 	public Server(int port,String server) throws IOException {
 		this.port   = port;
-		//this.server = server;
 		this.index  = new SessionIndex();
 		
 		QueueThread q = new QueueThread(this.pq);
@@ -43,9 +40,8 @@ public class Server implements Runnable {
 	}
 	
 	public static Session createClient(String server, String port, String local_port, User u, String id) throws IOException {
-		System.out.println("-----------------CLIENT CREATION---------------");
-		ClientThread client_thread = new ClientThread();
-		Client		 client		   = new Client(client_thread);
+		//ClientThread client_thread = new ClientThread();
+		Client		 client		   = new Client();
 		Session		 session	   = new Session();
 		
 		session.setSocket(new Socket(server,Integer.parseInt(port)));
@@ -65,13 +61,14 @@ public class Server implements Runnable {
 
 		System.out.println("Creating client to "+server+":"+port+"...");
 		
-		Conversation conv = new Conversation(client);
+		Conversation conv = new Conversation(session,client);
 		client.setWindow(conv);
 		
 		session.addClient(id, client);
 		
-		client_thread.setModel(client);
-		client_thread.start();
+		client.connect();
+		//client_thread.setModel(client);
+		//client_thread.start();
 		
 		return session;
 	}
