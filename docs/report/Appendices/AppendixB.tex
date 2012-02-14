@@ -6,11 +6,35 @@
 
 \section{Introduction}
 
+The Enigma Protocol is a communications protocol intended for use in Instant Messaging applications. It is very loosely based around the concept of \emph{Jabber/XMPP}\footnote{http://xmpp.org/about-xmpp/history/}, primarily as it is an application of the Extensible Markup Language (XML) to allow for near-real-time communications between networked devices. The XMPP protocol is considerably more complex than Enigma, and the two should not be considered comparable.
+
+This document covers the basic XML elements that must be implemented by an Enigma Protocol-based application. As its primary purpose is to provide a simple way of sending text with meta-data, it should only be used for research purposes. The Enigma Application can be considered a reference implementation, however it is not a complete implementation.
+
+\section{Requirements}
+
+An IM application for use in the testing of sending encrypted messages should have the capability to:
+
+	\begin{enumerate}
+		\item Be able to exchange brief text messages in near-real-time.
+		\item Transmit information that can be used to securely generate and exchange encryption keys.
+		\item Transmit information that can be used to identify and authenticate.
+	\end{enumerate}
+	
+And thus, any application implementing the Enigma Protocol must be able to adhere to the above requirements.
+
+\section{History}
+
+This document covers version $1.0$ of the Enigma protocol. There are no prior implementations.
+
 \section{Terminology}
 
-\section{Definitions}
+No specialised terminology is used without explanation in this document.
 
 \section{Format}
+
+A conversation between two users should be considered as the building of a valid XML document using the \verb!enigma:client! namespace. The document should consist of a valid root element occurring only once, valid child elements matching those listed in the document, and finish with a closing tag matching the root element. Each packet, that is not a root element, must consist of a start-tag and end-tag, or an empty-element tag otherwise it \textbf{should not} be parsed and \textbf{should} be dropped.
+
+The order of the messages is important if the \verb;time; attribute is not included, in which case they should be handled and displayed in a first-in-first-out order.
 
 \section{Commands}
 
