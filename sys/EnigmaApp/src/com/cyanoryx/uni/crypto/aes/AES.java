@@ -4,8 +4,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.SecureRandom;
 import java.util.zip.DataFormatException;
 
-import com.cyanoryx.uni.common.Bytes;
-
 /**
  * Base struct for AES implementation to use - for storing Plain/Ciphertext, IV, etc
  * 
@@ -71,24 +69,6 @@ public class AES {
 		rng.nextBytes(iv);
 		
 		return iv;
-	}
-	
-	public static void main(String[] args) {
-		AES aes = new AES();
-		try {
-			aes.setKey(new Key(KeySize.K256));
-			aes.setPlainText("Hello".getBytes());
-			aes.setCipherText(aes.encrypt());
-			
-			byte[] decrypted = aes.decrypt();
-			if (Bytes.equals(decrypted,("Hello".getBytes()))) {
-				System.out.println("It works!");
-			} else {
-				System.out.println("It doesn't work :(");
-			}
-		} catch (DataFormatException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/**

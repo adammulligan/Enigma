@@ -1,13 +1,4 @@
-package com.cyanoryx.uni.enigma.net.io;
-
-import java.io.FilterReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
-/*
- * ========================================================================= *
+/* ========================================================================= *
  *                                                                           *
  *                 The Shigeoka Software License,  Version 1.1               *
  *                   based on Apache Software License, v 1.1                 *
@@ -33,52 +24,4 @@ import java.io.Reader;
  * ANY  WAY  OUT OF  THE  USE OF  THIS  SOFTWARE,  EVEN  IF  ADVISED  OF THE *
  * POSSIBILITY OF SUCH DAMAGE.                                               *
  *                                                                           *
- * ========================================================================= *
- * 
- */
-
-/**
- * Implementation of Apache Xerces (http://xerces.apache.org/)
- * for parsing XML (using SAX)
- * 
- * Based on Iain Shigeoka's "Instant Messaging in Java"
- * See above for the licence of use.
- * 
- * @author adammulligan
- *
- */
-public class XercesReader extends FilterReader {
-	int sendBlank = 0;
-	
-	public XercesReader(InputStream in){
-	    super(new InputStreamReader(in));
-    }
-
-	private XercesReader(Reader in){
-	    super(in);
-	}
-
-	public int read() throws IOException {
-	    if (sendBlank > 0) {
-	    	sendBlank--;
-	    	return (int)' ';
-	    }
-	    
-	    int b = in.read();
-	    if (b == (int)'>') sendBlank = 2;
-	    
-	    return b;
-	}
-
-	public int read(char [] text, int offset, int length) throws IOException {
-	    int numRead = 0;
-	    for (int i = offset; i < offset + length; i++){
-	    	int temp = this.read();
-	      	if (temp == -1) break;
-	        text[i] = (char) temp;
-	        numRead++;
-	    }
-	    if (numRead == 0 && length != 0) numRead = -1;
-	    return numRead;
-	}
-}
+ * ========================================================================= */

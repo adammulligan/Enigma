@@ -1,40 +1,107 @@
 package com.cyanoryx.uni.enigma.net.server;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.prefs.Preferences;
+import java.util.zip.DataFormatException;
 
+import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
+
+import com.cyanoryx.uni.common.Base64;
+import com.cyanoryx.uni.crypto.aes.Key;
+import com.cyanoryx.uni.crypto.aes.KeySize;
+import com.cyanoryx.uni.crypto.cert.Certificate;
+import com.cyanoryx.uni.crypto.cert.KeyAlgorithm;
+import com.cyanoryx.uni.crypto.rsa.PrivateKey;
+import com.cyanoryx.uni.crypto.rsa.PublicKey;
+import com.cyanoryx.uni.crypto.rsa.RSA_OAEP;
 import com.cyanoryx.uni.enigma.net.protocol.Session;
 import com.cyanoryx.uni.enigma.net.protocol.xml.Packet;
 import com.cyanoryx.uni.enigma.net.protocol.xml.PacketListener;
 import com.cyanoryx.uni.enigma.utils.AppPrefs;
-import java.util.prefs.Preferences;
 
 public class AuthHandler implements PacketListener {
+	private SessionIndex index;
+	
+	public AuthHandler(SessionIndex i) {
+		this.index=i;
+	}
+	
 	@Override
 	public void notify(Packet packet) {
 		Session s = packet.getSession();
 		Preferences p = new AppPrefs().getPrefs();
 		
-		// Firstly, if we're setup not to do auth for this session, just ignore these packets
-		if (p.getBoolean("allow_unauthenticated_conversations", false) || s.getAuthenticated()==false) return;
+		Session stored_session = index.getSession(packet.getAttribute("id"));
+		if (stored_session==null) return;
 		
 		try {
-			String method = packet.getAttribute("stage");
+			String stage = packet.getAttribute("stage");
 			String type = packet.getType();
 			
-			if (method.equalsIgnoreCase("agreement")) {
-				// FOR: <auth stage="agreement">signed key</auth>
-				if (type.equalsIgnoreCase("RSA")) {
+			if (stage.equalsIgnoreCase("agreement")) {
+				// FOR: <auth stage="agreement" type="method">method of key agreement</auth>
+				if (type.equalsIgnoreCase("method")) {
+					String agreement_method = packet.getChildValue("method");
 					
-				} else if (type.equalsIgnoreCase("DH")) {
-					
+					if (agreement_method.equalsIgnoreCase("RSA")) stored_session.setAgreementType(KeyAlgorithm.RSA);
+				} else if (type.equalsIgnoreCase("cert")) {
+					// FOR: <auth stage="agreement" type="cert">Base64 encoded Enigma certificate</auth>
+					if (stored_session.getAgreementType()==KeyAlgorithm.RSA) {
+						//String ca_key_location = p.get("ca_key_location","/");
+						
+						Certificate cert = new Certificate(new String(Base64.decode(packet.getChildValue("cert"))));
+						//CertificateAuthority ca = new CertificateAuthority(new PublicKey(new File(ca_key_location+"id_rsa.pub")));
+						
+						//if (p.getBoolean("require_cert", true)) ca.verify(cert);
+						stored_session.setPublicKey(new PublicKey(new String(cert.getSubject_key())));
+						
+						RSA_OAEP rsa = new RSA_OAEP(stored_session.getPublicKey());
+						
+						byte[] key_bytes = new Key(KeySize.K256).getKey();
+						String key 		 = Base64.encodeBytes(rsa.encrypt(key_bytes));
+						
+						stored_session.sendAuth("key", "agreement", key, stored_session.getID());
+						stored_session.setCipherKey(key_bytes);
+					}
+				} else if (type.equalsIgnoreCase("key")) {
+					// FOR: <auth stage="agreement" type="key">Base64 encoded key</auth>
+					if (stored_session.getAgreementType()==KeyAlgorithm.RSA) {
+						byte[] key = Base64.decode(packet.getChildValue("key"));
+						
+						RSA_OAEP rsa = new RSA_OAEP(new PrivateKey(new File("./id_rsa")));
+						key = rsa.decrypt(key);
+						
+						stored_session.setCipherKey(key);
+					}
 				}
-			} else if (method.equalsIgnoreCase("identification")) {
-				// FOR: <auth stage="identification">certificate</auth>
-				if (s.getStatus()==Session.AUTHENTICATED) return; // Ignore these packets if the stream is already authenticated
+			} else if (stage.equalsIgnoreCase("streaming")) {
+				// FOR: <auth stage="streaming" type="toggle">turn encryption on/off</auth>
+				if (type.equalsIgnoreCase("toggle")) {
+					if (packet.getChildValue("toggle").equalsIgnoreCase("off")) {
+						if (!p.getBoolean("allow_unauthenticated_conversations", false)) {
+							// If the user's preferences don't allow unauth'd convos, ask if they want to continue
+							int result = JOptionPane.showConfirmDialog(stored_session.getWindow().getFrame().getContentPane(), "The remote user is asking to turn off encryption,\nhowever your preferences do not allow this. Continue?", "Error", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+							
+							// If not, close the session
+							if (result!=0) stored_session.closeStream();
+						}
+						stored_session.setAuthenticated(false);
+						stored_session.setStatus(Session.STREAMING);
+						stored_session.getWindow().update(stored_session.getUser().getName()+" turned off encryption...");
+					} else {
+						stored_session.setAuthenticated(true);
+						stored_session.setStatus(Session.AUTHENTICATED);
+						stored_session.getWindow().update(stored_session.getUser().getName()+" turned on encryption...");
+					}
+				}
 			}
-			
-			packet.writeXML(s.getWriter());
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (DataFormatException e) {
+			e.printStackTrace();
+		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 	}

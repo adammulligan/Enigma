@@ -10,6 +10,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Random;
@@ -29,8 +30,14 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.MaskFormatter;
 
+import com.cyanoryx.uni.common.Base64;
+import com.cyanoryx.uni.crypto.cert.Certificate;
+import com.cyanoryx.uni.crypto.cert.KeyAlgorithm;
+import com.cyanoryx.uni.enigma.net.protocol.CipherAlgorithm;
+import com.cyanoryx.uni.enigma.net.protocol.Session;
 import com.cyanoryx.uni.enigma.net.protocol.User;
 import com.cyanoryx.uni.enigma.net.server.Server;
+import com.cyanoryx.uni.enigma.utils.AppPrefs;
 
 /**
  * Base window for Enigma application.
@@ -41,13 +48,14 @@ import com.cyanoryx.uni.enigma.net.server.Server;
  */
 public class Connect extends JFrame {
 	private static final long serialVersionUID = -8107133128033113815L;
+	
 	private JPanel contentPane;
 	private JTextField portField;
 	private JTextField addressField;
-	private int port;
 	
+	private int port;
 	private Server server;
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -94,7 +102,7 @@ public class Connect extends JFrame {
 		
 		setVisible(true);
 	}
-	
+
 	/**
 	 * Creates basic window UI
 	 * 
@@ -162,23 +170,7 @@ public class Connect extends JFrame {
         connect.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					Connect.this.showLoading();
-					Connect.this.server.getSessionIndex()
-									   .addSession(Server.createClient(addressField.getText(),
-																       portField.getText(),
-																       ""+port, new User("adam"),
-																       ""+(new Random().nextInt(100))));
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(Connect.this, "Could not connect - "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				} finally {
-					try {
-						Connect.this.recreateUI();
-					} catch (ParseException e) {
-						e.printStackTrace();
-						System.exit(1);
-					}
-				}
+				Connect.this.connect(addressField.getText(),portField.getText());
 			}
         });
         
@@ -207,8 +199,26 @@ public class Connect extends JFrame {
 		
 		JMenu file = new JMenu("File");
 		file.addSeparator();
+		
 		JMenu recent_connections = new JMenu("Recent Connections");
+		
+		String[] ips = new AppPrefs().getLastConnections();
+		for (final String i : ips) {
+			JMenuItem ip = new JMenuItem(i);
+			ip.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					String[] ip      = i.split(":");
+					String   address = ip[0];
+					String   port    = ip[1];
+					Connect.this.connect(address, port);
+				}
+			});
+			recent_connections.add(ip);
+		}
+		
 		file.add(recent_connections);
+		
 		menu.add(file);
 		
 		JMenu tools = new JMenu("Tools");
@@ -223,6 +233,42 @@ public class Connect extends JFrame {
 		menu.add(tools);
 		
 		return menu;
+	}
+	
+	private void connect(String address, String remote_port) {
+		System.out.println("Connecting");
+		try {
+			Connect.this.showLoading();
+			
+			String id = ""+(new Random().nextInt(100));
+			
+			Session session = Server.createClient(address,
+												  remote_port,
+											      ""+port,
+											      new User("remote user"),
+											      id);
+			Connect.this.server.getSessionIndex().addSession(session);
+			
+			session.setAuthenticated(true);
+			session.setStatus(Session.AUTHENTICATED);
+			session.setAgreementType(KeyAlgorithm.RSA);
+			session.setCipherType(CipherAlgorithm.AES);
+			
+			session.sendAuth("method", "agreement", new AppPrefs().getPrefs().get("default_asym_cipher","RSA"), id);
+			session.sendAuth("cert"  , "agreement", Base64.encodeBytes(new Certificate(new File("./cert")).toString().getBytes()), id);
+			
+			new AppPrefs().getPrefs().put("last_connections",
+										  address+":"+port+";"+new AppPrefs().getPrefs().get("last_connections",""));
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(Connect.this, "Could not connect - "+e.getCause()+" - "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		} finally {
+			try {
+				Connect.this.recreateUI();
+			} catch (ParseException e) {
+				e.printStackTrace();
+				System.exit(1);
+			}
+		}
 	}
 	
 	/**

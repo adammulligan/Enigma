@@ -3,22 +3,29 @@ package com.cyanoryx.uni.enigma.net.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.zip.DataFormatException;
 
 import com.cyanoryx.uni.enigma.gui.Conversation;
-import com.cyanoryx.uni.enigma.net.client.Client;
 import com.cyanoryx.uni.enigma.net.protocol.Session;
 import com.cyanoryx.uni.enigma.net.protocol.User;
 import com.cyanoryx.uni.enigma.net.protocol.xml.PacketQueue;
 import com.cyanoryx.uni.enigma.net.protocol.xml.ProcessThread;
 import com.cyanoryx.uni.enigma.net.protocol.xml.QueueThread;
 
+/**
+ * Server thread that listens for connections and starts
+ * processes to handle them.
+ * 
+ * @author adammulligan
+ *
+ */
 public class Server implements Runnable {
 	private int port;
 	
 	PacketQueue pq = new PacketQueue();
 
 	private ServerSocket ss;
-	private SessionIndex index;
+	private SessionIndex index; // Global session index for this server
 	
 	public Server(int port,String server) throws IOException {
 		this.port   = port;
@@ -28,47 +35,53 @@ public class Server implements Runnable {
 			q.setDaemon(true);
 			q.addListener(new OpenStreamHandler(index),"stream");
 			q.addListener(new CloseStreamHandler(index),"/stream");
-			q.addListener(new AuthHandler(),"auth");
+			q.addListener(new AuthHandler(index),"auth");
 			q.addListener(new MessageHandler(index), "message");
 		q.start();
 		
 		ss = new ServerSocket(this.port);
 	}
 	
+	/**
+	 * Returns the session index for this server instance.
+	 * 
+	 * @return
+	 */
 	public SessionIndex getSessionIndex() {
 		return this.index;
 	}
 	
-	public static Session createClient(String server, String port, String local_port, User u, String id) throws IOException {
-		//ClientThread client_thread = new ClientThread();
-		Client		 client		   = new Client();
-		Session		 session	   = new Session();
+	/**
+	 * Wrapper to create a session with attached conversation window.
+	 * 
+	 * Used to create connections from the server to another Enigma server.
+	 * 
+	 * @param server - Remote server address
+	 * @param port - Remote server port
+	 * @param local_port - Local server port
+	 * @param u - User 
+	 * @param id - Session ID
+	 * @return - Session for the new connection
+	 * @throws IOException
+	 * @throws DataFormatException 
+	 */
+	public static Session createClient(String server, String port, String local_port, User u, String id)
+			throws IOException, DataFormatException {
+		Session session	= new Session(new Socket(server,Integer.parseInt(port)));
 		
-		session.setSocket(new Socket(server,Integer.parseInt(port)));
 		session.setStatus(Session.CONNECTED);
+		session.setServerName(server);
+		session.setServerPort(port);
 		session.setLocalPort(local_port);
 		session.setID(id);
 		session.setUser(u);
-		
-		client.setServerName(server);
-		client.setServerAddress(server);
-		client.setPort(port);
-		client.setUser(u);
-		
-		client.setSessionID(id);
-		client.setLocalPort(local_port);
-		client.setWriter(session.getWriter());
 
 		System.out.println("Creating client to "+server+":"+port+"...");
 		
-		Conversation conv = new Conversation(session,client);
-		client.setWindow(conv);
+		Conversation conv = new Conversation(session);
+		session.setWindow(conv);
 		
-		session.addClient(id, client);
-		
-		client.connect();
-		//client_thread.setModel(client);
-		//client_thread.start();
+		session.connect();
 		
 		return session;
 	}

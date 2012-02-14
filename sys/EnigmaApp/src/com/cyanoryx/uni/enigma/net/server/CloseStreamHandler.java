@@ -1,11 +1,15 @@
 package com.cyanoryx.uni.enigma.net.server;
 
-import javax.swing.text.BadLocationException;
-
 import com.cyanoryx.uni.enigma.net.protocol.Session;
 import com.cyanoryx.uni.enigma.net.protocol.xml.Packet;
 import com.cyanoryx.uni.enigma.net.protocol.xml.PacketListener;
 
+/**
+ * Handles </stream> tags.
+ * 
+ * @author adammulligan
+ *
+ */
 public class CloseStreamHandler implements PacketListener {
 	private SessionIndex index;
 	
@@ -18,8 +22,10 @@ public class CloseStreamHandler implements PacketListener {
 		Session s = packet.getSession();
 		
 		try {
-			index.getSession(s.getID()).getClient(s.getID()).getWindow().update("Partner disconnected...");
-		} catch (BadLocationException e) {
+			Session stored_session = index.getSession(s.getID());
+			stored_session.getWindow().update("Partner disconnected...");
+			stored_session.closeStream();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

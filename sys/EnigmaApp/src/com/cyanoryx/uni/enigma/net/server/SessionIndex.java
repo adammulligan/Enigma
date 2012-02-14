@@ -10,7 +10,7 @@ import com.cyanoryx.uni.enigma.net.protocol.Session;
  * @author adammulligan
  */
 public class SessionIndex {
-	Hashtable<String, Session> idIndex = new Hashtable<String, Session>();
+	Hashtable<String, Session> index = new Hashtable<String, Session>();
 
 	/**
 	 * Return session from given ID
@@ -19,7 +19,7 @@ public class SessionIndex {
 	 * @return
 	 */
 	public Session getSession(String id){
-		return (Session)idIndex.get(id);
+		return (Session)index.get(id);
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class SessionIndex {
 	 * @param id
 	 */
 	public void removeSession(String id) {
-		if (idIndex.containsKey(id)) idIndex.remove(id);
+		if (index.containsKey(id)) index.remove(id);
 	}
 
 	/**
@@ -47,6 +47,6 @@ public class SessionIndex {
 	 * @param session
 	 */
 	public void addSession(Session session){
-		idIndex.put(session.getID(),session);
+		index.put(session.getID(),session);
 	}
 }

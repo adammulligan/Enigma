@@ -4,4 +4,110 @@
 \label{AppendixB}
 \lhead{Appendix B. \emph{Enigma Protocol Specification}}
 
-Write your Appendix content here.
+\section{Introduction}
+
+\section{Terminology}
+
+\section{Definitions}
+
+\section{Format}
+
+\section{Commands}
+
+\subsection{Connection}
+
+A connection is represented by a streaming XML document, with the root element being \verb!<stream>!.
+
+\begin{itemize}
+	\item \textbf{Opening a connection:}
+		\begin{verbatim}
+			<stream  to="SERVER_NAME"
+				         from="USER_NAME"
+				         id="SESSION_ID"
+				         return-port="LOCALHOST_INBOUND_PORT"
+				         xmlns="enigma:client">
+		\end{verbatim}
+	\item \textbf{Closing a connection:}
+		\begin{verbatim}
+			</stream>
+		\end{verbatim}
+\end{itemize}
+
+\subsection{Authentication}
+
+\begin{itemize}
+	\item \textbf{Toggling encryption:}
+		\begin{verbatim}
+			<auth stage="streaming"
+			      id="SESSION_ID"
+			      type="toggle">
+			      [off|on]
+			</auth>
+		\end{verbatim} \\
+		Note: this requires the agreement of both users. The connection should be closed if one user disagrees to change the current encryption status.
+\end{itemize}
+
+\begin{itemize}
+	\item \textbf{Asserting the key agreement method:}
+		\begin{verbatim}
+			<auth stage="agreement"
+			      id="SESSION_ID"
+			      type="method">
+			      [method type identifier]
+			</auth>
+		\end{verbatim} \\
+\end{itemize}
+
+\begin{itemize}
+	\item \textbf{Publishing a certificate:}
+		\begin{verbatim}
+			<auth stage="agreement"
+			      id="SESSION_ID"
+			      type="cert">
+			      [Base64 encoded Enigma Certificate]
+			</auth>
+		\end{verbatim} \\
+\end{itemize}
+
+\begin{itemize}
+	\item \textbf{Publish an encrypted symmetric cipher key:}
+		\begin{verbatim}
+			<auth stage="agreement"
+			      id="SESSION_ID"
+			      type="key"
+			      [method="CIPHER_ALGORITHM"]>
+			      [Base64 encoded encrypted key]
+			</auth>
+		\end{verbatim} \\
+\end{itemize}
+
+\subsection{Messaging}
+
+\begin{itemize}
+	\item \textbf{Sending a message:}
+		\begin{verbatim}
+			<message  [to="REMOTE_USER_NAME"]
+				          from="USER_NAME"
+				          id="SESSION_ID"
+				          [type=""]>
+			    <body>MESSAGE_CONTENT</body>
+			</message>
+		\end{verbatim}
+\end{itemize}
+
+\subsection{Errors}
+
+Errors do not have a specific element themselves, but are included as a subelement of any other tag, setting \verb!att:type! to \verb!error!.
+
+\begin{itemize}
+	\item \textbf{Sending an error:}
+		\begin{verbatim}
+			<element  [other attributes]
+				          type="error">
+			    <error type="ERROR_NUMBER">
+			        ERROR_MESSAGE
+			    </error>
+			    [element contents]
+			</element>
+		\end{verbatim}
+\end{itemize}

@@ -1,14 +1,14 @@
 package com.cyanoryx.uni.crypto.rsa;
 
 import java.io.File;
+import java.io.IOException;
 
 public class PublicKey extends Key {
-	public PublicKey(File keyfile) {
-		super(keyfile);
-		this.parseKeyFile();
+	public PublicKey(String key) {
+		super(key);
 	}
 	
-	protected void parseKeyFile() {
-		super.parseKeyFile();
+	public PublicKey(File keyfile) throws IOException {
+		super(keyfile);
 	}
 }

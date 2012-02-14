@@ -2,11 +2,8 @@ package com.cyanoryx.uni.crypto.rsa;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Scanner;
-import java.util.zip.DataFormatException;
 
 import com.cyanoryx.uni.common.FileIO;
 
@@ -39,13 +36,7 @@ public class Decrypt {
 			log("Writing plaintext to "+output_file);
 			FileIO.writeFile(output, output_file);
 			log("File decrypted.");
-		} catch (DataFormatException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

@@ -1,20 +1,18 @@
 package com.cyanoryx.uni.crypto.rsa;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 
 public class PrivateKey extends Key {
 	private BigInteger p,q;
 	
-	public PrivateKey(File keyfile) {
-		super(keyfile);
-		this.parseKeyFile();
+	public PrivateKey(String key) {
+		super(key);
 	}
 	
-	protected void parseKeyFile() {
-		super.parseKeyFile();
-		
-		// Other stuff...
+	public PrivateKey(File keyfile) throws IOException {
+		super(keyfile);
 	}
 	
 	public BigInteger getExponent() {

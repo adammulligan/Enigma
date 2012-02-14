@@ -158,6 +158,8 @@ public class RSA_PSS {
 		 *     long" and stop.
 		 */
 		if (M.length > this.md.getDigestLength()) {
+			System.out.println(M.length);
+			System.out.println(this.md.getDigestLength());
 			throw new DataFormatException("Message too long");
 		}
 		

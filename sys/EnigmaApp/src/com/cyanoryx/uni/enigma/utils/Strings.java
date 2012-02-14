@@ -3,6 +3,7 @@ package com.cyanoryx.uni.enigma.utils;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 
 public class Strings {
@@ -13,8 +14,7 @@ public class Strings {
     private static MessageFormat formatter;
 
     public static String translate(String messageName) {
-//        return resourceBundle.getString(messageName);
-    	return messageName;
+        return resourceBundle.getString(messageName);
     }
 
 
@@ -24,12 +24,9 @@ public class Strings {
 
 
     public static void initialise() {
-      //  Locale locale = Locale.ENGLISH;
-       // String localePreference = Preferences.get(Preferences.ApplicationOptions.LOCALE);
-        //if (localePreference != null) {
-         //   locale = new Locale(localePreference);
-        //}
-        loadBundle(Locale.ENGLISH);
+    	Preferences prefs = new AppPrefs().getPrefs();
+        Locale locale = new Locale(prefs.get("locale", "en"));
+        loadBundle(locale);
     }
 
     

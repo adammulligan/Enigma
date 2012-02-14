@@ -1,6 +1,8 @@
 package com.cyanoryx.uni.common;
 
 import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /*
 	Cryptix General License
@@ -173,4 +175,9 @@ public final class Bytes {
 	}
 	
 	public static final String toString(byte[] a) { return ""; }
+	
+	public static final byte[] ipToBytes(String ip) throws UnknownHostException {
+		InetAddress addr = InetAddress.getByName(ip);
+		return addr.getAddress();
+	}
 }

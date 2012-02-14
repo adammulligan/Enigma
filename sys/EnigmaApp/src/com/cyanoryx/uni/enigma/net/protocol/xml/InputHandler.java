@@ -10,6 +10,12 @@ import org.apache.xerces.parsers.SAXParser;
 
 import com.cyanoryx.uni.enigma.net.protocol.Session;
 
+/**
+ * Handles SAX events and builds packets from them.
+ * 
+ * @author adammulligan
+ *
+ */
 public class InputHandler extends DefaultHandler {
     PacketQueue packet_queue;
     Session session;
@@ -31,44 +37,60 @@ public class InputHandler extends DefaultHandler {
 
     	parser.parse(new InputSource(session.getReader()));
     }
-
-    public void startElement(String namespaceURI,String localName,String qName,Attributes atts) throws SAXException {
+    
+    /**
+     * Handles starting elements
+     * 
+     */
+    @Override
+    public void startElement(String namespace,String localName,String name,Attributes attributes)
+    		throws SAXException {
     	switch (depth++){
-    		case 0:
-    			if (qName.equals("stream")){
-    				Packet openPacket = new Packet(null,qName,namespaceURI,atts);
-    				openPacket.setSession(session);
-    				packet_queue.push(openPacket);
+    		case 0: // Root element
+    			if (name.equals("stream")){
+    				Packet packet = new Packet(null,name,namespace,attributes);
+    				packet.setSession(session);
+    				packet_queue.push(packet);
     				return;
     			}
     			throw new SAXException("Root element must be <stream>");
-    		case 1:
-    			packet = new Packet(null,qName,namespaceURI,atts);
+    		case 1: // Message elements
+    			packet = new Packet(null,name,namespace,attributes);
     			packet.setSession(session);
     			break;
-    		default:
-    			Packet child = new Packet(packet,qName,namespaceURI,atts);
+    		default: // Any child elements
+    			Packet child = new Packet(packet,name,namespace,attributes);
     			packet = child;
     	}
     }
 
-    public void characters(char[] ch,int start,int length) throws SAXException {
-    	if (depth > 1){
-    		packet.getChildren().add(new String(ch,start,length));
-    	}
+    /**
+     * Adds a string (char array) as a child element to the current packet.
+     *  
+     * Ideally this would use a string, but for some unknown reason,
+     * DefaultHandler uses char[].
+     */
+    @Override
+    public void characters(char[] c,int start,int length) throws SAXException {
+    	if (depth > 1) packet.getChildren().add(new String(c,start,length));
     }
 
-    public void endElement(java.lang.String uri,java.lang.String localName,java.lang.String qName) throws SAXException {
+    /**
+     * Handles end elements
+     * 
+     */
+    @Override
+    public void endElement(String uri,String localName,String name) throws SAXException {
     	switch(--depth){
-    		case 0:   // We're back at the end of the root
-    			Packet closePacket = new Packet("/stream");
-    			closePacket.setSession(session);
-    			packet_queue.push(closePacket);
+    		case 0: // End of the stream
+    			Packet c_packet = new Packet("/stream");
+    			c_packet.setSession(session);
+    			packet_queue.push(c_packet);
     			break;
-    		case 1:   // The Packet is finished
+    		case 1: // Put the completed packet on the packet queue
     			packet_queue.push(packet);
     			break;
-    		default:  // Move back up the tree
+    		default:  // Parent still being constructed; traverse back up the tree
     			packet = packet.getParent();
     	}
     }

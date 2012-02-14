@@ -62,6 +62,10 @@ public class Certificate {
 		this.setSubject_key(Cert.get("Subject_key"));
 	}
 	
+	public Certificate(File c) throws FileNotFoundException, IOException, DataFormatException {
+		this(Certificate.readFile(c.toString()));
+	}
+	
 	/**
 	 * Takes an Enigma Certificate file and parses it to create a Certificate object
 	 * 
@@ -69,11 +73,11 @@ public class Certificate {
 	 * @throws IOException 
 	 * @throws DataFormatException 
 	 */
-	public Certificate(File c) throws IOException, FileNotFoundException, DataFormatException {
+	public Certificate(String c) throws DataFormatException {
 		StringBuffer certificate;
 		
 		Pattern pattern = Pattern.compile("-----BEGIN-ENIGMA-CERTIFICATE-----\n(.*?)\n-----END-ENIGMA-CERTIFICATE-----");
-        Matcher matcher = pattern.matcher(Certificate.readFile(c.toString()));
+        Matcher matcher = pattern.matcher(c);
         if (matcher.find()) {
         	certificate = new StringBuffer(matcher.group(1));
         	
@@ -152,6 +156,32 @@ public class Certificate {
 		output.append("-----END-ENIGMA-CERTIFICATE-----");
 		
 		return output.toString();
+	}
+	
+	/**
+	 * Returns a readable format of the certificate.
+	 * 
+	 * @return
+	 */
+	public String toReadable() {
+		StringBuffer readable = new StringBuffer();
+		
+		readable.append("Algorithm: "+new String(this.getSignatureAlgorithm()+"\n"));
+		readable.append("Signature: "+new String(this.getSignature()+"\n\n"));
+    	
+		readable.append("Issuer: "+new String(this.getIssuer()+"\n"));
+		readable.append("Serial: "+new String(this.getSerial()+"\n\n"));
+    	
+    	readable.append("Validity Not After: "+new String(this.getValidity_notAfter()+"\n"));
+    	readable.append("Validity Not Before: "+new String(this.getValidity_notBefore()+"\n\n"));
+    	
+    	readable.append("Unique Identifier: "+new String(this.getUniqIdent()+"\n\n"));
+    	
+    	readable.append("Subject Name: "+new String(this.getSubject_name()+"\n"));
+    	readable.append("Subject Algorithm: "+new String(this.getSubject_algorithm()+"\n"));
+    	readable.append("Subject Key: "+new String(this.getSubject_key()+"\n"));
+    	
+    	return readable.toString();
 	}
 	
 	/**
