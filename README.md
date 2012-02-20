@@ -1,19 +1,15 @@
-#Prime Numbers and Cryptosystems
+# Prime Numbers and Cryptosystems
 
-##Aim
-To implement utilities dealing with prime numbers and cryptographic applications based on them.
+My final year project, Enigma, a study in to algorithms based around prime numbers and their uses. The application is a simple chat testbed that I use to test algorithms, and the report is a discussion of the engineering behind this and the algorithms.
 
-##Abstract 
+# Usage
 
-Modern cryptography allows us to perform many types of information exchange over insecure 
-channels. One of these tasks is to agree on a secret key over a channel where messages can 
-be overheard. This is achieved by Diffe-Hellman protocol. Other tasks include public key 
-and digital signature schemes; RSA key exchange can be used for them. These protocols are 
-of great importance for bank networks.
+Run the following command:
 
-Most such algorithms are based upon number theory, namely, the intractability of certain 
-problems involving prime numbers. The project involves implementing basic routines for 
-dealing with prime numbers and then building cryptographic applications using them.
+`$ rake`
 
-The project may be developed into several directions: modern algorithms for dealing with 
-prime numbers, integration with symmetric techniques such as DES or AES, or cryptographic attacks.
+This (will in the future) compile all the latex documents, compiles and builds a jar file and creates a neat distribution directory with all the things you would need to hand in a final year project on prime-number based cryptography.
+
+# Licence
+
+The entirety of this project -- this include all programming code, documentation, data, reports, latex source code, imagery, and any other files -- is released under the GNU Lesser General Public Licence version 3 (LGPLv3).
