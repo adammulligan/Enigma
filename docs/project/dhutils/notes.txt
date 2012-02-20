@@ -1,7 +1,0 @@
-Someone initiates DH
-Initiator generates g,p,q
-I generates x,y from g,p
-Shares g,p with receiver
-Receiver generates x,y from g,p
-ZZ = (y^x) mod p
-KM = Hash( ZZ || OtherInfo )
