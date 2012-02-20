@@ -2,45 +2,149 @@
 \vspace {1em}
 \contentsline {chapter}{Acknowledgements}{iii}{dummy.2}
 \vspace {1em}
-\contentsline {chapter}{List of Figures}{vi}{dummy.4}
-\contentsline {chapter}{List of Tables}{vii}{dummy.6}
-\contentsline {chapter}{Abbreviations}{viii}{dummy.8}
+\contentsline {chapter}{List of Figures}{viii}{dummy.4}
+\contentsline {chapter}{List of Tables}{ix}{dummy.6}
+\contentsline {chapter}{Abbreviations}{x}{dummy.8}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.11}
 \contentsline {section}{\numberline {1.1}What it's about}{1}{section.12}
-\contentsline {chapter}{\numberline {2}Mathematical Basis}{2}{chapter.13}
-\contentsline {section}{\numberline {2.1}Number Theory}{2}{section.14}
-\contentsline {section}{\numberline {2.2}Prime Numbers}{2}{section.15}
-\contentsline {subsection}{\numberline {2.2.1}Finding Prime Numbers}{2}{subsection.16}
-\contentsline {chapter}{\numberline {3}Cryptographic Primitives}{3}{chapter.17}
-\contentsline {section}{\numberline {3.1}Cryptography Basics}{3}{section.18}
-\contentsline {section}{\numberline {3.2}Real Life Cryptography}{3}{section.19}
-\contentsline {section}{\numberline {3.3}Primitives}{3}{section.20}
-\contentsline {subsection}{\numberline {3.3.1}Key Agreement}{3}{subsection.21}
-\contentsline {subsection}{\numberline {3.3.2}Encryption}{3}{subsection.22}
-\contentsline {subsection}{\numberline {3.3.3}Authentication and Identification}{3}{subsection.23}
-\contentsline {subsection}{\numberline {3.3.4}Hashing}{3}{subsection.24}
-\contentsline {chapter}{\numberline {4}Algorithm Implementations}{4}{chapter.25}
-\contentsline {section}{\numberline {4.1}Command Line Implementations}{4}{section.26}
-\contentsline {section}{\numberline {4.2}Key Agreement}{5}{section.27}
-\contentsline {subsection}{\numberline {4.2.1}RSA}{5}{subsection.28}
-\contentsline {subsection}{\numberline {4.2.2}Diffie-Hellman}{5}{subsection.29}
-\contentsline {section}{\numberline {4.3}Encryption and Symmetric Ciphers}{5}{section.30}
-\contentsline {subsection}{\numberline {4.3.1}AES}{5}{subsection.31}
-\contentsline {subsection}{\numberline {4.3.2}Twofish}{5}{subsection.32}
-\contentsline {section}{\numberline {4.4}Authentication and Identification}{5}{section.33}
-\contentsline {subsection}{\numberline {4.4.1}RSA Signing}{5}{subsection.34}
-\contentsline {subsection}{\numberline {4.4.2}Digital Certificates}{5}{subsection.35}
-\contentsline {section}{\numberline {4.5}Hashing}{5}{section.36}
-\contentsline {section}{\numberline {4.6}SHA Family}{5}{section.37}
-\contentsline {section}{\numberline {4.7}Skein}{5}{section.38}
-\contentsline {chapter}{\numberline {5}Enigma: A Testbed}{6}{chapter.39}
-\contentsline {section}{\numberline {5.1}Description}{6}{section.40}
-\contentsline {section}{\numberline {5.2}Protocol}{6}{section.41}
-\contentsline {section}{\numberline {5.3}Interface}{6}{section.42}
-\contentsline {chapter}{\numberline {6}Attacks and Flaws}{7}{chapter.43}
-\contentsline {chapter}{\numberline {7}Further Research}{8}{chapter.44}
+\contentsline {section}{\numberline {1.2}Goals and Intentions}{1}{section.13}
+\contentsline {section}{\numberline {1.3}Project Summary}{2}{section.14}
+\contentsline {section}{\numberline {1.4}Other Information}{3}{section.19}
+\contentsline {subsection}{\numberline {1.4.1}A note on openness}{3}{subsection.25}
+\contentsline {subsection}{\numberline {1.4.2}Project Repository}{4}{subsection.26}
+\contentsline {chapter}{\numberline {2}Cryptographic Primitives}{5}{chapter.27}
+\contentsline {section}{\numberline {2.1}Basics of Information Security}{5}{section.28}
+\contentsline {section}{\numberline {2.2}Objectives}{6}{section.30}
+\contentsline {section}{\numberline {2.3}Key Concepts}{7}{section.35}
+\contentsline {section}{\numberline {2.4}Primitives}{7}{section.36}
+\contentsline {subsection}{\numberline {2.4.1}Encryption}{7}{subsection.37}
+\contentsline {subsubsection}{\numberline {2.4.1.1}Symmetric Key Encryption}{7}{subsubsection.38}
+\contentsline {subsection}{\numberline {2.4.2}Key Agreement}{8}{subsection.39}
+\contentsline {subsubsection}{\numberline {2.4.2.1}Key Distribution Centre}{8}{subsubsection.40}
+\contentsline {subsubsection}{\numberline {2.4.2.2}Asymmetric Cryptography}{9}{subsubsection.46}
+\contentsline {subsection}{\numberline {2.4.3}Authentication}{10}{subsection.51}
+\contentsline {subsection}{\numberline {2.4.4}Digital Signatures}{10}{subsection.54}
+\contentsline {subsection}{\numberline {2.4.5}Public-key Certificates}{11}{subsection.58}
+\contentsline {subsection}{\numberline {2.4.6}Hashing}{12}{subsection.63}
+\contentsline {section}{\numberline {2.5}Mathematics}{13}{section.66}
+\contentsline {subsection}{\numberline {2.5.1}Notation}{13}{subsection.67}
+\contentsline {subsection}{\numberline {2.5.2}Number Theory}{13}{subsection.78}
+\contentsline {subsubsection}{\numberline {2.5.2.1}Modulo Arithmetic}{14}{subsubsection.94}
+\contentsline {subsection}{\numberline {2.5.3}Abstract Algebra}{15}{subsection.100}
+\contentsline {subsection}{\numberline {2.5.4}Complexity}{15}{subsection.101}
+\contentsline {section}{\numberline {2.6}Moving On}{15}{section.103}
+\contentsline {chapter}{\numberline {3}Number Theory and Public-key Cryptography}{16}{chapter.104}
+\contentsline {section}{\numberline {3.1}Overview}{16}{section.105}
+\contentsline {section}{\numberline {3.2}Modular Arithmetic and Congruence}{17}{section.106}
+\contentsline {section}{\numberline {3.3}Prime Numbers}{17}{section.107}
+\contentsline {subsection}{\numberline {3.3.1}Generation}{18}{subsection.109}
+\contentsline {subsubsection}{\numberline {3.3.1.1}A Note on Random Number Generators}{18}{subsubsection.110}
+\contentsline {section}{\numberline {3.4}Public-key Cryptography}{19}{section.114}
+\contentsline {section}{\numberline {3.5}Integers}{19}{section.115}
+\contentsline {subsection}{\numberline {3.5.1}RSA}{19}{subsection.116}
+\contentsline {subsubsection}{\numberline {3.5.1.1}Implementation}{19}{subsubsection.117}
+\contentsline {subsubsection}{\numberline {3.5.1.2}Textbooks and OAEP}{19}{subsubsection.118}
+\contentsline {subsection}{\numberline {3.5.2}Diffie-Hellman}{19}{subsection.119}
+\contentsline {subsubsection}{\numberline {3.5.2.1}Implementation}{19}{subsubsection.120}
+\contentsline {section}{\numberline {3.6}Other Variations Implementing PKI}{19}{section.121}
+\contentsline {chapter}{\numberline {4}Symmetric Cryptography}{20}{chapter.122}
+\contentsline {chapter}{\numberline {5}Identification and Authentication}{21}{chapter.123}
+\contentsline {section}{\numberline {5.1}Overview and Intentions}{21}{section.124}
+\contentsline {section}{\numberline {5.2}Basic and Common Schemes}{21}{section.125}
+\contentsline {section}{\numberline {5.3}Digital Signatures}{21}{section.126}
+\contentsline {section}{\numberline {5.4}Certificates}{21}{section.127}
+\contentsline {section}{\numberline {5.5}Other Methods}{21}{section.128}
+\contentsline {chapter}{\numberline {6}Enigma: A Testbed}{22}{chapter.129}
+\contentsline {section}{\numberline {6.1}Overview and Intentions}{22}{section.130}
+\contentsline {section}{\numberline {6.2}Engineering Methodologies and Planning}{22}{section.131}
+\contentsline {subsection}{\numberline {6.2.1}Methodology}{22}{subsection.132}
+\contentsline {subsection}{\numberline {6.2.2}Documentation}{23}{subsection.133}
+\contentsline {section}{\numberline {6.3}Application Development}{24}{section.135}
+\contentsline {subsection}{\numberline {6.3.1}User Interface}{24}{subsection.136}
+\contentsline {subsubsection}{\numberline {6.3.1.1}GUI Frameworks}{24}{subsubsection.137}
+\contentsline {section}{\numberline {6.4}Protocol Implementation}{24}{section.138}
+\contentsline {section}{\numberline {6.5}Algorithm Implementation}{24}{section.139}
+\contentsline {section}{\numberline {6.6}Usage}{24}{section.140}
+\contentsline {section}{\numberline {6.7}Program Listing}{24}{section.141}
+\contentsline {chapter}{\numberline {7}Cryptanalysis}{25}{chapter.142}
+\contentsline {section}{\numberline {7.1}Public-key Cryptography}{25}{section.143}
+\contentsline {subsection}{\numberline {7.1.1}RSA}{25}{subsection.144}
+\contentsline {subsubsection}{\numberline {7.1.1.1}Brute Force}{25}{subsubsection.145}
+\contentsline {subsubsection}{\numberline {7.1.1.2}Elementary Attacks}{26}{subsubsection.146}
+\contentsline {paragraph}{Small Exponent}{26}{section*.147}
+\contentsline {subparagraph}{Private Exponent}{26}{section*.148}
+\contentsline {subparagraph}{Public Exponent}{26}{section*.149}
+\contentsline {paragraph}{Key Exposure}{27}{section*.150}
+\contentsline {paragraph}{Coppersmith's Short Pad Attack}{27}{section*.151}
+\contentsline {subparagraph}{Hastad's Broadcast Attack}{27}{section*.152}
+\contentsline {paragraph}{Related Message Attack}{27}{section*.153}
+\contentsline {paragraph}{Forward Search Attack}{27}{section*.154}
+\contentsline {paragraph}{Common Modulus Attack}{27}{section*.155}
+\contentsline {paragraph}{Cycling Attack}{27}{section*.156}
+\contentsline {paragraph}{Message Concealing}{27}{section*.157}
+\contentsline {subsubsection}{\numberline {7.1.1.3}System and Implementation Attacks}{27}{subsubsection.158}
+\contentsline {paragraph}{Timing}{27}{section*.159}
+\contentsline {paragraph}{Random Faults}{27}{section*.160}
+\contentsline {paragraph}{Bleichenbacher's Attack}{28}{section*.161}
+\contentsline {subsection}{\numberline {7.1.2}Certificates and Authentication}{28}{subsection.162}
+\contentsline {subsubsection}{\numberline {7.1.2.1}Implementation Attacks}{28}{subsubsection.163}
+\contentsline {paragraph}{SSL BEAST}{28}{section*.164}
+\contentsline {paragraph}{Authority Security and Impersonation}{28}{section*.165}
+\contentsline {section}{\numberline {7.2}Symmetric Cryptography}{28}{section.166}
+\contentsline {subsection}{\numberline {7.2.1}Brute-force}{29}{subsection.167}
+\contentsline {subsection}{\numberline {7.2.2}XSL Attack}{29}{subsection.168}
+\contentsline {subsection}{\numberline {7.2.3}Biryukov and Khovratovich}{29}{subsection.169}
+\contentsline {subsection}{\numberline {7.2.4}Related Key Attack}{29}{subsection.170}
+\contentsline {subsection}{\numberline {7.2.5}Known-key Distinguishing Attack}{29}{subsection.171}
+\contentsline {subsection}{\numberline {7.2.6}Bogdanov, Khovratovich, and Rechberger}{29}{subsection.172}
+\contentsline {subsection}{\numberline {7.2.7}Side-channel attacks}{29}{subsection.173}
+\contentsline {section}{\numberline {7.3}Hash Functions}{29}{section.174}
+\contentsline {subsection}{\numberline {7.3.1}Birthday Attacks}{29}{subsection.175}
+\contentsline {subsection}{\numberline {7.3.2}Collision and Compression}{29}{subsection.176}
+\contentsline {subsection}{\numberline {7.3.3}Chaining Attack}{29}{subsection.177}
+\contentsline {section}{\numberline {7.4}Emerging Threats}{29}{section.178}
+\contentsline {subsection}{\numberline {7.4.1}Quantum Cryptography and Cryptanalysis}{29}{subsection.179}
+\contentsline {subsection}{\numberline {7.4.2}Ron was wrong, Whit is right}{30}{subsection.180}
+\contentsline {subsubsection}{\numberline {7.4.2.1}Sony PlayStation 3}{30}{subsubsection.181}
+\contentsline {section}{\numberline {7.5}A comment on theory}{32}{section.182}
+\contentsline {chapter}{\numberline {8}Outcomes and Further Research}{33}{chapter.183}
+\contentsline {section}{\numberline {8.1}Fulfilment of Specification}{33}{section.184}
+\contentsline {section}{\numberline {8.2}Testing}{33}{section.185}
+\contentsline {subsection}{\numberline {8.2.1}Test Driven Development}{33}{subsection.186}
+\contentsline {subsection}{\numberline {8.2.2}Unit Testing}{33}{subsection.187}
+\contentsline {subsection}{\numberline {8.2.3}Code Coverage}{33}{subsection.188}
+\contentsline {subsection}{\numberline {8.2.4}Functional Testing}{33}{subsection.189}
+\contentsline {section}{\numberline {8.3}Problems and Evaluation}{34}{section.190}
+\contentsline {section}{\numberline {8.4}Limitations}{34}{section.191}
+\contentsline {subsection}{\numberline {8.4.1}Standards Compliance}{34}{subsection.192}
+\contentsline {subsection}{\numberline {8.4.2}Hardware Implementation}{34}{subsection.193}
+\contentsline {section}{\numberline {8.5}Project Management}{34}{section.194}
+\contentsline {section}{\numberline {8.6}Summary}{34}{section.195}
 \vspace {2em}
-\contentsline {chapter}{\numberline {A}Enigma Application Specification}{9}{appendix.45}
-\contentsline {chapter}{\numberline {B}Enigma Protocol Specification}{10}{appendix.46}
+\contentsline {chapter}{\numberline {A}Enigma Application Specification}{35}{appendix.196}
+\contentsline {section}{\numberline {A.1}Introduction}{35}{section.197}
+\contentsline {subsection}{\numberline {A.1.1}Purpose}{35}{subsection.198}
+\contentsline {subsection}{\numberline {A.1.2}Scope}{35}{subsection.199}
+\contentsline {subsection}{\numberline {A.1.3}Definitions}{35}{subsection.200}
+\contentsline {subsection}{\numberline {A.1.4}Overview}{35}{subsection.201}
+\contentsline {section}{\numberline {A.2}Overall Description}{35}{section.202}
+\contentsline {subsection}{\numberline {A.2.1}Product Perspective}{35}{subsection.203}
+\contentsline {subsection}{\numberline {A.2.2}Product Functions}{35}{subsection.204}
+\contentsline {subsection}{\numberline {A.2.3}User Characteristics}{35}{subsection.205}
+\contentsline {subsection}{\numberline {A.2.4}Constraints}{35}{subsection.206}
+\contentsline {subsection}{\numberline {A.2.5}Assumptions and dependencies}{35}{subsection.207}
+\contentsline {chapter}{\numberline {B}Enigma Protocol Specification}{36}{appendix.208}
+\contentsline {section}{\numberline {B.1}Introduction}{36}{section.209}
+\contentsline {section}{\numberline {B.2}Requirements}{36}{section.211}
+\contentsline {section}{\numberline {B.3}History}{37}{section.215}
+\contentsline {section}{\numberline {B.4}Terminology}{37}{section.216}
+\contentsline {section}{\numberline {B.5}Format}{37}{section.217}
+\contentsline {section}{\numberline {B.6}Commands}{38}{section.218}
+\contentsline {subsection}{\numberline {B.6.1}Connection}{38}{subsection.219}
+\contentsline {subsection}{\numberline {B.6.2}Authentication}{38}{subsection.220}
+\contentsline {subsection}{\numberline {B.6.3}Messaging}{39}{subsection.221}
+\contentsline {subsection}{\numberline {B.6.4}Errors}{39}{subsection.222}
+\contentsline {chapter}{\numberline {C}Licenced Software Usage}{41}{appendix.223}
+\contentsline {chapter}{\numberline {D}Enigma: User Manual}{43}{appendix.228}
 \vspace {2em}
-\contentsline {chapter}{Bibliography}{11}{dummy.47}
+\contentsline {chapter}{Bibliography}{44}{dummy.229}

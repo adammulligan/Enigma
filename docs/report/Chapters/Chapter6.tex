@@ -1,7 +1,50 @@
-% Chapter 7
+% Chapter 6
 
-\chapter{Further Research} % Write in your own chapter title
-\label{Chapter7}
-\lhead{Chapter 7. \emph{Further Research}} % Write in your own chapter title to set the page header
+\chapter{Enigma: A Testbed} 
+\label{Chapter6}
+\lhead{Chapter 6. \emph{Enigma: A Testbed}} 
 
-????
+\section{Overview and Intentions}
+
+The intention of this project is to produce an application that allows two users to securely identify and authenticate one another, and communicate with text messages via a presumed-insecure network. However, the primary \emph{goal} is to create a testbed that allows any cryptographic algorithms to be integrated in place, to provide a platform for further analysis, such as comparison of run-times between open and closed source implementations.
+
+\section{Engineering Methodologies and Planning}
+
+\subsection{Methodology}
+
+The main focus of the development process was to break the application down in to its component pieces, and iteratively develop them so that minimalist functionality sets could be produced and then combined in the shortest possible times. The overarching category for this style of production is known as \emph{agile development}: a practice based around iterative and incremental development. More specifically, a subset of agile development will be used -- Scrum. The goals of Scrum fit neatly with the desired development cycle in that programming is done in "sprints," with a deadline organised at the start of these sprints and a set of tasks that must be completed by the end. A sprint can last anywhere between one week and one month. This, combined with test driven development (TDD, writing tests for functionality before producing the functionality), produces a set of components matching a well-defined requirements document that can be combined in to the final product.
+
+However, without results, methodologies are meaningless
+
+\subsection{Documentation}
+
+Documentation is an extremely important part of software engineering. It is a broad concept, and encompasses: requirements and specification, design overview, technical details, user manuals and even marketing information. However, in terms of the software development process, it is only the first three that are of direct importance. 
+
+It is said a program listing should be documentation unto itself: the programming style should allow an overall structure and purpose to be easily determined from examining the code \cite{McConnell:2004tv}. However, this is an idealistic view and design and technical documentation are of great importance, not only for the developer currently producing the software, but for those possible developers in the future who have to maintain the code.
+
+As a major component of this project is to develop a library of cryptographic algorithms, having a clear and accurate listing of all available methods in the API is vital. Conveniently, Java and the Eclipse IDE are tightly integrated with \emph{JavaDoc}\footnote{http://java.sun.com/j2se/javadoc}, a documentation generator that automatically produces standardised API documentation in HTML format based on comments inserted in the code. The comment blocks -- distinguished using the format \verb!/** ... */! -- contain a method description, and a number of control sequences that give detailed information about what the method returns, the parameters it takes and other details such as exceptions thrown.
+
+JavaDoc outputs are bundled with the appropriate packages in the file tree, and manual technical documentation is found in the appendices. A requirements specification has been compiled in \emph{Appendix A}.
+
+\section{Application Development}
+
+\subsection{User Interface}
+\emph{Packages covered in this section: com.cyanoryx.uni.enigma.gui.*}
+
+\subsubsection{GUI Frameworks}
+
+\section{Protocol Implementation}
+\emph{Packages covered in this section: com.cyanoryx.uni.enigma.net.*}
+
+% Parsing XML
+
+\section{Algorithm Implementation}
+\emph{Packages covered in this section: com.cyanoryx.uni.crypto.*}
+
+\section{Usage}
+
+A user's instruction manual is included as \emph{Appendix D}. This manual also briefly covers compilation, required dependencies, and other build related information.
+
+\section{Program Listing}
+
+Due to the size of the project a detailed, printed code listing is impossible, and thus it is recommended that the code be viewed using a text editor or other text environment on a device. If you do not have a digital copy of this project, please see \emph{Section 1.4.2}.

@@ -34,7 +34,7 @@
 %% =====================
 % STYLES
 
-\setstretch{1.3}  
+\setstretch{1}  
 
 \fancyhead{}  
 \rhead{\thepage}  
@@ -64,7 +64,7 @@ Bruce Schneier, \textit{The Ethics of Vulnerability Research}
 \addtotoc{Abstract} 
 
 \abstract{
-	\addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
+	\addtocontents{toc}{\vspace{1em}}  
 
 	Modern cryptography allows us to perform many types of information exchange over insecure 
 	channels. One of these tasks is to agree on a secret key over a channel where messages can 
@@ -84,7 +84,6 @@ Bruce Schneier, \textit{The Ethics of Vulnerability Research}
 
 \setstretch{1.3}  % Reset the line-spacing to 1.3 for body text (if it has changed)
 
-% The Acknowledgements page, for thanking everyone
 \acknowledgements{
 \addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
 
@@ -146,8 +145,6 @@ With thanks to my project advisor Yuri Kalnishkan, and the RHUL Department of Co
 
 \input{./Chapters/Chapter8}
 
-\input{./Chapters/Chapter9}
-
 %% =====================
 % APPENDICES
 
@@ -161,6 +158,8 @@ With thanks to my project advisor Yuri Kalnishkan, and the RHUL Department of Co
 
 \input{./Appendices/AppendixC} 
 
+\input{./Appendices/AppendixD} 
+
 \addtocontents{toc}{\vspace{2em}} 
 \backmatter
 
@@ -170,7 +169,7 @@ With thanks to my project advisor Yuri Kalnishkan, and the RHUL Department of Co
 \label{Bibliography}
 \lhead{\emph{Bibliography}}  
 \bibliographystyle{unsrtnat}  
-\bibliography{Project}  % The references (bibliography) information are stored in the file named "Bibliography.bib"
+\bibliography{Project} 
 
 \end{document}  % The End
 %% ----------------------------------------------------------------
