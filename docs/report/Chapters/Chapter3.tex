@@ -38,21 +38,150 @@ We, however, will be using them for a far more interesting\footnote{http://xkcd.
   
   First and foremost, we must devise an efficient method for generating the prime numbers. Although generating the keys for use in prime number based algorithms is generally not done on a regular basis, it is still a complex task to complete in a reasonable amount of time. As it stands, a number of algorithms already exist (and have done for many hundreds of years) for this purpose, though in a different sense: it is relatively easy to generate small sequences of small primes, however to obtain large, individual primes the fastest method is to generate probable primes using primality tests.
   
+  To help understand these algorithms, we must first state a number of theorems that make clearer how these algorithms work and how they will fit in to the public-key implementations later on \cite{Alfred-Menezes:1996kx}: \\
+  
+  \begin{mathdef}
+    We define $\pi(x)$ as the number of primes found in the interval $[2,x]$, where $\pi(x) \sim \frac{x}{\ln x}$.
+  \end{mathdef}
+  
+  \begin{mathfact}
+    If $gcd(a,n) = 1$, there are infinitely many primes that are congruent to $a \ (mod \ n)$.
+  \end{mathfact}
+  
+  \begin{mathfact}
+    We can say that all prime numbers are uniformly distributed across $\phi(n)$ because:
+    \begin{center}
+    	$\pi(x,n,a) \sim \frac{x}{\phi(n) \ln x}$
+    \end{center}
+    Where $\pi(x,n,a)$ is the number of primes in the interval $[2,x]$ congruent to $a \ (mod \ n)$.
+  \end{mathfact}
+  
+  \begin{mathfact}
+    We can approximately determine the $n$th prime number as $\rho_n \sim n \ln n$, where $n \geq 6$.
+  \end{mathfact}
+  
     \subsubsection{Probable, Provable and Pseudo-primes}
     
     There is a subtle yet significant difference between the types of primes that can be generated.
     
       \paragraph{Probable Primes}
+      
+      A probably prime is a prime that meets certain conditions that are satisfied by all prime numbers. Testing for probably primes are more appropriately known as \emph{compositeness tests} rather than probable primality tests.
+      
+      The algorithms we will define as probabilistic primality tests will take arbitrary integers and test them to provide information about their primality. 
+      
+      \paragraph{Pseudo-primes}
+      
+      Pseudo-primes are a subset of probably primes. They are composite numbers that pass tests that most composite numbers fail, for example an integer is pseudo-prime if it satisfies Fermat's Little Theorem.
+      
+      \paragraph{Provable Primes}
+      
+      A provable prime is a prime that can be formally proven to be prime using an algorithm, such as the AKS primality test. Generally these are not used in cryptography due to the previous inefficiency of calculating provably-prime numbers, and also as they work most effectively when the input has been passed through a probabilistic primality test first.
   
     \subsubsection{Sieves}
     
+    A prime sieve is a fast algorithm to find prime numbers, the most commonly used being the \emph{sieve of Erastothenes} and \emph{sieve of Atkin}. Prime sieves operate by generating a list of integers up to a defined limit $n$: $\{2,3,4,...,n\}$ and progressively removing the composite integers in line with particular rules. However, this is very slow for the generation of individual large primes, and so is immediately discounted from possible use in a cryptographic algorithm.
+    
     \subsubsection{Fermat's Little Theorem}
+    
+    \textbf{Note:} Fermat's theorem is no longer considered to be a true probabilistic primality test as it cannot determine the difference between probable primes and composite integers known as Carmichael numbers\footnote{Carmichael numbers are similar to Fermat primes as they satisfy the congruence $b^{n-1} \equiv 1 \ (mod \ n)$. The conditions for a number to be in the Carmichael set are more complex than this, however the details are out of the scope of this section.}. The theorem can still be used to prove the compositeness of a number.
+    
+    Fermat's theorem states:
+    
+    \begin{center}
+      If $n$ is prime and $a$ is an integer, $1 \leq a \leq n - 1$, then
+      $a^{n-1} \equiv 1 \ (mod \ n)$
+    \end{center}
+    
+    Using this, we can take an integer $n$ and to test for primality find an integer in this interval where the equivalence is not valid, thus proving that $n$ is composite, and is not likely to be prime.
+    
+    The implementation of this in Java is as so:
+    
+    \lstset{language=Java}
+    
+    \lstinputlisting{./Code/primes/FermatTesting.java}
+    \emph{This file can be found at latex\_src/Code/primes/FermatTesting.java}
+    
+    This is a very simple algorithm to implement. It selects a random integer in the interval $[1,n-1]$ and computes $a^{n-1}$. If $a \neq 1$, then $a$ must be composite.
+    
+    \textbf{Note:} We are using the class \verb!BigInteger! to represent integers, as it allows far larger bit representations of integers than Java's standard 64-bit primitive \verb!integer! type. \verb!BigInteger! offers all the same operators that can be used with \verb!integer! primitives, alongside useful operations such as modular arithmetic, GCD and even built in primality testing. We will use \verb!BigInteger! for all Java-based programming that involves large integers.
     
     \subsubsection{Miller--Rabin Primality Test}
     
+    In practice, the Miller--Rabin test is the most used primality test, that also is based on a set of equivalences that are true for primes, and thus if a number to be checked does not pass these equivalences it is not prime. \\
+    
+    \begin{mathdef}
+      Let $n$ be an odd prime: $n - 1 = 2^dr$, where $d$ and $r$ are positive integers, with $r$ being odd. For $a \in (\mathbb{Z}/n\mathbb{Z})$: \\
+      $a^r \equiv 1 \ (mod \ n)$ \textbf{or} \\
+      $a^{2^dr} \equiv -1 \ (mod \ n)$ assuming $0 \leq d \leq s - 1$.
+    \end{mathdef}
+    
+    Using this, we can define the Miller--Rabin requirements as:
+    
+    \begin{enumerate}
+      \item Assume $n$ is an odd composite integer, and $n - 1 = 2^sr$, where $r$ is odd.
+      \item Where $a$ is an integer in the interval $[1,n-1]$, if $a$ does not match the conditions in definition 3.3.2 ($a^r \not\equiv1 \ (mod \ n)$,  $a^{2^sr} \not\equiv -1 \ (mod \ n)$), then $a$ is known as a witness for $n$.
+      \item Where $a$ is the same as $a$ in point 2, if $a$ matches \emph{either} of the conditions in definition 3.3.2, it is known as a strong liar for $n$.
+    \end{enumerate}
+    
+    When $n$ is determined to be a composite, it is known as a \emph{witness}, meaning it is a definite composite number. When we refer to probable primes, they are known as \emph{strong liars} as they are a likely probably prime to the base integer -- it is known as a "strong" liar due to the fact that $n$ could still be composite while the prime equivalences still hold.
+    
+    The implementation of this in Java is as so:
+    
+    \lstinputlisting{./Code/primes/MillerRabinTest.java}
+    \emph{This file can be found at latex\_src/Code/primes/FermatTesting.java}
+    
+    In some cases the number of iterations is known as the \emph{security parameter}.
+    
     \subsubsection{Solovay--Strassen Primality Test}
     
+    The Solovay--Strassen test was one of the first primality tests to be made popular by the increasing use of public-key cryptography. It is another probabilistic primality test. It is, in essence, quite a simple algorithm in that the process flow is linearly straightforward. \\
+    
+    \begin{mathdef}
+      Let $n$ be an odd integer, then $a^{\frac{(n-1)}{2}} \equiv (\frac{a}{n}) \ (mod \ n)$ where gcd$(a,n) = 1$.
+    \end{mathdef}
+    
+    We can use this to define the Solovay--Strassen algorithm requirements:
+    
+    \begin{enumerate}
+      \item If gcd$(a,n) > 1$ or $a^{\frac{(n-1)}{2}} \not\equiv (\frac{a}{n}) \ (mod \ n)$, then $a$ is an Euler witness for $n$ (composite).
+      \item If gcd$(a,n) = 1$ and $a^{\frac{(n-1)}{2}} \equiv (\frac{a}{n}) \ (mod \ n)$ then $n$ is an Euler pseudoprime (prime).
+    \end{enumerate}
+    
+    This is relatively simple to implement:
+    
+    \lstinputlisting{./Code/primes/SolovayStrassenTest.java}
+    \emph{This file can be found at latex\_src/Code/primes/SolovayStrassenTest.java} \\
+    
+    \begin{mathdef}
+      $(\frac{a}{n})$ is known as the Jacobi symbol, and plays an important part in the Solovay--Strassen test. Let $m,n$ be odd integers where $m \geq 3$ and $n \geq 3$, and $a,b \in \mathbb{Z}$, then we have the following properties\cite{Alfred-Menezes:1996kx}:
+    
+      \begin{enumerate}
+        \item $(\frac{a}{n}) = 0$ or $1$ or $-1$.
+        \item $(\frac{a}{n}) = 0$ if gcd$(a,n) \neq 1$.
+        \item $(\frac{ab}{n}) = (\frac{a}{n}) (\frac{b}{n})$
+        \item $(\frac{a}{nm}) = (\frac{a}{m}) (\frac{a}{n})$
+        \item If $a \equiv b \ (mod \ n)$ then $(\frac{a}{n}) = (\frac{b}{n})$. This is one of the most useful properties.
+        \item $(\frac{1}{n}) = 1$
+        \item $(\frac{-1}{n}) = (-1)^{\frac{n-1}{2}}$, and so $(\frac{-1}{n}) = 1$ if $n \equiv 1 \ (mod \ 4)$, or $(\frac{-1}{n}) = -1$ if $n \equiv 3 \ (mod \ 4)$.
+        \item $(\frac{2}{n}) = (-1)^{\frac{n^2-1}{8}}$, and so $(\frac{2}{n}) = 1$ if $n \equiv 1 $ or $ 7 \ (mod \ 8)$, or $(\frac{2}{n}) = -1$ if $n \equiv 3 $ or $ 5 \ (mod \ 8)$
+        \item $(\frac{m}{n}) = (\frac{n}{m})$ unless $m,n \cong 3 \ (mod \ 4)$ which makes $(\frac{m}{n}) = -(\frac{n}{m})$.
+      \end{enumerate}
+    
+      The Java implementation of this is given above.
+    \end{mathdef}
+    
     \subsubsection{AKS Primality Test}
+    
+    \subsubsection{BigInteger Generation}
+    
+    \subsubsection{Primality Test Outcomes}
+    
+    Complexity table:
+    
+    \subsubsection{The Differences Between Primality Testing and Generation}
+    
+    Prime number generation is different from primality testing in that it produces primes or probably primes that can then (but not necessarily) be tested using primality tests to prove that they are prime. This distinction is made as the former may lead to more efficient production and testing of prime numbers.
   
     \subsubsection{A Note on Random Number Generators}
     
@@ -63,6 +192,8 @@ We, however, will be using them for a far more interesting\footnote{http://xkcd.
     The generation and application of random numbers is an extensive and current area of research. For the purposes of the cryptographic utilities to be developer, and the Enigma application, we will be used the \emph{Java SDK} class \verb!SecureRandom!. \verb!SecureRandom! is a cryptographically strong pseudo-random number generator that complies and follows tests specified by FIPS-140-2\footnote{Section 4.9.1}, and also uses non-deterministic seed material, as defined by \emph{RFC 1750}\footnote{http://www.faqs.org/rfcs/rfc1750.html}. Assuming the proper use of this class, it is about as close as we will get to generating secure, non-deterministic random numbers without resorting to physical methods.
     
     In short, and for our purposes, the generation of secure random numbers is based around maintaining the secrecy of a truly random seed on which a random sequence can be generated.
+    
+  \subsection{Strong Primes}
 
 \section{Integers}
 

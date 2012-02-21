@@ -23,8 +23,4 @@ public class FermatTesting {
 
     return true;
   }
-
-  public static void main(String[] args) {
-    System.out.printf("checkprime(10) is %b%n", checkPrime(BigInteger.valueOf(10L), 20));
-  }
 }
