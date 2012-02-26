@@ -1,4 +1,4 @@
-\begin{thebibliography}{8}
+\begin{thebibliography}{17}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -9,6 +9,55 @@
 Kenneth~H. Rosen.
 \newblock \emph{Discrete Mathematics and Its Applications}.
 \newblock McGraw-Hill, 6th edition, 2007.
+
+\bibitem[Menezes et~al.(1996)Menezes, van Oorschot, and
+  Vanstone]{Alfred-Menezes:1996kx}
+Alfred Menezes, Paul van Oorschot, and Scott Vanstone.
+\newblock \emph{Handbook of Applied Cryptography (Discrete Mathematics and Its
+  Applications)}.
+\newblock CRC Press, 5th edition, 1996.
+
+\bibitem[Agrawal et~al.(2002)Agrawal, Kayal, and Saxena]{Agrawal:2002aa}
+Manindra Agrawal, Neeraj Kayal, and Nitin Saxena.
+\newblock Primes in p.
+\newblock Technical report, Indian Institute of Technology, Kanpur-208016,
+  INDIA, 2002.
+
+\bibitem[Salembier and Southerington(2005)]{Salembier:2005aa}
+Robert~G. Salembier and Paul Southerington.
+\newblock An implementation of the aks primality test.
+\newblock Technical report, George Mason University, 2005.
+
+\bibitem[Jav(2006)]{Java:2006ab}
+2006.
+\newblock URL
+  \url{http://developer.classpath.org/doc/java/math/BigInteger-source.html}.
+
+\bibitem[Hunt and Thomas(1999)]{Hunt:1999aa}
+Andrew Hunt and David Thomas.
+\newblock \emph{The Pragmatic Programmer: From Journeyman to Master}.
+\newblock Addison-Wesley, 1999.
+
+\bibitem[Rivest and Silverman(1999)]{Rivest:1999aa}
+Ronald~L. Rivest and Robert~D. Silverman.
+\newblock Are 'strong' primes needed for rsa?
+\newblock Technical report, Massachusetts Institute of Technology, 1999.
+
+\bibitem[Gordon(1985)]{Gordon:1985aa}
+John~A. Gordon.
+\newblock Strong primes are easy to find.
+\newblock In \emph{Proceedings of Eurocrypt}, 1985.
+
+\bibitem[Bellare and Rogaway(1995)]{Bellare:1995aa}
+Mihir Bellare and Phillip Rogaway.
+\newblock Optimal asymmetric encryption - how to encrypt with rsa.
+\newblock Technical report, University of Calinfornia, 1995.
+
+\bibitem[Jonsson and Kaliski(2003)]{Jonsson:2003aa}
+J.~Jonsson and B.~Kaliski.
+\newblock \emph{Public-Key Cryptography Standards (PKCS) No. 1: RSA
+  Specifications Version 2.1}.
+\newblock RSA Laboratories, 2003.
 
 \bibitem[McConnell(2004)]{McConnell:2004tv}
 Steve McConnell.

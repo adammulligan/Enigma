@@ -3,47 +3,49 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: Thesis.aux
 The style file: unsrtnat.bst
 Database file #1: Project.bib
+Warning--entry type for "Java:2006ab" isn't style-file defined
+--line 51 of file Project.bib
 Warning--entry type for "Google:2011ah" isn't style-file defined
---line 21 of file Project.bib
-You've used 8 entries,
+--line 103 of file Project.bib
+You've used 17 entries,
             2481 wiz_defined-function locations,
-            600 strings with 5395 characters,
-and the built_in function-call counts, 2234 in all, are:
-= -- 179
-> -- 91
-< -- 6
-+ -- 42
-- -- 26
-* -- 138
-:= -- 370
-add.period$ -- 23
-call.type$ -- 8
-change.case$ -- 13
-chr.to.int$ -- 8
-cite$ -- 9
-duplicate$ -- 138
-empty$ -- 223
-format.name$ -- 35
-if$ -- 469
+            654 strings with 6661 characters,
+and the built_in function-call counts, 4767 in all, are:
+= -- 395
+> -- 215
+< -- 12
++ -- 94
+- -- 60
+* -- 291
+:= -- 789
+add.period$ -- 49
+call.type$ -- 17
+change.case$ -- 32
+chr.to.int$ -- 17
+cite$ -- 19
+duplicate$ -- 284
+empty$ -- 460
+format.name$ -- 87
+if$ -- 1008
 int.to.chr$ -- 1
-int.to.str$ -- 9
-missing$ -- 9
-newline$ -- 47
-num.names$ -- 21
-pop$ -- 77
+int.to.str$ -- 18
+missing$ -- 14
+newline$ -- 91
+num.names$ -- 45
+pop$ -- 157
 preamble$ -- 1
-purify$ -- 8
+purify$ -- 17
 quote$ -- 0
-skip$ -- 83
+skip$ -- 175
 stack$ -- 0
-substring$ -- 17
-swap$ -- 18
+substring$ -- 36
+swap$ -- 34
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 44
+type$ -- 101
 warning$ -- 0
-while$ -- 14
+while$ -- 30
 width$ -- 0
-write$ -- 106
-(There was 1 warning)
+write$ -- 217
+(There were 2 warnings)

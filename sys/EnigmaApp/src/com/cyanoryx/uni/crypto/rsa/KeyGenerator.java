@@ -23,7 +23,8 @@ public class KeyGenerator {
 		if (size<SIZE_MAX) {
 			this.keysize = size;
 		} else {
-			throw new InternalError("Key size must adhere to "+SIZE_MIN+" < k < "+SIZE_MAX);
+			throw new InternalError("Key size must adhere to "
+                                     +SIZE_MIN+" < k < "+SIZE_MAX);
 		}
 	}
 	
@@ -46,7 +47,8 @@ public class KeyGenerator {
 		{
 			E = new BigInteger( this.keysize/2, new SecureRandom() ) ;
 		}
-		while( ( E.compareTo( phi ) != -1 ) || ( E.gcd( phi ).compareTo( BigInteger.valueOf( 1 ) ) != 0 ) ) ;
+		while( ( E.compareTo( phi ) != -1 )
+			   || ( E.gcd( phi ).compareTo( BigInteger.valueOf( 1 ) ) != 0 ) ) ;
 	    
 	    // D = 1/E mod r
 		BigInteger D = E.modInverse(phi);

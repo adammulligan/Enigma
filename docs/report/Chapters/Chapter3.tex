@@ -45,7 +45,7 @@ We, however, will be using them for a far more interesting\footnote{http://xkcd.
   \end{mathdef}
   
   \begin{mathfact}
-    If $gcd(a,n) = 1$, there are infinitely many primes that are congruent to $a \ (mod \ n)$.
+    If $gcd(a,n) = 1$, there are infinitely many primes that are congruent to $a \mod{n}$.
   \end{mathfact}
   
   \begin{mathfact}
@@ -53,7 +53,7 @@ We, however, will be using them for a far more interesting\footnote{http://xkcd.
     \begin{center}
     	$\pi(x,n,a) \sim \frac{x}{\phi(n) \ln x}$
     \end{center}
-    Where $\pi(x,n,a)$ is the number of primes in the interval $[2,x]$ congruent to $a \ (mod \ n)$.
+    Where $\pi(x,n,a)$ is the number of primes in the interval $[2,x]$ congruent to $a \mod{n}$.
   \end{mathfact}
   
   \begin{mathfact}
@@ -84,13 +84,13 @@ We, however, will be using them for a far more interesting\footnote{http://xkcd.
     
     \subsubsection{Fermat's Little Theorem}
     
-    \textbf{Note:} Fermat's theorem is no longer considered to be a true probabilistic primality test as it cannot determine the difference between probable primes and composite integers known as Carmichael numbers\footnote{Carmichael numbers are similar to Fermat primes as they satisfy the congruence $b^{n-1} \equiv 1 \ (mod \ n)$. The conditions for a number to be in the Carmichael set are more complex than this, however the details are out of the scope of this section.}. The theorem can still be used to prove the compositeness of a number.
+    \textbf{Note:} Fermat's theorem is no longer considered to be a true probabilistic primality test as it cannot determine the difference between probable primes and composite integers known as Carmichael numbers\footnote{Carmichael numbers are similar to Fermat primes as they satisfy the congruence $b^{n-1} \equiv 1 \mod{n}$. The conditions for a number to be in the Carmichael set are more complex than this, however the details are out of the scope of this section.}. The theorem can still be used to prove the compositeness of a number.
     
     Fermat's theorem states:
     
     \begin{center}
       If $n$ is prime and $a$ is an integer, $1 \leq a \leq n - 1$, then
-      $a^{n-1} \equiv 1 \ (mod \ n)$
+      $a^{n-1} \equiv 1 \mod{n}$
     \end{center}
     
     Using this, we can take an integer $n$ and to test for primality find an integer in this interval where the equivalence is not valid, thus proving that $n$ is composite, and is not likely to be prime.
@@ -112,15 +112,15 @@ We, however, will be using them for a far more interesting\footnote{http://xkcd.
     
     \begin{mathdef}
       Let $n$ be an odd prime: $n - 1 = 2^dr$, where $d$ and $r$ are positive integers, with $r$ being odd. For $a \in (\mathbb{Z}/n\mathbb{Z})$: \\
-      $a^r \equiv 1 \ (mod \ n)$ \textbf{or} \\
-      $a^{2^dr} \equiv -1 \ (mod \ n)$ assuming $0 \leq d \leq s - 1$.
+      $a^r \equiv 1 \mod{n}$ \textbf{or} \\
+      $a^{2^dr} \equiv -1 \mod{n}$ assuming $0 \leq d \leq s - 1$.
     \end{mathdef}
     
     Using this, we can define the Miller--Rabin requirements as:
     
     \begin{enumerate}
       \item Assume $n$ is an odd composite integer, and $n - 1 = 2^sr$, where $r$ is odd.
-      \item Where $a$ is an integer in the interval $[1,n-1]$, if $a$ does not match the conditions in definition 3.3.2 ($a^r \not\equiv1 \ (mod \ n)$,  $a^{2^sr} \not\equiv -1 \ (mod \ n)$), then $a$ is known as a witness for $n$.
+      \item Where $a$ is an integer in the interval $[1,n-1]$, if $a$ does not match the conditions in definition 3.3.2 ($a^r \not\equiv1 \mod{n}$,  $a^{2^sr} \not\equiv -1 \mod{n}$), then $a$ is known as a witness for $n$.
       \item Where $a$ is the same as $a$ in point 2, if $a$ matches \emph{either} of the conditions in definition 3.3.2, it is known as a strong liar for $n$.
     \end{enumerate}
     
@@ -138,14 +138,14 @@ We, however, will be using them for a far more interesting\footnote{http://xkcd.
     The Solovay--Strassen test was one of the first primality tests to be made popular by the increasing use of public-key cryptography. It is another probabilistic primality test. It is, in essence, quite a simple algorithm in that the process flow is linearly straightforward. \\
     
     \begin{mathdef}
-      Let $n$ be an odd integer, then $a^{\frac{(n-1)}{2}} \equiv (\frac{a}{n}) \ (mod \ n)$ where gcd$(a,n) = 1$.
+      Let $n$ be an odd integer, then $a^{\frac{(n-1)}{2}} \equiv (\frac{a}{n}) \mod{n}$ where gcd$(a,n) = 1$.
     \end{mathdef}
     
     We can use this to define the Solovay--Strassen algorithm requirements:
     
     \begin{enumerate}
-      \item If gcd$(a,n) > 1$ or $a^{\frac{(n-1)}{2}} \not\equiv (\frac{a}{n}) \ (mod \ n)$, then $a$ is an Euler witness for $n$ (composite).
-      \item If gcd$(a,n) = 1$ and $a^{\frac{(n-1)}{2}} \equiv (\frac{a}{n}) \ (mod \ n)$ then $n$ is an Euler pseudoprime (prime).
+      \item If gcd$(a,n) > 1$ or $a^{\frac{(n-1)}{2}} \not\equiv (\frac{a}{n}) \mod{n}$, then $a$ is an Euler witness for $n$ (composite).
+      \item If gcd$(a,n) = 1$ and $a^{\frac{(n-1)}{2}} \equiv (\frac{a}{n}) \mod{n}$ then $n$ is an Euler pseudoprime (prime).
     \end{enumerate}
     
     This is relatively simple to implement:
@@ -161,28 +161,159 @@ We, however, will be using them for a far more interesting\footnote{http://xkcd.
         \item $(\frac{a}{n}) = 0$ if gcd$(a,n) \neq 1$.
         \item $(\frac{ab}{n}) = (\frac{a}{n}) (\frac{b}{n})$
         \item $(\frac{a}{nm}) = (\frac{a}{m}) (\frac{a}{n})$
-        \item If $a \equiv b \ (mod \ n)$ then $(\frac{a}{n}) = (\frac{b}{n})$. This is one of the most useful properties.
+        \item If $a \equiv b \mod{n}$ then $(\frac{a}{n}) = (\frac{b}{n})$. This is one of the most useful properties.
         \item $(\frac{1}{n}) = 1$
-        \item $(\frac{-1}{n}) = (-1)^{\frac{n-1}{2}}$, and so $(\frac{-1}{n}) = 1$ if $n \equiv 1 \ (mod \ 4)$, or $(\frac{-1}{n}) = -1$ if $n \equiv 3 \ (mod \ 4)$.
-        \item $(\frac{2}{n}) = (-1)^{\frac{n^2-1}{8}}$, and so $(\frac{2}{n}) = 1$ if $n \equiv 1 $ or $ 7 \ (mod \ 8)$, or $(\frac{2}{n}) = -1$ if $n \equiv 3 $ or $ 5 \ (mod \ 8)$
-        \item $(\frac{m}{n}) = (\frac{n}{m})$ unless $m,n \cong 3 \ (mod \ 4)$ which makes $(\frac{m}{n}) = -(\frac{n}{m})$.
+        \item $(\frac{-1}{n}) = (-1)^{\frac{n-1}{2}}$, and so $(\frac{-1}{n}) = 1$ if $n \equiv 1 \mod{4}$, or $(\frac{-1}{n}) = -1$ if $n \equiv 3 \mod{4}$.
+        \item $(\frac{2}{n}) = (-1)^{\frac{n^2-1}{8}}$, and so $(\frac{2}{n}) = 1$ if $n \equiv 1 $ or $ 7 \mod{8}$, or $(\frac{2}{n}) = -1$ if $n \equiv 3 $ or $ 5 \mod{8}$
+        \item $(\frac{m}{n}) = (\frac{n}{m})$ unless $m,n \cong 3 \mod{4}$ which makes $(\frac{m}{n}) = -(\frac{n}{m})$.
       \end{enumerate}
     
       The Java implementation of this is given above.
     \end{mathdef}
     
+    \subsubsection{Lehmann Primality Test}
+    
+    A far lesser known primality test is Lehmann's Primality Test. Commonly (at least, within the minority that implement it) referred to as a balance between the simplicity of Fermat's Theorem and the complexity of implementation of Miller--Rabin, it consists of three steps:
+    
+    \begin{enumerate}
+      \item Pick a random integer $a$, such that $1 \leq a < n$.
+      \item Let $x = a^{\frac{(n-1)}{2}} \mod n$.
+      \item If $x$ is 1 or $-1 \mod n$ then is is a possible prime, otherwise it is composite.
+    \end{enumerate}
+    
+    The Java implementation of this is as so:
+    \lstinputlisting{./Code/primes/LehmannTest.java}
+    \emph{This file can be found at latex\_src/Code/primes/LehmannTest.java}
+    
+    We include this here as an example that subtle improvements to these algorithms can result in considerable improvements to running time\cite{Kendal:2012rt} without adding to the complexity, though we will not consider it as a final algorithm.
+    
+    However, simplicity does not come without a cost: as with Fermat's Theorem, it is susceptible to considering Carmichael numbers as possibly prime\footnote{http://news.ycombinator.com/item?id=3373284}.
+    
     \subsubsection{AKS Primality Test}
+    
+    The only true-prime test of the four listed so far, AKS was presented as recently as 2002 by three mathematicians: Manindra \textbf{A}grawal, Neeraj \textbf{K}ayal and Nitin \textbf{S}axena (hence AKS) \cite{Agrawal:2002aa}. It is a deterministic primality-proving algorithm, with a complexity relatively similar to that of the faster probabilistic primality tests.
+    
+    The AKS test is based around Fermat's Little Theorem, however it excels where Fermat's theorem was unable to: it is able to distinguish between pseudoprimes and Carmichael numbers. Recall that Fermat's Little Theorem states that: 
+    
+    \begin{mathfact}
+      Where integers $a \in \mathbb{Z}$, $n \geq 2$ and gcd$(a,n)=1$, $n$ is prime if the following congruence is satisfied: \\
+      $(x+a)^n \equiv x^n + a \mod{n}$ 
+    \end{mathfact}
+    
+    This fails for both pseudoprimes and Carmichael numbers. Instead, the following congruence is used as the base of the AKS algorithm: 
+    
+    \begin{mathdef}
+      Where $r$ is the smallest possible value that satisfies $O_r(n) > 4log^2n$,\\
+       $(x+a)^n \equiv x^n + a \mod{x^r -1, n}$ 
+    \end{mathdef}
+    
+    The algorithm for AKS is fairly simple to follow, however the Java program is somewhat verbose, and thus it is helpful if we first define it in pseudocode (uses the Lenstra and Pomerance Improvements \cite{Salembier:2005aa}):
+    
+    \begin{enumerate}
+      \item If $n = a^b$ where $a \in \mathbb{N}$ and $b > 1$ then print "composite" and stop.
+      \item Find the smallest value of $r$ so that $O_r(n) > 4log^2n$.
+      \item If gcd$(a,n) \neq 1$ for all integers $a$ where $a \leq r$ then print "composite" and stop.
+      \item For ($a=1$) to $\lfloor \sqrt{r} $ log $ n \rfloor$:
+      \item If $((x+a)^n) \equiv x^n + a \mod{(x^r-1, n)}$ then print "prime" and stop.
+    \end{enumerate}
+    
+    To calculate r, we use the following method:
+    
+    \begin{enumerate}
+      \item Pick a number $q$ where $q > \lfloor log^2n \rfloor$.
+      \item For $j=1$ to $[(log^2n)]$ do
+      \item   Calculate $n^j \mod{q}$
+      \item   If the residue $= 1 \mod{q}$, then $q++$.
+      \item   Else $r=q$.
+    \end{enumerate}
+    
+    \subsubsection{Maurer's Algorithm}
+    
+    Maurer's Algorithm is the second of two provable prime tests. It is an efficient recursive algorithm, that is only marginally less efficient than the generation of \emph{probable primes} using Miller--Rabin.
+    
+    First, let's define a number of facts necessary for this algorithm\cite{Maurer:1994aa}.
+    
+    \begin{mathdef}
+      Let $n=2RF+1$ where the prime factorisation of $F=q_1^{b_1}...q_r^{b_r}$. Where $a$ is an integer such that: 
+      \begin{center}
+        $a^{n-1} \equiv 1 \mod n$ and gcd$(a^{\frac{(n-1)}{q_r}}-1,n) = 1$
+      \end{center}
+      Then, a prime factor $p$ of $n$ is $p = mF+1$ for an integer $m \geq 1$. \\
+      If $F > \sqrt{n}$, or $F$ is odd and $F > R$, then $n$ is prime.
+    \end{mathdef}
+    
+    \begin{mathdef}
+      Let $n,a,R$ and $F$ be as in definition 3.3.6. Let $x \geq 0$ and $y = 2R - xF$ where $0 \leq y < F$. \\
+      If $F \geq \sqrt[3]{n}$ and $y^2-4x \neq 0$ and not perfect square, $n$ is prime.
+    \end{mathdef}
+    
+    The proofs for these definitions can be found in \cite{Maurer:1991aa}\textsection 2.
+    
+      \paragraph{Trial Division} 
+      
+      is required for Maurer's algorithm. Trial division is an integer factorisation algorithm, but the process can be used for finding primes. For small numbers, e.g. $n < 20$, then trial division is faster than most methods. However, for primes larger than 20-25 bits it is excessively inefficient\cite{Shwarz:2007aa}. Given a boundary $n$ to check for a prime $p$, $p$ is divided by all primes less than $n$. $p$ is not prime if it can be divided by any prime in the interval $[1,n]$. \\
+      
+      \lstinputlisting{./Code/primes/TrialDivisionTest.java}
+      
+      This code could be made more efficient by introducing the use of a prime sieve to pre-generate a list of prime divisors to be used.
+      
+      \paragraph{Algorithm Steps}
+      
+      \begin{enumerate}
+        \item Test
+      \end{enumerate}
+      
+      We will not be implementing Maurer's algorithm in Java due to the complexity required for little benefit. See \textsection 3.3.1.10.
     
     \subsubsection{BigInteger Generation}
     
+    Using the constructor \verb!BigInteger(int bitLength, int certainty, Random rnd)!, we can generate random, arbitrary probable primes with the given certainty. The \verb!BigInteger! prime generator uses the Miller--Rabin test\cite{Java:2006ab} with a random number generator to produce random probable primes.
+    
     \subsubsection{Primality Test Outcomes}
     
-    Complexity table:
+    Given these algorithms, which is best suited to our use further in this project? It is best to attempt to do this formally, rather than subjectively.
     
-    \subsubsection{The Differences Between Primality Testing and Generation}
+    Primality \emph{proving} algorithms are required to satisfy the following four constraints, however they also apply to probable primality tests:
     
-    Prime number generation is different from primality testing in that it produces primes or probably primes that can then (but not necessarily) be tested using primality tests to prove that they are prime. This distinction is made as the former may lead to more efficient production and testing of prime numbers.
-  
+    \begin{enumerate}
+      \item \textbf{Generality} -- The primality of any general number can be identified.
+      \item \textbf{Polynomial} -- The maximum running time of the algorithm is polynomial.
+      \item \textbf{Deterministic} -- The algorithm can deterministically identify if the input integer is prime or not.
+      \item \textbf{Unconditional} -- The validity of the test result is not dependent on the proof of a current unproven hypothesis.
+    \end{enumerate}
+    
+    \begin{center}
+        \begin{tabular}{ | l | p{7cm} |}
+          \hline
+          \textbf{Algorithm} & \textbf{Constraints matched}  \\ \hline
+          Fermat's Little Theorem & Meets only two constraints. \\ \hline
+          Miller--Rabin & Miller--Rabin in its suggested form meets three constraints, as it is dependent on the proving of the generalised Riemann hypothesis. Basic Miller--Rabin tests are not deterministic, and only meet two constraints. \\ \hline
+          Solovay--Strassen &  Meets all but the third constraint, as it is not deterministic, but probabilistic.\\ \hline
+          AKS & Meets all four constraints. \\ \hline
+        \end{tabular}
+      \end{center}
+    
+     \paragraph{Running Times}
+      
+      \begin{center}
+        \begin{tabular}{ | l | l |}
+          \hline
+          \textbf{Algorithm} & \textbf{Running Time}  \\ \hline
+          Fermat's Little Theorem & $O(k \times log^2n \times log \ log \ n \times log \ log \ log \ n)$ \\ \hline
+          Miller--Rabin & $O(k \ log^3n)$ \\ \hline
+          Solovay--Strassen & $O(k \ log^3n)$ \\ \hline
+          AKS\footnote{$\breve{O}(g(n))$ is shorthand for $O(g(n) \ log^k \ g(n))$} & $\breve{O}(log^{12}n)$ \\ \hline
+        \end{tabular}
+      \end{center}
+      
+      The running time of the Maurer algorithm is harder to quantify, due to the number of estimates that have to be made based on long integer mathematics and probability. However, we can use the facts we defined previously to determine a rough estimate of a basic implementation. Where $k$ is the size of the prime needed, and given that we are exponentiating through multiplication and the inverse modulus, for which the running time would be $O(k^3)$, and also dividing, for which the running time would be $O(k\log(k))$, we can say that the running time is $O(\frac{k^4}{log(k)})$\cite{Schwarz:2007aa}.
+      
+    Based on the above and what we've seen when implementing the algorithms, we can say with confidence that the Miller-Rabin test is the most useful probable primality test due to the balance of complexity  and simplicity in implementation, whereas the AKS test is the most useful provable primality test due to its relatively fast execution speed (compared to other provable prime algorithms), and thus the Miller--Rabin test is the best overall algorithm to be used in the efficient generation of primes.
+    
+      \paragraph{Conclusion}
+      
+      Overall, \verb!BigInteger! gives the best results for minimal execution time, minimal effort, support and reduced likelihood of mistakes. Importantly, it implements the Miller--Rabin test, which as we have determined, is the fastest primality test that can be reasonably used in software. Alongside this, as it is a maintained library that has been in the JDK since 1999, it is mature and any errors or bugs will have been repaired at this point. It is said that a developer should not repeat themselves, or ``reinvent the wheel": ``Every piece of knowledge must have a single, unambiguous, authoritative representation within a system"\cite{Hunt:1999aa} and as such, reimplementing Miller--Rabin for no reason other than as proof that you can will result in poor software that is difficult and time-consuming to maintain, as well as containing errors.
+    
     \subsubsection{A Note on Random Number Generators}
     
     The random number generators mentioned thus far, and all used later, cannot be considered \emph{truly} random. They are known as \emph{pseudo-random number generators} -- sequences generated deterministically based on a seed value. The sequences are produced algorithmically based on a relatively small set of values, Generally these sequence can be considered \emph{practically} random for most uses, assuming the seed is not publicly known and is truly random.
@@ -194,23 +325,402 @@ We, however, will be using them for a far more interesting\footnote{http://xkcd.
     In short, and for our purposes, the generation of secure random numbers is based around maintaining the secrecy of a truly random seed on which a random sequence can be generated.
     
   \subsection{Strong Primes}
+  
+  A prime $n$ is defined as strong if the integers $a,b,$ and $c$ exist such that:
+  
+  \begin{enumerate}
+    \item $n - 1$ has a large prime factor $a$.
+    \item $n + 1$ has a large prime factor $b$.
+    \item $a - 1$ has a large prime factor $c$.
+  \end{enumerate}
+  
+  Gordon's algorithm can be used to generate such strong primes based around the output of a probabilistic primality test such as Miller--Rabin, however it is out of the scope of this section.
+  
+  The utility of random primes is in the generation of moduli for public-key cryptography. It is expected that the integer primes $p,q$ used to generate modulus $n$ be distinct and of sufficient size that factorisation of $n$ is implausible. However, they should be random in the sense that they are selected from a set of prime integers sufficiently large enough to make a brute force attack infeasible.
+  
+  Recently it has been shown that strong primes do not make much difference in terms of security over their random prime counterparts. However, it is of shared opinion that as they are no \emph{less} secure and have a negligible execution time, strong primes should still be used for cryptographic prime requirements.
+  
+  For more information, see \cite{Rivest:1999aa} or \cite{Gordon:1985aa}.
 
 \section{Integers}
 
+Integers are a well-define concept, and you would have had great difficulty getting this far in the report without understanding what one is. Integers are, as with lots of areas of studies, extremely useful in cryptography, or perhaps more specifically: the properties of integers and the operations we can perform on them are particularly useful in cryptography.
+
   \subsection{Factorisation}
+  
+  The integer factorisation problem is the very foundation of many cryptographic algorithms. Formally, it is defined as:
+  
+  \begin{mathdef}
+    Given a positive integer $n$, find its prime factors: $n = p^{e_1}_1p^{e_2}_2...p^{e_n}_n$ where $p_n$ are distinct primes, and $e_n \geq 1$.
+  \end{mathdef}
+  
+  It is this problem that makes it implausible for RSA and other algorithms to be broken by factoring the modulus and obtaining the private keys. We will see this in the following sections.
+  
+  There are many current algorithms for factoring large prime multiples, which will be discussed in Chapter 7.
 
 \section{Public-key Cryptography}
 
   \subsection{RSA}
   
-  So far we have only covered the concepts of number theory and how they're used in cryptography. In this section we will discuss exactly how they are implemented, and go in to greater detail about the algorithms and techniques required.
+  So far we have only covered the concepts of number theory and how they're used in cryptography. In this section we will discuss exactly how they are implemented, and go in to greater detail about the algorithms and techniques required. Chapter 2 provides a brief definition of public-key cryptography.
+  
+    \subsubsection{The RSA Problem}
+    
+    The RSA Problem forms the foundation of the RSA public key system:
+    
+    \begin{mathdef}
+      Given 3 parameters:
+      \begin{enumerate}
+        \item a positive integer $n$, $n=pq$ where $p$ and $q$ are distinct, odd primes.
+        \item a positive integer $e$, where gcd$(e, (p-1)(q-1)) = 1$.
+        \item an integer c.
+      \end{enumerate} 
+      Find integer $m$, where $m^e = c \mod{n}$.
+    \end{mathdef}
+    
+    \subsubsection{RSA}
+    
+    The RSA cryptosystem -- an implementation of the RSA problem -- is the most popular asymmetric cryptosystem, mostly due to its ease of implementation and the simple concepts behind it. It's primary purpose is to provide privacy and confidentiality, and we will be using it as part of a key agreement scheme for use in symmetric ciphers.
+     
+    \subsubsection{Key Generation}
+    
+    A fundamental property of a public-key cryptosystem is the ability to generate and handle public- and private-keys, both of which come in pairs of corresponding keys. They complete the encryption and decryption transformations, respectively. 
+    
+    When wishing to setup the ability to receive asymmetrically encrypted messages, a user must first generate their keys as so:
+    
+    \begin{enumerate}
+      \item Generate two large primes, $p$ and $q$, and calculate $n=pq$.
+      \item Calculate $\phi = (p-1)(q-1)$, and randomly pick an integer $e$ until $1 < e < \phi$, assuming gcd$(e,\phi)=1$.
+      \item Calculate integer $d$, $1 < d < \phi$ so that $ed \equiv 1 (\mod{\phi})$
+    \end{enumerate}
+    
+    The public key is $(n,e)$ and the private key is $d$.
+    
+    The Java implementation of this as a class is:
+    \lstinputlisting{../../sys/EnigmaApp/src/com/cyanoryx/uni/crypto/rsa/KeyGenerator.java}
+    
+    This file can be found at \emph{src/com/cyanoryx/uni/crypto/rsa/KeyGenerator.java}.
+    
+    \paragraph{Key Distribution} Public-keys, as can be determined from their name, are intended to be made public and widely available. This has its own problems however, as without any capability to verify the origin of a public-key, a user will be susceptible to impersonation attacks. There are various methods to solve this, including certificates, using a trusted server, and other techniques that will be discussed in chapter 5.
+    
+    \subsubsection{Encryption}
+    
+    For a user Alice to send an encrypted message $m$ to user Bob, Alice must obtain Bob's public key $(n,e)$. The message is encrypted, $c = m^e \mod n$, and can be sent securely to Bob.
+    
+    The Java implementation of encryption is:
+    \lstinputlisting{Code/asymm/Encrypt.java}
+    
+    \subsubsection{Decryption}
+    
+    Decryption, as with encryption, is simple: using private key $d$, Bob computes $m = c^d \mod {n}$.
+    
+    The Java implementation of decryption is:
+    \lstinputlisting{Code/asymm/Decrypt.java}
+    
+    Both the encryption and decryption Java files have some helper methods removed for brevity and to highlight the actual algorithm.
+    
+    \subsubsection{Formal Proof}
+    
+    Given any message $m$ such that $m \in \mathbb{Z}_n$, as the decryption transformation ($D(m)$) is an inverse of the encryption transformation ($E(m)$), we have: 
+    \begin{center}
+      $E(D(m)) = D(E(m)) = m^{ed} \mod n$
+    \end{center}
+    
+    Exponents $e$ and $d$ are multiplicative inverses of each other, modulo $\phi(n)$, we get:
+    \begin{center}
+      $ed = 1 + k(p-1)(q-1)$
+    \end{center}
+    
+    \begin{center}
+      \begin{tabular}{ l l l l }
+        $m^{ed}$ & $\equiv$ & $m(m^{p-1})^{k(q-1)}$ & ($\mod p$) \\
+         & $\equiv$ & $m((m \mod p)^{p-1})^{k(q-1)}$ & ($\mod p$) \\
+         & $\equiv$ & $m(1)^{k(q-1)}$ & ($\mod p$) \\
+         & $\equiv$ & $m$ & ($\mod p$)
+      \end{tabular}
+    \end{center}
+    
+    And thus $m^{ed} \equiv m \mod p$.
+    
+    \subsubsection{Textbooks and OAEP}
+    
+    So far we have looked at what are known as "textbook algorithms" -- algorithms that are not suited for us in the real world. Generally they are constructed around the basic core mathematics of the problem, without any additional measures to counteract basic attacks, like frequency analysis. 
+    
+    As a solution to this, a number of standards have been introduced that add extra requirements to the algorithms such as hashing to improve the overall security. In the case of RSA, the most common standard implemented is known as \emph{RSA OAEP} -- RSA Optimal Asymmetric Encryption Padding\cite{Bellare:1995aa}. It is based upon the EME-OAEP encoding method -- the purpose of this scheme is to add randomness to the encrypted output, creating a probabilistic result, along with preventing any information leakage from ciphertexts.
+    
+    More specifically, the use of OAEP protects against chosen-plaintext attacks. There are some concerns about the inability to prove that it is secure from certain types of chosen-plaintext attacks, however this is discussed in more detail in Chapter 7.
+    
+    Given:
+    
+    \begin{itemize}
+      \item A hash function.
+      \item A mask generation function (MGF)
+      \item A public key.
+      \item The plaintext message.
+      \item A label to be appended to the message.
+    \end{itemize}
+    
+    There are three steps to the RSA OAEP encryption process:
+    
+    \begin{enumerate}
+      \item Check the length of input to ensure that it is below the limit for the hash function. In our case, the limit is $2^{61}-1$ (SHA-1).
+      \item Encode the message using EME-OAEP:
+      \item \begin{enumerate}
+                  \item Construct the \verb!byte! array:
+                  		\begin{verbatim}
+DB = LHash (the hash of the label)
+    || PS (a byte array of zero-bytes [0x00])
+    || 0x01
+    || M (the message to encrypt)
+                            \end{verbatim}
+                  \item Generate a random byte array for us as a seed $s$.
+                  \item Create a mask $m = $ MGF$($s, rsa modulus length $-$ hash length $- 1)$
+                  \item Mask DB: $mdb = DB \oplus m$
+                  \item Create a seed mask $sm =  $ MGF$($masked DB, hash length$)$
+                  \item Mask the seed: $ms = s \oplus sm$
+                  \item Finally, concatenate the generated masked byte arrays, prefixed with \verb!0x00!:
+                            \verb!EM = 0x00 || ms || mdb!.
+                \end{enumerate}
+      \item Encrypt the encoded \verb!byte! array $EM$ using the RSA method as defined previously.
+    \end{enumerate}
+    
+    After all the components have been created, they are assembled as so\cite{Jonsson:2003aa}:
+    
+    \begin{minipage}[b]{0.5\linewidth}
+      \small\begin{verbatim}
+                               +----------+---------+-------+
+                          DB = |  lHash   |    PS   |   M   |
+                               +----------+---------+-------+
+                                              |
+                    +----------+              V
+                    |   seed   |--> MGF ---> xor
+                    +----------+              |
+                          |                   |
+                 +--+     V                   |
+                 |00|    xor <----- MGF <-----|
+                 +--+     |                   |
+                   |      |                   |
+                   V      V                   V
+                 +--+----------+----------------------------+
+           EM =  |00|maskedSeed|          maskedDB          |
+                 +--+----------+----------------------------+
+      \end{verbatim}
+    \end{minipage}
+    
+    However, there is one function with this that is not yet explained.
+    
+    \paragraph{The Mask Generation Function (MGF)}
+    
+    is a function that takes (in Java terminology) a \verb!byte! array of arbitrary length and a desire output length, and gives a \verb!byte! array of that length. As it is based on a hash function, the output is deterministic. It is defined the RSA PKCSv2 specification \cite{Jonsson:2003aa} that the MGF should be pseudorandom, in that given one piece of the output, you are unable to predict another part of the output. The entire security of RSA OAEP is dependent on this property. 
+    
+    The MGF in Java is:
+    \lstinputlisting{../../sys/EnigmaApp/src/com/cyanoryx/uni/crypto/rsa/MGF1.java}
+    
+    This file can be found in \emph{com.cyanoryx.uni.crypto.rsa}.
+    
+    Decryption, as with standard RSA, is effectively the reverse of encryption. The ciphertext is decrypted, the concatenated string of properties is split in to the components created in encryption, and the message output.
+        
+    Because OAEP is a purely technical standard, rather than mathematical, we will list the Java implementation of it with inline comments as explanation.
+    
+    \lstinputlisting{../../sys/EnigmaApp/src/com/cyanoryx/uni/crypto/rsa/RSA_OAEP.java}
+    
+    The \verb!Key! class is a method for objectively storing key information that is imported from file. It can be viewed in the same package, \emph{com.cyanoryx.uni.crypto.rsa}.
+
+  \subsection{Diffie--Hellman}
+  
+  The Diffie-Hellman Key Exchange Protocol was one of the first public-key schemes created for sharing keys. Created by Whitfield Diffie, and Martin Hellman (though believed to have been originally created by British Signals Intelligence agency \emph{GCHQ} and kept classified), it allows to users to generate keying material without ever having to send the key in cleartext.
+  
+  The general concept of the D--H protocol is that a large prime and a generator element are shared publicly between entities, both of whom will then pick a secret number and generate a public number based upon this. Each entity uses their partner's public number to generate keying material, which will be the same for both.
+  
+  There is an excellent public domain graphic that explains the Diffie--Hellman process using the colour of paint\footnote{Created and released in to the public domain by Wikimedia user \emph{Flugaal}}:
+  
+  \begin{center}
+    \includegraphics[scale=0.6]{./Figures/3-5-2a.pdf}
+  \end{center}
+  
+  Unfortunately, however, we cannot easily turn graphics in to algorithms, and so we must define the formal process behind Diffie--Hellman\cite{Mao:2003uq}.
+  
+  \begin{enumerate}
+    \item Given a large prime $p$ and $g$, an element in the finite field $F_p^*$,
+    \item Alice picks an integer $a$ in $[1,p-1)$ and calculates $g_a = g^a \mod p$ and sends it to Bob.
+    \item Bob picks an integer $b$ in $[1,p-1)$ and calculates $g_b = g^b \mod p$ and sends it to Alice.
+    \item Alice and Bob computer $K = g_b^a$ and $K = g_a^b$, respectively.
+  \end{enumerate}
+  
+  Given that the relationship $ab \equiv ba \mod (p-1)$ is valid, and the for Alice:
+  
+  \begin{center}
+    $K = g^{ba} \mod p$
+  \end{center}
+  
+  And for Bob:
+  
+  \begin{center}
+    $K = g^{ab} \mod p$
+  \end{center}
+  
+  We can see that both Alice and Bob's calculations will result in the same keying material.
+  
+  The secrecy of Diffie--Hellman is reliant on a problem known as the Computational Diffie--Hellman Problem. 
+  
+  \begin{mathdef}
+    Given $g$, a generator element in the finite field $\mathbb{F}_q^*$, and ${g^a,g^b} \in F_q^*, 0 < a, b < q$, find $g^{ab}$.
+  \end{mathdef}
+  
+  These values are available to an attacker, however they are not useful without being able to calculate $g^{ab}$ easily.
   
     \subsubsection{Implementation}
     
-    \subsubsection{Textbooks and OAEP}
-
-  \subsection{Diffie-Hellman}
-  
-    \subsubsection{Implementation}
+    In Java, two classes are necessary for a robust D--H implementation. Firstly, a key generator to create the public and private keys for both entitites.
+    
+     \lstinputlisting{../../sys/EnigmaApp/src/com/cyanoryx/uni/crypto/dh/KeyGenerator.java}
+    
+    Secondly, the actual algorithm implementation that, given a received public and local private key, will generate keying material as defined in RFC2631\footnote{\cite{Rescorla:1999aa}}.
+    
+    \lstinputlisting{../../sys/EnigmaApp/src/com/cyanoryx/uni/crypto/dh/KeyAgreement.java}
+    
+    Both \verb!KeyGenerator! and \verb!KeyAgreement! can be found in \emph{com.cyanoryx.uni.crypto.dh}.
+    
+    Using these implementations, a shared-key would be generated as so:
+    
+    \begin{enumerate}
+      \item Alice generates a public and private key pair with \verb!KeyGenerator!, and sends the public half to Bob.
+      \item Bob generates a key pair based on Alice's key using \verb!KeyGenerator!, and sends the public half to Alice.
+      \item Both Alice and Bob use \verb!KeyAgreement! to generate keying material using both their private and public keys.
+      \item Alice and Bob are now in possession of a shared session key that has not been sent between them, let alone in cleartext.
+    \end{enumerate}
   
 \section{Other Variations of Public-key Cryptography}
+
+  \subsection{ElGamal}
+  
+  ElGamal differs from RSA and D--H in that it is not just a public-key encryption/decryption algorithm, but a public-key cryptosystem that is to be used not only to generate and share keys, but also encrypt the confidential messages to be sent using these keys. It utilises the one-way trapdoor function, and became popular due to the fact that it is based around the Computational Diffie--Hellman Problem and the Discrete Logarithm Problem, \cite{Mao:2003uq} \textsection pg.253, the latter of which is considered as an alternative to the integer factorisation problem.
+  
+  \paragraph{Key Generation and Sharing}
+  
+  Alice:
+  
+  \begin{enumerate}
+    \item Chooses a random prime number $p$.
+    \item As with D--H, calculates a multiplicative generator element $g$ in $\mathbb{F}_p^*$.
+    \item Picks a random number $d$ where $d \in \mathbb{Z}_{p-1}$.
+    \item Computes $e = g^x\mod p$.
+    \item $d$ and $e$ are the private and public keys, respectively.
+  \end{enumerate}
+  
+  \paragraph{Encryption}
+  
+  If Bob wishes to send a message $m$ to Alice,  he must:
+  
+  \begin{enumerate}
+    \item Pick a random integer $k$ such that $k \in \mathbb{Z}_{p-1}$.
+    \item Computer a pair of ciphertexts $(C_1,C_2)$ such that:
+    \item $C_1 = g^k \mod p$
+    \item $C_2 = e^km \mod p$
+  \end{enumerate}
+  
+  And send the pair to Alice.
+  
+  \paragraph{Decryption}
+  
+  Upon receipt, Alice:
+  
+  \begin{enumerate}
+    \item Calculates $m = C_1/C_2^d \mod p$.
+  \end{enumerate}
+  
+  This can be proved by showing that:
+  
+  \begin{center}
+    $C_1^d \equiv (g^k)^x \equiv (g^d)^k \equiv e^k \equiv C_2/(m \mod p)$
+  \end{center}
+  
+    \subsubsection{Textbook Algorithm Insecurity}
+    
+    As we have said, textbook algorithms are defined as such because they are simply the core mathematical concept, with no additional security measures, and thus are very weak encryption schemes. The same stands for ElGamal -- it can leak parts of information. Commonly, a value $g$ (as defined above) is of order $r = $ord$_p(g) << p$ to improve efficiency\cite{Mao:2003uq} however if the message $m$ is not defined in the group $\langle g \rangle$ then a meet-in-the-middle attack -- for example, calculating the encrypted value of the plaintext for all possible keys and then decrypting for each key, which is likely to revel the correct keys -- can be made. 
+    
+    For a ciphertext $(C_1,C_2) = (g^k, e^km) \mod p$, an attacker Mallory can calculate $C_2^r \equiv m^r \mod p$. This is bad because it results in ElGamal no longer being a probabilistic encryption scheme, but a deterministic one. This means that a trial-and-error method of determining keys can take place, as above.
+  
+  \subsection{Rabin}
+  
+  The Rabin Public-Key Algorithm, created by Michael O. Rabin of Miller--Rabin fame, is a public-key cryptosystem that is based around the difficulty of calculating a square root, modulo a non-prime integer, which is equivalent to the difficulty of integer factorisation. It is a simple and efficient algorithm, and is implemented as so:
+  
+  \paragraph{Key Generation}
+  
+  Alice generates a key as in RSA:
+  
+  \begin{enumerate}
+    \item Generate to large primes, $p$ and $q$.
+    \item Compute the modulus $N = pq$.
+    \item Pick a random integer $b$ such that $b \in \mathbb{Z}_N^*$.
+    \item $(N,b)$ becomes the public key, while $(p,q)$ is the private key.
+  \end{enumerate}
+  
+  \paragraph{Encryption}
+  
+  To encrypt a message $m$, Bob must:
+  
+  \begin{enumerate}
+    \item Calculate ciphertext $c = m(m+b) \mod N$.
+  \end{enumerate}
+  
+  \paragraph{Decryption}
+  
+  To decrypt a received ciphertext $c$, Alice must:
+  
+  \begin{enumerate}
+    \item Solve the equation $m^2 + bm -c \equiv 0 \mod N$.
+  \end{enumerate}
+    
+Due to its popularity, we will be using RSA as our main method of key exchange.
+
+\section{Uses and going forward}
+
+Now that we have formally defined the mathematics behind public-key cryptography and implemented them from prime number generation through to key generation and actual encipherment/decipherment, what can it be used for practically? 
+
+In the context of our instant messaging application, could a secure public-key scheme like RSA be used to encrypt outgoing messages? Technically speaking, yes; however, practically, no primarily because of running time concerns: {\color{red}Add citation} public-key cryptography is significantly slower than using symmetric-key cryptography. The solution to this is to utilise both schemes such that they complement one another -- this is known as a digital envelope scheme.
+
+\begin{center}
+  \includegraphics[scale=0.6]{./Figures/3-7a.pdf}
+\end{center}
+
+This is the standard process for sending an encrypted message $m$ via public-key cryptography. If instead we encrypt a session key for a symmetric algorithm, like AES, and send that securely then both entities will be in possession of a session key without it ever having been transferred in the clear.
+
+\begin{center}
+  \includegraphics[scale=0.6]{./Figures/3-7b.pdf}
+\end{center}
+
+In this case, Alice generates and encrypts a key $k$ with Bob's public key and sends it to him, Bob then decrypts this and stores the key. Both Alice and Bob are now have the session key.
+
+This is a simple and easy to implement solution using existing -- and open source -- technologies (without requiring any custom hardware) that we will be utilising as a key exchange mechanism in the Enigma application.
+
+\subsection{Problems}
+
+As considered in \emph{\textsection 2.4}, there is an issue with using public-key schemes for either message encryption or key encryption -- impersonation. The ideal public-key system should allow two entities to securely communicate by sharing their public keys without ever meeting to exchange session keys, however there is no "built-in" method for determining whether or not the public key you are using to encrypt a key is indeed the key of the entity with which you wish to talk to. 
+
+\begin{center}
+  \includegraphics[scale=0.6]{./Figures/3-7-1.pdf}
+\end{center}
+
+\begin{enumerate}
+  \item Alice sends her public key to who she thinks is Bob, however Mallory receives it.
+  \item Mallory sends her own public key to Bob, masquerading as Alice.
+  \item Bob encrypts a generated session key with Mallory's public key, and sends it to Mallory.
+  \item Mallory decrypts the session key, and re-encrypts it with Alice's public key, and sends it to Alice.
+\end{enumerate}
+
+Here, Mallory is acting as a middle-man and unbeknownst to the other she gains access to the session key. Using this, she will be able to read and modify any messages sent between Alice and Bob, undetected.
+
+\textsection 2.2 states that there are four requirements are necessary for a system to be considered secure:
+
+\definecolor{gray}{RGB}{128,128,128}
+\begin{enumerate}
+	\item \textcolor{gray}{Confidentiality}
+	\item \textbf{Authentication}
+	\item \textcolor{gray}{Non-repudiation}
+	\item \textcolor{gray}{Data Integrity}
+\end{enumerate}
+
+Here we are failing \textbf{authentication}. As we will see in Chapter 5, we can use another aspect of public-key cryptography -- digital signatures -- along with trusted third parties to identify and authenticate the entity with which we are communicating.
+
+However, we are getting ahead of ourselves. The next step is to research and implement the symmetric ciphers that will be used to rapidly and securely encrypt the messages that will be transmitted between users.

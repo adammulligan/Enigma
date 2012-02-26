@@ -2,8 +2,13 @@ require 'rake'
 require 'rubygems'
 require 'git'
 require 'logger'
+require 'zlib'
+require 'archive/tar/minitar'
+require 'find'
 
-@build_dir = './dist'
+include Archive::Tar
+
+@build_dir = Dir.getwd + '/dist'
 
 desc 'Build project for distribution'
 task :build do
@@ -40,7 +45,27 @@ task :build do
     # Run latex three times because:
     # http://en.wikibooks.org/wiki/LaTeX/Bibliography_Management#Why_won.27t_LaTeX_generate_any_output.3F
     `pdflatex Thesis.tex && bibtex Thesis && pdflatex Thesis.tex && pdflatex Thesis.tex`
+    FileUtils.cp 'Thesis.pdf', "#{@build_dir}/Thesis.pdf"
+
+    latex_src = "#{@build_dir}/latex_src"
+    Dir.mkdir(latex_src) unless File.directory?(latex_src)
+
+    ignored_extensions = [".toc",".log",".bbl",".lot",".aux",".blg",".lof",".synctex",".out",".class"]
+    Find.find("./") do |file|
+      next if ignored_extensions.include?(File.extname(file)) || File.fnmatch?('*TSWLatexianTemp*',file)
+
+      puts file
+
+      if File.directory?(file)
+        FileUtils.cp_r file, latex_src+'/'+file
+      else
+        FileUtils.cp file, latex_src+'/'+file
+      end
+    end
   end
+
+  tgz = Zlib::GzipWriter.new(File.open('project.tgz', 'wb'))
+  Minitar.pack(@build_dir, tgz)
 end
 
 task :clean do
