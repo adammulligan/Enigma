@@ -31,7 +31,7 @@ As said, secure systems should follow a guideline, or set of criteria, that ensu
 
 As with any discipline, there are a number of fundamental concepts that need to be thoroughly defined. This section will cover the definitions of basic information security and cryptography related concepts. While Computer Scientists and Mathematicians, unlike Biologists, tend to abstract ideas using existing words such as \emph{normal} which ultimately cause confusion to those trying to understand the area of study, the field of Information Security fortunately uses phrases that are succinct and aptly describe notions.
 
-TODO: er, do this bit.
+\textcolor{red}{TODO: er, do this bit.}
 
 \section{Primitives}
 
@@ -88,7 +88,7 @@ As can be obviously seen, using a KDC is dependent entirely on the ability of tw
 
 There is a security risk: how can you verify that the entity that sent the encrypted key is indeed the one with which you are trying to communicate? It would be easy for an attacker to encrypt their own session key with Alice's public key, and claim that the key is from Bob. The attacker would then be able to decrypt any messages intended for Bob. The solution to this issue is the use of digital certificates, and signatures, which will be discussed in \emph{Authentication}.
 
-We will discuss specific algorithms further on, however it is worth pointing out that the current public-key algorithms used for these purposes are \emph{RSA} (Rivest, Shamir, Adleman) and the\emph{Diffie-Hellman Key Exchange} (not defined as a public-key algorithm, however it uses the sharing of public cleartext values). There exist a number of interesting algorithms that implement the public key architecture which will also be considered later.
+We will discuss specific algorithms further on, however it is worth pointing out that the current public-key algorithms used for these purposes are \emph{RSA} (Rivest, Shamir, Adleman) and the \emph{Diffie--Hellman Key Exchange Protocol}. There exist a number of interesting algorithms that implement the public key architecture which will also be considered later.
 
 There are other considerations in key management to ensure confidentiality and integrity. Some provisos exist such as changing the key for each session to ensure perfect forward secrecy, however these are trivial to implement and can be considered as part of the overall application security development.
 

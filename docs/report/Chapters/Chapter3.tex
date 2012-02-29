@@ -356,13 +356,13 @@ Integers are a well-define concept, and you would have had great difficulty gett
   
   It is this problem that makes it implausible for RSA and other algorithms to be broken by factoring the modulus and obtaining the private keys. We will see this in the following sections.
   
-  There are many current algorithms for factoring large prime multiples, which will be discussed in Chapter 7.
+  There are many current algorithms for factoring large prime multiples, which will be discussed in \textsection \ref{Chapter7}.
 
 \section{Public-key Cryptography}
 
   \subsection{RSA}
   
-  So far we have only covered the concepts of number theory and how they're used in cryptography. In this section we will discuss exactly how they are implemented, and go in to greater detail about the algorithms and techniques required. Chapter 2 provides a brief definition of public-key cryptography.
+  So far we have only covered the concepts of number theory and how they're used in cryptography. In this section we will discuss exactly how they are implemented, and go in to greater detail about the algorithms and techniques required. \textsection \ref{Chapter2} provides a brief definition of public-key cryptography.
   
     \subsubsection{The RSA Problem}
     
@@ -401,7 +401,7 @@ Integers are a well-define concept, and you would have had great difficulty gett
     
     This file can be found at \emph{src/com/cyanoryx/uni/crypto/rsa/KeyGenerator.java}.
     
-    \paragraph{Key Distribution} Public-keys, as can be determined from their name, are intended to be made public and widely available. This has its own problems however, as without any capability to verify the origin of a public-key, a user will be susceptible to impersonation attacks. There are various methods to solve this, including certificates, using a trusted server, and other techniques that will be discussed in chapter 5.
+    \paragraph{Key Distribution} Public-keys, as can be determined from their name, are intended to be made public and widely available. This has its own problems however, as without any capability to verify the origin of a public-key, a user will be susceptible to impersonation attacks. There are various methods to solve this, including certificates, using a trusted server, and other techniques that will be discussed in \textsection\ref{Chapter5}.
     
     \subsubsection{Encryption}
     
@@ -448,7 +448,7 @@ Integers are a well-define concept, and you would have had great difficulty gett
     
     As a solution to this, a number of standards have been introduced that add extra requirements to the algorithms such as hashing to improve the overall security. In the case of RSA, the most common standard implemented is known as \emph{RSA OAEP} -- RSA Optimal Asymmetric Encryption Padding\cite{Bellare:1995aa}. It is based upon the EME-OAEP encoding method -- the purpose of this scheme is to add randomness to the encrypted output, creating a probabilistic result, along with preventing any information leakage from ciphertexts.
     
-    More specifically, the use of OAEP protects against chosen-plaintext attacks. There are some concerns about the inability to prove that it is secure from certain types of chosen-plaintext attacks, however this is discussed in more detail in Chapter 7.
+    More specifically, the use of OAEP protects against chosen-plaintext attacks. There are some concerns about the inability to prove that it is secure from certain types of chosen-plaintext attacks, however this is discussed in more detail in \textsection\ref{Chapter7}.
     
     Given:
     
@@ -721,6 +721,6 @@ Here, Mallory is acting as a middle-man and unbeknownst to the other she gains a
 	\item \textcolor{gray}{Data Integrity}
 \end{enumerate}
 
-Here we are failing \textbf{authentication}. As we will see in Chapter 5, we can use another aspect of public-key cryptography -- digital signatures -- along with trusted third parties to identify and authenticate the entity with which we are communicating.
+Here we are failing \textbf{authentication}. As we will see in \textsection\ref{Chapter5}, we can use another aspect of public-key cryptography -- digital signatures -- along with trusted third parties to identify and authenticate the entity with which we are communicating.
 
 However, we are getting ahead of ourselves. The next step is to research and implement the symmetric ciphers that will be used to rapidly and securely encrypt the messages that will be transmitted between users.

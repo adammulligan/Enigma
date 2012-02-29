@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.cyanoryx.uni.enigma.utils;
 
 import java.util.prefs.Preferences;
@@ -13,28 +10,28 @@ import java.util.prefs.Preferences;
  *
  */
 public class AppPrefs {
-	/**
-	 * Returns a Preferences object for this application
-	 * 
-	 * @return
-	 */
-	public Preferences getPrefs() {
-		return Preferences.userNodeForPackage(getClass());
-	}
-	
-	/**
-	 * Returns an array of the last 10 connections as IP addresses
-	 * 
-	 * @return
-	 */
-	public String[] getLastConnections() {
-		String   ips 		 = this.getPrefs().get("last_connections", "");
-		String[] connections = new String[10];
-		
-		String separator = ";";
-		
-		connections = ips.split(separator);
-		
-		return connections;
-	}
+  /**
+   * Returns a Preferences object for this application
+   * 
+   * @return
+   */
+  public Preferences getPrefs() {
+    return Preferences.userNodeForPackage(getClass());
+  }
+  
+  /**
+   * Returns an array of the last 10 connections as IP addresses
+   * 
+   * @return
+   */
+  public String[] getLastConnections() {
+    String   ips      = this.getPrefs().get("last_connections", "");
+    String[] connections = new String[10];
+    
+    String separator = ";";
+    
+    connections = ips.split(separator);
+    
+    return connections;
+  }
 }

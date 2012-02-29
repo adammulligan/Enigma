@@ -14,7 +14,7 @@ The intention of this project is to produce an application that allows two users
 
 The main focus of the development process was to break the application down in to its component pieces, and iteratively develop them so that minimalist functionality sets could be produced and then combined in the shortest possible times. The overarching category for this style of production is known as \emph{agile development}: a practice based around iterative and incremental development. More specifically, a subset of agile development will be used -- Scrum. The goals of Scrum fit neatly with the desired development cycle in that programming is done in "sprints," with a deadline organised at the start of these sprints and a set of tasks that must be completed by the end. A sprint can last anywhere between one week and one month. This, combined with test driven development (TDD, writing tests for functionality before producing the functionality), produces a set of components matching a well-defined requirements document that can be combined in to the final product.
 
-However, without results, methodologies are meaningless
+However, without results, methodologies are meaningless. One should not concentrate too heavily on explicitly following a development process, particularly when working alone, otherwise work output can be reduced significantly by the overhead and "red tape." Because of this, the methodology of development will not be encountered again in this document, however it is of interest to know the basics as above.
 
 \subsection{Documentation}
 
@@ -24,27 +24,431 @@ It is said a program listing should be documentation unto itself: the programmin
 
 As a major component of this project is to develop a library of cryptographic algorithms, having a clear and accurate listing of all available methods in the API is vital. Conveniently, Java and the Eclipse IDE are tightly integrated with \emph{JavaDoc}\footnote{http://java.sun.com/j2se/javadoc}, a documentation generator that automatically produces standardised API documentation in HTML format based on comments inserted in the code. The comment blocks -- distinguished using the format \verb!/** ... */! -- contain a method description, and a number of control sequences that give detailed information about what the method returns, the parameters it takes and other details such as exceptions thrown.
 
-JavaDoc outputs are bundled with the appropriate packages in the file tree, and manual technical documentation is found in the appendices. A requirements specification has been compiled in \emph{Appendix A}.
+JavaDoc outputs are bundled with the appropriate packages in the file tree, and manual technical documentation is found in the appendices. A requirements specification has been compiled in \emph{\textsection \ref{AppendixA}}.
 
 \section{Application Development}
 
-\subsection{User Interface}
-\emph{Packages covered in this section: com.cyanoryx.uni.enigma.gui.*}
-
-\subsubsection{GUI Frameworks}
+  \subsection{User Interface}
+  \emph{Packages covered in this section: com.cyanoryx.uni.enigma.gui.*}
+  
+    \subsubsection{GUI Frameworks}
+    
+      \paragraph{SWT} -- the Standard Widget Toolkit -- initially created by IBM and now maintained by the Eclipse Foundation, it's a modern alternative to Swing. Initially SWT was used (predominantly in tests) for the Enigma application, however as development continued it became more apparent that it was introducing a level of complexity to the interface code so much so that development slowed to an unmanageable speed. SWT benefits from its use of native component libraries, generally resulting in a more congruent user experience, however it falls down when it comes to ease of development.
+      
+      \textbf{Pros and cons of Swing}
+      
+       \begin{center}
+       \begin{tabular}{ | p{6cm} | p{6cm} |}
+          \hline
+          Pros & Cons \\ \hline \hline
+          Part of the JDK, meaning there's no need for native system libraries & The look and feel does not always match well with the native system \\ \hline
+          No differences in development between platforms and systems & \\ \hline
+          Very good documentation available, particularly from Sun & \\ \hline
+          Mature and well supported & \\ \hline
+          Is supported by official Java extensions like OpenGL & \\
+          \hline
+        \end{tabular}
+      \end{center}
+      
+      \textbf{Pros and cons of SWT}
+      
+      \begin{center}
+       \begin{tabular}{ | p{6cm} | p{6cm} |}
+          \hline
+          Pros & Cons \\ \hline \hline
+          Uses native components & Native libraries must be available for all supported systems \\ \hline
+          Also supported by the Eclipse editor & Some native resources are not available on other systems, and so portability can be damaged \\ \hline
+          Documentation is good (though not as good as Swing) & Requires manual management of resources rather than, for example, SWT disposing windows, they must be done by the developer. \\ \hline
+          SWT programs can also integrate Swing components & SWT requires separate libraries to be distributed for 32- and 64-bit systems. \\ \hline
+          SWT is supposedly faster at rendering than Swing, though only minimally & \\
+          \hline
+        \end{tabular}
+      \end{center}
+      
+      SWT appears initially simpler to use thanks to its use of the Model--View--Controller design pattern, the ability to "plug in" different look and feel settings, and so on, however it introduces the necessity to manage resources manually, rather than following the Java standard method of automatic resource disposal (known as the garbage collector).
+      
+      Swing was selected as the framework to be used, primarily due to its current prevalence over SWT. Purely comparing speed statistics, SWT comes out on top, however the community behind Swing is far larger and more important than the downsides introduced by using Swing, and clearly the balance of pros and cons is in Swing's favour.
+      
+    \subsubsection{Designs}
+    
+    Being an application purely for testing purposes, the interface can have a certain leniency in terms of usability as those utilising it will likely have a good understanding of systems anyway. However, more importantly, the interface should be "invisible," meaning that the user should not have to think about using it and can focus on the task they are trying to complete -- e.g. comparing encryption algorithms.
+    
+    The application will have four main windows:
+    
+    \begin{enumerate}
+      \item Connect Window -- The main starting point of the application. Users will enter the IP address of another Enigma server, or select an address from a "recently connected" menu.
+      \item Chat Window -- Where the actual communications will take place. It will consist of a main listing box to display a message history for the current conversation, and have an input box for sending messages. It will also contain options for: Regenerating session keys, changing the cipher type, changing the agreement cipher type, and viewing the log window for this session.
+      \item Log Window -- Can be used to log info, warning and error messages that do not cause a general program crash.
+      \item Preferences -- Used to modify basic preferences, like default ciphers, username, etc.
+    \end{enumerate}
+    
+     \begin{figure}
+       \centering
+       \includegraphics[scale=0.7]{./Figures/Ch6/6-3-1-2a.pdf}
+       \caption{Overall Application Flow}
+       \label{fig:app_flow}
+     \end{figure}
+    
+    Figure \ref{fig:app_flow} shows a basic overview of how the application will be used.
+    
+    As developed with Swing, the four main windows look as so (on Mac OS X):
+    
+    \subsubsection{Connect Window}
+    
+    \begin{center}
+      \includegraphics[scale=0.7]{./Figures/Ch6/6-3-1-2-connect_window.pdf}
+    \end{center}
+    
+    The Connect window comprises of two main pieces of logic:
+    
+    \begin{enumerate}
+      \item Server creation.
+      \item Connection making.
+    \end{enumerate}
+    
+    Firstly, the Connect window is the main focal point of the application and as such the creation of a \verb!Connect! object signifies the start of the Enigma application. \verb!Connect#Connect()! creates a new \verb!Server! object with a random port number and initiates the process of creating the UI for the window.
+    
+    
+  
+    \subsubsection{Chat Window}
+    
+    \begin{center}
+        \includegraphics[scale=0.7]{./Figures/Ch6/6-3-1-2-chat_window.pdf}
+     \end{center}
+    
+    \subsubsection{Log Window}
+    
+    \begin{center}
+        \includegraphics[scale=0.5]{./Figures/Ch6/6-3-1-2-log_window.pdf}
+     \end{center}
+    
+    \subsubsection{Preferences Window}
+    
+    \begin{center}
+        \includegraphics[scale=0.7]{./Figures/Ch6/6-3-1-2-preferences_window.pdf}
+     \end{center}
+    
+    Each was developed using the Swing framework, as mentioned, but the "look and feel" of the components were designated to match the JDK's interpretation of the system's theme, meaning that the components will be very similar to those used in native applications thus making the application more portable, at least in terms of appearance. 
+    
+  \subsection{Preferences}
+  
+  It is necessary to have some persistent data between application sessions, for example the user's display name and their cipher preferences. There are many simple and many complex methodologies to solve this problem, the simplest seemingly being saving preferences to a text file with a custom format. However, as with any proprietary format it will be non-portable from the outset, and likely difficult to maintain in the future. Large amounts of "boiler--plate" code will be required to manage aspects like text-encoding, storage location, file formats, and so on which will unnecessarily add to development time and likely create bugs.
+  
+  The JDK comes with a class \emph{com.util.prefs.Preferences} for storing a collection of preference data. \verb!Preferences! stores data in a key-value persistent backing store that is independent of the system implementation. Given a "node" name, \verb!Preferences! will load data from the appropriate storage implementation, depending on the operating system. For example, it may store preferences in flat files, registries or even databases. This has one primary benefit: the developer does not need to concern themselves with the details of storage, but merely implement an application that creates a \verb!Preferences! object given a node name and \verb!Preferences! will handle the details.
+  
+  More specifically, \verb!Preferences! has a static method \emph{userNodeForPackage(String name)} which returns a \verb!Preferences! object containing handles that reference the persistent backing store. This \verb!Preferences! objects provides helper methods such as \emph{get(String key, String default\_val)} that will programmatically return the value for the key \verb!key!, handling any errors and using the default value if necessary. 
+  
+  However, this introduce an integrity and consistency issue: what if the node name changes? Do we store the node name in a centralised location? (introducing something of a chicken and egg problem). Or perhaps assume that it will never need to change? In our case, a wrapper class was created that returned a \verb!Preferences! object with a node name equal to \verb!getClass()!. This way the node will always be named after the package identifier for the given class, which can be refactored if necessary. \\
+  
+  \lstinputlisting{../../sys/EnigmaApp/src/com/cyanoryx/uni/enigma/utils/AppPrefs.java}
+  
+  \emph{This code can be found in com.cyanoryx.uni.enigma.utils.AppPrefs}
+  
+  We have also written a helper method that returns the last 10 IP connections, which are stored upon connection as a concatenated \verb!String! array.
+  
+    \subsubsection{Usage}
+    
+    \begin{lstlisting}
+      Preferences p = new AppPrefs().getPrefs();
+      p.get("preference_name","test");
+    \end{lstlisting}
+  
+  \subsection{Internationalisation}
+  
+  Internationalisation, colloquially shortened to \emph{i18n} as 18 is the number of characters between the first and last letters, of an application is adding the possibility of easily creating new language sets that allow components and text in the application to be translated and shown in another language while retaining the ability to switch back to other languages. The purpose is to remove the need for software changes, and introduce a preference or setting that points the application to appropriate language set.
+  
+  In this case, the language sets are stored in \verb!.properties! files:
+  
+  \lstinputlisting{../../sys/EnigmaApp/bin/Enigma.properties}
+  
+  As with the preferences, a helper class is necessary to access the locale information and abstract some of the more verbose syntax needed for getting language information. In this case, a class \verb!Strings! has been created that on initialisation gets the locale preference and attempts to load the corresponding language set (known in \verb!Locale! parlance as a bundle), and provides a translate method that takes a string identifier, and returns the matching language string from the current locale bundle. \\
+  
+  \lstinputlisting{../../sys/EnigmaApp/src/com/cyanoryx/uni/enigma/utils/Strings.java}
+  
+  \emph{This code can be found in com.cyanoryx.uni.enigma.utils.Strings}
+  
+  \subsection{Drawable Graphics}
+  
+  Some elements of the user interface require the inclusion of local images and icons. For example, in the chat window the menu bar buttons contain representative icons rather than text. However, as with strings of text, hard-coded references to resources generally results in excessive maintenance if the resource location changes. As a solution to this, we will create a lightweight class modelled around the \emph{Android SDK} concept of "drawables." Drawables are graphic resources stored in the system, represented by an identifier which can be retrieved using the \verb!Drawable! class.\\
+  
+  \lstinputlisting{../../sys/EnigmaApp/src/com/cyanoryx/uni/enigma/utils/Drawable.java}
+  
+  \emph{This code can be found in com.cyanoryx.uni.enigma.utils.Drawable}
+  
+  As an example: if we decide that a database is more suitable for storing graphics than local files, the \verb!loadImage()! method can be modified to search the database for the identifiers, and all the (possibly) hundreds of references to images within other parts of the codebase will not have to change.
 
 \section{Protocol Implementation}
-\emph{Packages covered in this section: com.cyanoryx.uni.enigma.net.*}
+  \emph{Packages covered in this section: com.cyanoryx.uni.enigma.net.*}
+  
+  \subsection{Overview}
+  
+  The purpose of the Enigma application is to provide an example application to be used for testing cryptographic algorithms, however the \emph{function} of the application is to provide a means of communication between two entities who are capable of running the same software. To do this we will be implementing a custom variation of the Jabber/XMPP protocols within a server that will be able to send and receive  XML data streams.
+  
+  Servers are simple to implement, particularly with Java's excellent networking support -- simply open a port locally that accepts connections, and parse any input and return outputs where necessary. However, there are many other aspects of running a server that are not covered by this in any form: for example, handling multiple connections efficiently and reliably, maintaining message integrity, and so forth. Because of this, we will be creating a server that is extensible and advanced in how it deals with connections and input. Alongside this, by introducing XML parsing capabilities and a well-defined protocol we are able to improve reliability (by being able to detect malformed XML) and make handling different types of input easier (by have distinct sets of XML tags for specific purposes).
+  
+    \subsubsection{Goals and Objectives}
+    
+    \begin{enumerate}
+      \item Simplicity -- the server should have components which are only strictly necessary. Very little time should be spent on input processing.
+      \item Easy to integrate with cryptographic algorithms -- this is harder to quantify, however it should result in software where there are only a small handful of points where algorithms will need to be connected, reducing the amount of repetition.
+      \item Extensible -- it should be easy to add new handlers in the event the protocol is modified.
+    \end{enumerate}
+    
+    For a full requirements specification, see \textsection \ref{AppendixA}.
+    
+  \subsection{Server Design}
+  
+    \subsubsection{Server}
+    
+      \begin{figure}
+        \centering
+        \includegraphics[scale=0.7]{./Figures/Ch6/6-4-2.pdf}
+        \caption{A simplified overview of two servers communicating.}
+        \label{fig:server_overview}
+      \end{figure}
+      
+    The server is be split in to four major components:
+    
+    \begin{enumerate}
+      \item Sessions -- connections between two entities will be managed by \verb!Session! objects stored in an index.
+      \item Packets -- packets represent sections of an XML document are stored in a queue upon arrival, and are handled in a first come first served basis by the XML parser.
+      \item XML parser -- the XML parser takes packets and converts them in to Java objects for use in handler endpoints.
+      \item Handlers -- after a packet has been parsed, it is sent to the registered handler for its type, which processes the packet. For example, a message handler would only take \verb!<message>! packets and would send them to the correct GUI window for the sending entity.
+    \end{enumerate}
+    
+    Various threads will be created to allow for concurrent processing of multiple connections, however all these threads will run under a parent \verb!Server! thread that maintains connections and sessions, along with dealing with registering packet handlers.
+    
+    The server uses \verb!java.net.ServerSocket! to create a socket that accepts all connections on a specified port. The port is defined during object construction, generally it should be random, and \verb!Server! will throw an \verb!IOException! if the port is already taken.
+    
+    \subsubsection{Session}
+    
+    The \verb!Session! and \verb!SessionIndex! classes form the basis around managing connections between servers -- a \verb!Session! object represents a single connection between two entities. \verb!Session! objects store a number of bits of information regarding a connection that provide context, such as the connection ID (for use in sending messages to the correct GUI window), the \verb!java.net.Socket! associated with the connection, the stream objects for sending/receiving data, statuses, and so on. A \verb!Session! object is created upon connection and filled with the relevant data (random connection ID, user details, etc.) and as long as the connection remains open the \verb!Session! object will remain in memory.
+    
+    However, Java objects are transient and cannot be easily transmitted across a network, particularly using XML. The \verb!Server! maintains an objects called \verb!SessionIndex!, which is a wrapper around a \verb!java.util.Hashtable! where the key is the connection ID (also referred to as a session ID) and the value is the corresponding \verb!Session! object. By doing this, we are able to maintain a persistent store of information regarding a connection that is easily accessible from all objects within the \verb!Server!, like packet handlers.
+    
+    The \verb!Session! is also used to store, upon connection, a \verb!Conversation! object for the newly opened conversation window. Upon receipt of a \verb!<message>!, the message handler will look up the session using the session ID received with the packet, and use methods within the \verb!Conversation! object to update the window with the received message.
+    
+    As local \verb!Session! objects are created by the server when a outbound connection attempt is made, they are used to handle the assembly and transmission of packets, such as connection packets, message, authentication, etc.
+  
+  \subsection{Protocol Model}
+  
+  \emph{For structural information regarding the protocol, see \textsection \ref{AppendixB}.}
+  
+  The protocol model is based around using XML (eXtensible Markup Language) to transmit data along with metadata (attributes) to represent instructions to be received by another system.
+  
+    \subsubsection{Routing and How It Works}
+    
+    We will find out in this section how packets are routed through the server upon receipt, along with how they are sent. Figure \ref{fig:conv_overview} provides an overview of how two entities will communicate with one another, and what packets are required.
+    
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.7]{./Figures/Ch6/6-4-3-1.pdf}
+      \caption{The basic conversation elements between two entities.}
+      \label{fig:conv_overview}
+    \end{figure}
+    
+  \subsection{Parsing XML}
+  
+  Before we can start converting received messages in to Java objects and handling them, we must parse the XML in to something more usable.
+  
+    \subsubsection{SAX and Xerces}
+    \label{subsubsec:sax}
+    
+    An implementation of the Simple API for XML (SAX) known as Apache Xerces is used as the SAX parser for incoming packets. Originally a Java-only library, it has become the standard for XML parsing within Java. It uses an event-driven model to parse XML documents, and rather than handling entire documents at once, it is done in a continuous stream of pieces, unlike DOM parsers (Document Object Model) which run using trees based on a complete document. The benefits of this for us are three-fold:
+    
+    \begin{enumerate}
+      \item It is considerably faster than standard parsing, and works in linear time.
+      \item Only small portions of a document need be in memory at any one time, and so the memory footprint of parsing a document is small.
+      \item It can handle not being in possession of a full, valid XML document  when parsing, like the packets we will be sending between entities.
+    \end{enumerate}
+    
+    It has one primary downside however: developer time. The concept of event-driven XML parsing is harder to manage than simply imagining a document as a tree. However, using Apache Xerces significantly improves upon this as the developer no longer has to handler the parsing itself, but merely what to do with the data once it is parsed. Xerces is more accurately a modular library for parsing, validating and manipulating XML documents. It introduces a framework known as \emph{Xerces Native Interface} that allows developers to build their own parser components, however we will only be using it for its SAX features.
+    
+    SAX parsers will follow through a document, and upon reaching specific points it will generate events and execute a callback function. For example, upon reaching the start of an element -- e.g. \verb!<message>! -- the parser could be configured to call a function \verb!startElement()! that determines what to do with this new element.
+    
+    One interesting thing to note is the use of the class \verb!StreamingCharFactory!. While capable of handling subsections of XML documents, SAX parsers are not generally (by default) able to handle streaming data as it arrives, and so the parsers will hang until reaching the end of the document (in this case, the connection closes). \cite{Shigeoka:2002ys} details the \verb!StreamingCharFactory! class that configures Xerces to use a streaming data reader rather than the default buffered one.
+    
+    \paragraph{The InputHandler} class deals with XML parsing by processing these SAX events. The primary way that documents will be handled is through \emph{depth} -- each section of the document is treated as a tree (as in DOM parsing). Upon encountering each element, the depth is increased by one, and decreased by one when the element ends. This is known as depth-first searching. We have three main methods that handle events:
+    
+    \begin{enumerate}
+      \item \verb!startElement([...])! -- aptly named method that handles the start of elements.
+      \item \verb!characters(char[] c,int start,int length)! -- handles the string values of elements.
+      \item \verb!endElement(String uri,String localName,String name)! -- handles the closing tags for the current open element. 
+    \end{enumerate}
+    
+    Methods 1 and 2 create \verb!Packet! objects that represent their respective XML elements. In the case of \verb!startElement()!, when at depth 0 the only element possible is a root \verb!<stream>! and so a \verb!Packet! with element name "stream" is created and pushed on to the queue, along with the attributes passed down from the SAX parser: \\
+    
+    \begin{lstlisting}
+    public void startElement(String namespace,
+                                 String localName,
+                                 String name,
+                                 Attributes attributes)
+                     throws SAXException {
+  switch (depth++){
+    case 0: // Root element
+      if (name.equals("stream")){
+        Packet packet = new Packet(null,name,namespace,attributes);
+        packet.setSession(session);
+        packet_queue.push(packet);
+        return;
+      }
+      throw new SAXException("Root element must be <stream>");
+    case 1: // Message elements
+      packet = new Packet(null,name,namespace,attributes);
+      packet.setSession(session);
+      break;
+    default: // Any child elements
+      Packet child = new Packet(packet,name,namespace,attributes);
+      packet = child;
+  }
+}
+    \end{lstlisting}
+    
+    As can be seen, at depth 1 a \verb!Packet! is created with all the provided attributes from the parser, including the name. At any other depth, however, we can assume we are dealing with a child element and so the previous \verb!Packet! is set as its parent (see \textsection\ref{subsubsec:packets} for details about how parent-child relationships are implemented programmatically) and all other attributes are stored as usual. At each depth, a global \verb!Packet! object is stored in the class to give access child packets access to parents.
+    
+    If we are dealing with a value of an element, for example the body of a message, the method \verb!characters()! is called by the parser. \verb!characters()! is a simple method that adds a child value to the last traversed packet in the tree. \\
+    
+    \begin{lstlisting}
+public void characters(char[] c,int start,int length) throws SAXException {
+  if (depth > 1) packet.getChildren().add(new String(c,start,length));
+}
+    \end{lstlisting}
+    
+    Finally, when an end element is reached we will once again check the current depth. If it is of depth 0, we must be at the end of the document and so a \verb!</stream>! packet is created and pushed on to the queue. At depth 1, the current packet is complete and can be pushed on to the queue, and otherwise we must still be assembling the parent, and so set the pointer to the parent packet. \\
+    
+    \begin{lstlisting}
+public void endElement(String uri,
+                            String localName,
+                            String name)
+       throws SAXException {
+  switch(--depth){
+    case 0: // End of the stream
+      Packet c_packet = new Packet("/stream");
+      c_packet.setSession(session);
+      packet_queue.push(c_packet);
+      break;
+    case 1: // Put the completed packet on the packet queue
+      packet_queue.push(packet);
+      break;
+    default:  // Parent still being constructed; traverse back up the tree
+      packet = packet.getParent();
+  }
+}
+    \end{lstlisting}
+    
+    \subsubsection{Packets}
+    \label{subsubsec:packets}
+    
+    All packet related classes can be found in \emph{com.cyanoryx.uni.enigma.protocol.xml}.
+    
+    Packets in the context of the Enigma protocol are somewhat distinct from what are traditionally known as packets in networking. When we refer to packets we are referencing the XML sections representing messages sent between entities. In the previous section, \textsection\ref{subsubsec:sax}, we defined how these XML fragments are parsed and converted in to packets without really defining what a packet in this context is (henceforth any references to ``packet" will refer to the concept of sections of XML, unless stated otherwise or defined as a class, e.g. \verb!Packet!). Previously we described creating packets by instantiating \verb!Packet! objects with the name, attributes and child elements of the XML -- this class serves two purposes:
+    
+    \begin{enumerate}
+      \item To provide the capability of storing packets internally and in memory without the need to re-parse each time the data is needed, and to provide helper methods to retrieve this data.
+      \item To allow the simple, programmatic creation of XML packets through the instantiation of \verb!Packet! objects which can then be converted in to XML to be transmitted across the network.
+    \end{enumerate}
+    
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.7]{./Figures/Ch6/6-4-4-2.pdf}
+      \caption{The hierarchy of 3 packet objects.}
+      \label{fig:packet_hierarchy}
+    \end{figure}
+    
+    Figure \ref{fig:packet_hierarchy} displays how \verb!Packet! classes represent XML elements and store their children in what is effectively a tree. The corresponding XML would be:
+    
+    \begin{verbatim}
+<message>
+  <thread>12</thread>
+  <body>Hi Bob, it's Alice</body>
+</message>
+    \end{verbatim}
+    
+    The \verb!Packet! class can be simply defined overall as a data structure consisting of a name, and attributes, with a \verb!java.util.LinkedList! of child \verb!Packet!s and a pointer to a parent \verb!Packet!, where applicable.
+    
+    Packets are parsed and handled on a first come, first served basis. Upon receipt, the \verb!Server! places packets in to a \verb!PacketQueue! where they will be picked out one by one by a running \verb!QueueThread! and handled by an appropriate class. \textsection\ref{subsec:combined} provides an overview of how \verb!Packets!, queues and thread fit together in the overall system.
+    
+    \verb!Packet! can be found in \emph{com.cyanoryx.uni.enima.net.protocol.xml.Packet}.
+    
+    \subsubsection{Packet Handling}
+    \label{subsubsec:packet_queue}
+    
+      \paragraph{The PacketQueue} class is a thread-safe (synchronized) class that acts as a wrapper around a \verb!java.util.LinkedList! for storing all incoming packets. It has two methods, \verb!push! and \verb!pull!, the latter removes and returns the packet at the top of the queue, and the former adds a packet to the bottom of the queue. Both, alongside being implemented as synchronized, are thread-safe in that \verb!push! notifies all threads awaiting use of the queue when it is finished add the current packet, and \verb!pull! forces threads to wait if the queue is empty.
+      
+      \paragraph{The PacketListener} class, or more accurately the interface, provides a notify method implemented by the event handlers (\textsection\ref{subsubsec:handlers}) which allows the \verb!QueueThread! (below) to notify said handlers when a packet is pulled from the queue.
+      
+      \paragraph{The QueueThread} class is perhaps the most important as it acts as the link between receiving a message and handling it. A \verb!QueueThread! is started when a server is first created, and is passed all the desired event handlers and their XML tag identifiers, which are stored in a \verb!java.util.HashMap!. For example, the \verb!OpenStreamHandler! is required to handle new connection requests, signified by \verb!<stream>! and as such its identifier is "stream." The \verb!QueueThread! is constantly running alongside the server, looking for new packets pushed on to the queue. When it notices a new packet, it pulls it out of the queue and checks the element name of the packet and looks for it in its handler \verb!HashMap!. If a handler is found, it is notified and passed the \verb!Packet! object.
+      
+      The idea for this came from \cite{Shigeoka:2002ys}.
+      
+      \begin{lstlisting}
+  public void run(){
+    for (Packet packet=packetQueue.pull();packet!=null;packet=packetQueue.pull()) {
+      try {
+        // Element name to look for.
+        // Matches name of listener
+        String match = packet.getElement();
 
-% Parsing XML
+        synchronized(packetListeners){
+          Iterator<PacketListener> iter = packetListeners.keySet().iterator();
+          // Loop through the current set of listeners
+          while (iter.hasNext()){
+            PacketListener listener = iter.next();
+            // Get the name of the tag to match
+            String listenerString = packetListeners.get(listener);
+            // If the packet's element matches the element for this listener...
+            if (listenerString.equals(match)){
+              listener.notify(packet); // ..send packet to handlers
+            } 
+          } 
+        } 
+      } catch (Exception e){
+        e.printStackTrace();
+      }
+    } 
+  } 
+      \end{lstlisting}
+      
+      \verb!QueueThread! allows many packets to be sent to a server at once, with each being handled in order and none being lost.
+    
+      \paragraph{The ProcessThread} class is created whenever a new connection is made to the \verb!Server!. As \verb!InputHandler! objects parse an entire XML document, they are tied-up with each connection until the document is complete (i.e. a \verb!</stream>! is sent). Because of this, if we were to use one \verb!InputHandler! per server, only one connection would be possible at any one time. As a solution, \verb!ProcessThread! is created for each connection, which instantiates a new \verb!InputHandler! object and begins the XML processing on the incoming stream.
+    
+    \subsubsection{Handlers}
+    \label{subsubsec:handlers}
+    
+    Handler classes are where most of the work is done once a packet has been parsed. Four are required for the basic operation of the Enigma protocol:
+    
+    \begin{enumerate}
+      \item \textbf{OpenStreamHandler} -- handles an open stream request and initiates some default settings such as whether or not the conversation will be authenticated -- \verb!<stream>!.
+      \item \textbf{CloseStreamHandler} -- gracefully handles closed connections and cleans up \verb!Session! objects -- \verb!</stream>!.
+      \item \textbf{AuthHandler} -- handles all authentication and encryption setup, including received public keys, session keys and so on -- \verb!<auth></auth>!.
+      \item \textbf{MessageHandler} -- handles all incoming messages, determines who they are from and displays them in the appropriate window -- \verb!<message></message>!.
+    \end{enumerate}
+    
+    Handlers implement the \verb!PacketListener! interface, meaning they are notified whenever the matching packet type is parsed out of the queue. See \textsection\ref{subsubsec:packet_queue} for further details about how \verb!QueueThread! determines which handler to use. Handlers, on creation, also receive a reference to the master \verb!SessionIndex! within \verb!Server!.
+    
+    The handler implementations can be found at \emph{com.cyanoryx.uni.enigma.server}.
+    
+    \subsection{Fitting the Protocol Components Together}
+    \label{subsec:combined}
+    
+    So, how do these classes fit together in the final system? We've so far given distinct diagrams, and provided abstract descriptions of classes and how they relate, but this is hard to conceive as a whole system.
+    
+     \textcolor{red}{Overview of packet routing}
 
 \section{Algorithm Implementation}
-\emph{Packages covered in this section: com.cyanoryx.uni.crypto.*}
+  \emph{Packages covered in this section: com.cyanoryx.uni.crypto.*}
+  
+  \subsection{Interfaces and Abstraction}
+  
+  \subsection{Key Agreement and Certficates}
+  
+  \subsection{Ciphers}
 
 \section{Usage}
 
-A user's instruction manual is included as \emph{Appendix D}. This manual also briefly covers compilation, required dependencies, and other build related information.
+  A user's instruction manual is included as \emph{\textsection \ref{AppendixD}}. This manual also briefly covers compilation, required dependencies, and other build related information.
 
 \section{Program Listing}
 
-Due to the size of the project a detailed, printed code listing is impossible, and thus it is recommended that the code be viewed using a text editor or other text environment on a device. If you do not have a digital copy of this project, please see \emph{Section 1.4.2}.
+  Due to the size of the project a detailed, printed code listing is impossible, and thus it is recommended that the code be viewed using a text editor or other text environment on a device. If you do not have a digital copy of this project, please see \emph{\textsection \ref{sec:project_repo}}.

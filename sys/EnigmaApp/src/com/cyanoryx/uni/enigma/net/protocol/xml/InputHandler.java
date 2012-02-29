@@ -28,14 +28,14 @@ public class InputHandler extends DefaultHandler {
     }
 
     public void process(Session session) throws IOException, SAXException {
-    	SAXParser parser = new SAXParser();
+      SAXParser parser = new SAXParser();
 
-    	parser.setContentHandler(this);
-    	parser.setReaderFactory(new StreamingCharFactory());
+      parser.setContentHandler(this);
+      parser.setReaderFactory(new StreamingCharFactory());
 
-    	this.session = session;
+      this.session = session;
 
-    	parser.parse(new InputSource(session.getReader()));
+      parser.parse(new InputSource(session.getReader()));
     }
     
     /**
@@ -44,24 +44,24 @@ public class InputHandler extends DefaultHandler {
      */
     @Override
     public void startElement(String namespace,String localName,String name,Attributes attributes)
-    		throws SAXException {
-    	switch (depth++){
-    		case 0: // Root element
-    			if (name.equals("stream")){
-    				Packet packet = new Packet(null,name,namespace,attributes);
-    				packet.setSession(session);
-    				packet_queue.push(packet);
-    				return;
-    			}
-    			throw new SAXException("Root element must be <stream>");
-    		case 1: // Message elements
-    			packet = new Packet(null,name,namespace,attributes);
-    			packet.setSession(session);
-    			break;
-    		default: // Any child elements
-    			Packet child = new Packet(packet,name,namespace,attributes);
-    			packet = child;
-    	}
+        throws SAXException {
+      switch (depth++){
+        case 0: // Root element
+          if (name.equals("stream")){
+            Packet packet = new Packet(null,name,namespace,attributes);
+            packet.setSession(session);
+            packet_queue.push(packet);
+            return;
+          }
+          throw new SAXException("Root element must be <stream>");
+        case 1: // Message elements
+          packet = new Packet(null,name,namespace,attributes);
+          packet.setSession(session);
+          break;
+        default: // Any child elements
+          Packet child = new Packet(packet,name,namespace,attributes);
+          packet = child;
+      }
     }
 
     /**
@@ -72,7 +72,7 @@ public class InputHandler extends DefaultHandler {
      */
     @Override
     public void characters(char[] c,int start,int length) throws SAXException {
-    	if (depth > 1) packet.getChildren().add(new String(c,start,length));
+      if (depth > 1) packet.getChildren().add(new String(c,start,length));
     }
 
     /**
@@ -81,18 +81,18 @@ public class InputHandler extends DefaultHandler {
      */
     @Override
     public void endElement(String uri,String localName,String name) throws SAXException {
-    	switch(--depth){
-    		case 0: // End of the stream
-    			Packet c_packet = new Packet("/stream");
-    			c_packet.setSession(session);
-    			packet_queue.push(c_packet);
-    			break;
-    		case 1: // Put the completed packet on the packet queue
-    			packet_queue.push(packet);
-    			break;
-    		default:  // Parent still being constructed; traverse back up the tree
-    			packet = packet.getParent();
-    	}
+      switch(--depth){
+        case 0: // End of the stream
+          Packet c_packet = new Packet("/stream");
+          c_packet.setSession(session);
+          packet_queue.push(c_packet);
+          break;
+        case 1: // Put the completed packet on the packet queue
+          packet_queue.push(packet);
+          break;
+        default:  // Parent still being constructed; traverse back up the tree
+          packet = packet.getParent();
+      }
     }
 }
 

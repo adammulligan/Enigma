@@ -107,7 +107,7 @@ public class Session {
 	public void connect() throws IOException {
 		Writer out = getWriter();
 		out.write("<stream ");
-		out.write("  to='server_name");
+		out.write("  to='"+server_name);
 		out.write("' from='"+ prefs.get("local_user_name", "Kim"));
 		out.write("' id='"+ getID());
 		out.write("' return-port='"+ getLocalPort());
