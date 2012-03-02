@@ -3,49 +3,54 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: Thesis.aux
 The style file: unsrtnat.bst
 Database file #1: Project.bib
+Warning--entry type for "Kendal:2012rt" isn't style-file defined
+--line 27 of file Project.bib
 Warning--entry type for "Java:2006ab" isn't style-file defined
---line 51 of file Project.bib
+--line 75 of file Project.bib
 Warning--entry type for "Google:2011ah" isn't style-file defined
---line 103 of file Project.bib
-You've used 17 entries,
+--line 127 of file Project.bib
+Warning--I didn't find a database entry for "Maurer:1991aa"
+Warning--I didn't find a database entry for "Schwarz:2007aa"
+Warning--empty institution in Shwarz:2007aa
+You've used 23 entries,
             2481 wiz_defined-function locations,
-            654 strings with 6661 characters,
-and the built_in function-call counts, 4767 in all, are:
-= -- 395
-> -- 215
-< -- 12
-+ -- 94
-- -- 60
-* -- 291
-:= -- 789
-add.period$ -- 49
-call.type$ -- 17
-change.case$ -- 32
-chr.to.int$ -- 17
-cite$ -- 19
-duplicate$ -- 284
-empty$ -- 460
-format.name$ -- 87
-if$ -- 1008
+            687 strings with 7394 characters,
+and the built_in function-call counts, 6242 in all, are:
+= -- 522
+> -- 258
+< -- 17
++ -- 118
+- -- 72
+* -- 367
+:= -- 1024
+add.period$ -- 65
+call.type$ -- 23
+change.case$ -- 43
+chr.to.int$ -- 23
+cite$ -- 27
+duplicate$ -- 380
+empty$ -- 617
+format.name$ -- 106
+if$ -- 1323
 int.to.chr$ -- 1
-int.to.str$ -- 18
-missing$ -- 14
-newline$ -- 91
-num.names$ -- 45
-pop$ -- 157
+int.to.str$ -- 24
+missing$ -- 18
+newline$ -- 119
+num.names$ -- 60
+pop$ -- 214
 preamble$ -- 1
-purify$ -- 17
+purify$ -- 23
 quote$ -- 0
-skip$ -- 175
+skip$ -- 237
 stack$ -- 0
-substring$ -- 36
-swap$ -- 34
+substring$ -- 49
+swap$ -- 46
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 101
-warning$ -- 0
-while$ -- 30
+type$ -- 137
+warning$ -- 1
+while$ -- 40
 width$ -- 0
-write$ -- 217
-(There were 2 warnings)
+write$ -- 286
+(There were 6 warnings)

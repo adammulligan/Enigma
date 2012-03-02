@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -47,79 +48,80 @@ import com.cyanoryx.uni.enigma.utils.AppPrefs;
  *
  */
 public class Connect extends JFrame {
-	private static final long serialVersionUID = -8107133128033113815L;
-	
-	private JPanel contentPane;
-	private JTextField portField;
-	private JTextField addressField;
-	
-	private int port;
-	private Server server;
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new Connect();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+  private static final long serialVersionUID = -8107133128033113815L;
+  
+  private JPanel contentPane;
+  private JTextField portField;
+  private JTextField addressField;
+  private JCheckBox encrypted_option;
+  
+  private int port;
+  private Server server;
+  
+  /**
+   * Launch the application.
+   */
+  public static void main(String[] args) {
+    EventQueue.invokeLater(new Runnable() {
+      public void run() {
+        try {
+          new Connect();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    });
+  }
 
-	/**
-	 * Create the underlying frame and start up the local server.
-	 * 
-	 * @throws ParseException 
-	 * @throws IOException 
-	 * @throws UnsupportedLookAndFeelException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws ClassNotFoundException 
-	 */
-	public Connect() throws ParseException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
-		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		
-		Random rng = new Random();
-		port = rng.nextInt(100) + 60000;
-		server = new Server(port,"localhost");
-		new Thread(server).start();
-		
-		System.out.println("Starting server on port "+port+"...");
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 221, 181);
-		
-		this.setTitle("localhost:"+port);
-		contentPane = new JPanel();
-		setContentPane(contentPane);
-		
-		this.createUI();
-		
-		setVisible(true);
-	}
+  /**
+   * Create the underlying frame and start up the local server.
+   * 
+   * @throws ParseException 
+   * @throws IOException 
+   * @throws UnsupportedLookAndFeelException 
+   * @throws IllegalAccessException 
+   * @throws InstantiationException 
+   * @throws ClassNotFoundException 
+   */
+  public Connect() throws ParseException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    
+    Random rng = new Random();
+    port = rng.nextInt(100) + 60000;
+    server = new Server(port,"localhost");
+    new Thread(server).start();
+    
+    System.out.println("Starting server on port "+port+"...");
+    
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setBounds(100, 100, 221, 181);
+    
+    this.setTitle("localhost:"+port);
+    contentPane = new JPanel();
+    setContentPane(contentPane);
+    
+    this.createUI();
+    
+    setVisible(true);
+  }
 
-	/**
-	 * Creates basic window UI
-	 * 
-	 * GridBagLayout[
-	 * 
-	 * @throws ParseException
-	 */
-	private void createUI() throws ParseException {
-		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{0, 0};
-		gbl_contentPane.rowHeights = new int[]{0, 0, 0};
-		gbl_contentPane.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		contentPane.setLayout(gbl_contentPane);
-		
-		// == Description text ==
-		JTextPane description = new JTextPane();
+  /**
+   * Creates basic window UI
+   * 
+   * GridBagLayout[
+   * 
+   * @throws ParseException
+   */
+  private void createUI() throws ParseException {
+    GridBagLayout gbl_contentPane = new GridBagLayout();
+    gbl_contentPane.columnWidths = new int[]{0, 0};
+    gbl_contentPane.rowHeights = new int[]{0, 0, 0};
+    gbl_contentPane.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+    gbl_contentPane.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+    contentPane.setLayout(gbl_contentPane);
+    
+    // == Description text ==
+    JTextPane description = new JTextPane();
         description.setEnabled(false);
         description.setText("Enter the IP address of another running Enigma client:\n");
         description.setBackground(contentPane.getBackground());
@@ -127,26 +129,26 @@ public class Connect extends JFrame {
         
         GridBagConstraints gbc_constraints = new GridBagConstraints();
         
-		gbc_constraints.insets = new Insets(5, 5, 0, 5);
-		gbc_constraints.gridwidth = 3;
-		gbc_constraints.gridx = 0;
-		gbc_constraints.gridy = 0;
-		gbc_constraints.fill = GridBagConstraints.BOTH;
-		contentPane.add(description, gbc_constraints);
-		
-		// == Panel for inputs ==
-		JPanel input_panel = new JPanel();
-		input_panel.setLayout(new FlowLayout());
-		gbc_constraints.gridx = 0;
-		gbc_constraints.gridy = 1;
-		gbc_constraints.fill = GridBagConstraints.BOTH;
-		gbc_constraints.gridwidth = 3;
-		gbc_constraints.anchor = GridBagConstraints.WEST;
-		
-		// == IP address field ==
-		addressField = new JFormattedTextField(new MaskFormatter("###.###.###.###"));
-		addressField.setText("127.000.000.001");
-		addressField.setPreferredSize(new Dimension(90,30));
+    gbc_constraints.insets = new Insets(5, 5, 0, 5);
+    gbc_constraints.gridwidth = 3;
+    gbc_constraints.gridx = 0;
+    gbc_constraints.gridy = 0;
+    gbc_constraints.fill = GridBagConstraints.BOTH;
+    contentPane.add(description, gbc_constraints);
+    
+    // == Panel for inputs ==
+    JPanel input_panel = new JPanel();
+    input_panel.setLayout(new FlowLayout());
+    gbc_constraints.gridx = 0;
+    gbc_constraints.gridy = 1;
+    gbc_constraints.fill = GridBagConstraints.BOTH;
+    gbc_constraints.gridwidth = 3;
+    gbc_constraints.anchor = GridBagConstraints.WEST;
+    
+    // == IP address field ==
+    addressField = new JFormattedTextField(new MaskFormatter("###.###.###.###"));
+    addressField.setText("127.000.000.001");
+    addressField.setPreferredSize(new Dimension(90,30));
         input_panel.add(addressField);
 
         JLabel address_port_separator = new JLabel(":");
@@ -159,132 +161,170 @@ public class Connect extends JFrame {
         
         contentPane.add(input_panel, gbc_constraints);
         
-        // == Connect button ==
-        JButton connect = new JButton("Connect");
+        JPanel encrypted_panel = new JPanel();
+        encrypted_panel.setLayout(new FlowLayout());
         gbc_constraints.gridx = 0;
         gbc_constraints.gridy = 2;
         gbc_constraints.fill = GridBagConstraints.HORIZONTAL;
-        gbc_constraints.gridwidth = 3;
+        gbc_constraints.gridwidth = 1;
+        
+        encrypted_option = new JCheckBox("Encrypted?");
+        encrypted_option.setSelected(true);
+        encrypted_panel.add(encrypted_option);
+        
+        contentPane.add(encrypted_panel,gbc_constraints);
+        
+        // == Connect button ==
+        JButton connect = new JButton("Connect");
+        gbc_constraints.gridx = 1;
+        gbc_constraints.gridy = 2;
+        gbc_constraints.fill = GridBagConstraints.HORIZONTAL;
+        gbc_constraints.gridwidth = 2;
         getRootPane().setDefaultButton(connect);
         
         connect.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Connect.this.connect(addressField.getText(),portField.getText());
-			}
+	      @Override
+	      public void actionPerformed(ActionEvent arg0) {
+	        Connect.this.connect(addressField.getText(),portField.getText());
+	      }
         });
         
         contentPane.add(connect, gbc_constraints);
         
         setJMenuBar(this.createMenu());
-	}
-	
-	/**
-	 * Clear the window and recreate the UI
-	 * 
-	 * @throws ParseException 
-	 * 
-	 */
-	private void recreateUI() throws ParseException {
-		contentPane.removeAll();
-		contentPane.revalidate();
-		
-		this.createUI();
-		
-		contentPane.revalidate();
-	}
-	
-	private JMenuBar createMenu() {
-		JMenuBar menu = new JMenuBar();
-		
-		JMenu file = new JMenu("File");
-		file.addSeparator();
-		
-		JMenu recent_connections = new JMenu("Recent Connections");
-		
-		String[] ips = new AppPrefs().getLastConnections();
-		for (final String i : ips) {
-			JMenuItem ip = new JMenuItem(i);
-			ip.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					String[] ip      = i.split(":");
-					String   address = ip[0];
-					String   port    = ip[1];
-					Connect.this.connect(address, port);
-				}
-			});
-			recent_connections.add(ip);
-		}
-		
-		file.add(recent_connections);
-		
-		menu.add(file);
-		
-		JMenu tools = new JMenu("Tools");
-		JMenuItem options = new JMenuItem("Options");
-		options.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				new Preferences();
-			}
-		});
-		tools.add(options);
-		menu.add(tools);
-		
-		return menu;
-	}
-	
-	private void connect(String address, String remote_port) {
-		System.out.println("Connecting");
-		try {
-			Connect.this.showLoading();
-			
-			String id = ""+(new Random().nextInt(100));
-			
-			Session session = Server.createClient(address,
-												  remote_port,
-											      ""+port,
-											      new User("remote user"),
-											      id);
-			Connect.this.server.getSessionIndex().addSession(session);
-			
-			session.setAuthenticated(true);
-			session.setStatus(Session.AUTHENTICATED);
-			session.setAgreementType(KeyAlgorithm.RSA);
-			session.setCipherType(CipherAlgorithm.AES);
-			
-			session.sendAuth("method", "agreement", new AppPrefs().getPrefs().get("default_asym_cipher","RSA"), id);
-			session.sendAuth("cert"  , "agreement", Base64.encodeBytes(new Certificate(new File("./cert")).toString().getBytes()), id);
-			
-			new AppPrefs().getPrefs().put("last_connections",
-										  address+":"+port+";"+new AppPrefs().getPrefs().get("last_connections",""));
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(Connect.this, "Could not connect - "+e.getCause()+" - "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		} finally {
-			try {
-				Connect.this.recreateUI();
-			} catch (ParseException e) {
-				e.printStackTrace();
-				System.exit(1);
-			}
-		}
-	}
-	
-	/**
-	 * Clears the window and displays a loading txt to indicate a connection 
-	 * attempt is being made
-	 * 
-	 * @throws ParseException
-	 */
-	private void showLoading() throws ParseException {
-		contentPane.removeAll();
-		contentPane.revalidate();
-		
+  }
+  
+  /**
+   * Clear the window and recreate the UI
+   * 
+   * @throws ParseException 
+   * 
+   */
+  private void recreateUI() throws ParseException {
+    contentPane.removeAll();
+    contentPane.revalidate();
+    
+    this.createUI();
+    
+    contentPane.revalidate();
+  }
+  
+  private JMenuBar createMenu() {
+    JMenuBar menu = new JMenuBar();
+    
+    JMenu file = new JMenu("File");
+    file.addSeparator();
+    
+    JMenu recent_connections = new JMenu("Recent Connections");
+    
+    String[] ips = new AppPrefs().getLastConnections();
+    for (final String i : ips) {
+      JMenuItem ip = new JMenuItem(i);
+      ip.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+          String[] ip      = i.split(":");
+          String   address = ip[0];
+          String   port    = ip[1];
+          Connect.this.connect(address, port);
+        }
+      });
+      recent_connections.add(ip);
+    }
+    
+    file.add(recent_connections);
+    
+    menu.add(file);
+    
+    JMenu tools = new JMenu("Tools");
+    JMenuItem options = new JMenuItem("Options");
+    options.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent arg0) {
+        new Preferences();
+      }
+    });
+    tools.add(options);
+    menu.add(tools);
+    
+    return menu;
+  }
+  
+  private void connect(String address, String remote_port) {
+    try {
+      Connect.this.showLoading();
+      
+      String id = ""+(new Random().nextInt(100));
+      
+      java.util.prefs.Preferences prefs = new AppPrefs().getPrefs();
+      
+      boolean use_auth=encrypted_option.isSelected();
+      if (!encrypted_option.isSelected()) {
+    	  if (!prefs.getBoolean("allow_unauthenticated_conversations", false)) {
+    		  use_auth=false;
+    		  JOptionPane.showMessageDialog(Connect.this,
+    				  						"Your preferences do not allow unencrypted conversations. Defaulting to encrypted.",
+                      						"Error",
+                      						JOptionPane.ERROR_MESSAGE);
+    	  }
+      }
+      
+      Session session = Server.createClient(address,
+                        remote_port,
+                        ""+port,
+                        new User("remote user"),
+                        id);
+      Connect.this.server.getSessionIndex().addSession(session);
+      
+      session.setAuthenticated(use_auth);
+      session.setStatus(Session.AUTHENTICATED);
+      session.setAgreementType(KeyAlgorithm.searchByID(prefs.get("default_asym_cipher","RSA")));
+      session.setCipherType(CipherAlgorithm.searchByID(prefs.get("default_sym_cipher","AES")));
+      
+      session.sendAuth("method",
+                       "agreement",
+                       prefs.get("default_asym_cipher","RSA"),
+                       id);
+      session.sendAuth("cert",
+                       "agreement",
+                       Base64.encodeBytes(new Certificate(new File("./cert"))
+                                              .toString()
+                                              .getBytes()),
+                       id);
+      
+      prefs.put("last_connections",
+                 address+":"+port+";"+prefs.get("last_connections",""));
+    } catch (Exception e) {
+      JOptionPane.showMessageDialog(Connect.this,
+                                    "Could not connect - "+
+                                    e.getCause()+" - "+
+                                    e.getMessage(),
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+    } finally {
+      try {
+        Connect.this.recreateUI();
+      } catch (ParseException e) {
+        e.printStackTrace();
+        System.exit(1);
+      }
+    }
+  }
+  
+  /**
+   * Clears the window and displays a loading txt to indicate a connection 
+   * attempt is being made
+   * 
+   * @throws ParseException
+   */
+  private void showLoading() throws ParseException {
+    contentPane.removeAll();
+    contentPane.revalidate();
+    
         contentPane.setLayout(new GridLayout(1, 1));
         
         JLabel filler = new JLabel("Connecting...");
         filler.setHorizontalAlignment(JLabel.CENTER);
         contentPane.add(filler);
-	}
+  }
 }

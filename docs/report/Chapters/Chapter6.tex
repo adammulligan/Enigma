@@ -95,9 +95,11 @@ JavaDoc outputs are bundled with the appropriate packages in the file tree, and 
     
     \subsubsection{Connect Window}
     
-    \begin{center}
+    \begin{figure}
+      \centering
       \includegraphics[scale=0.7]{./Figures/Ch6/6-3-1-2-connect_window.pdf}
-    \end{center}
+      \label{fig:connect_window}
+    \end{figure}
     
     The Connect window comprises of two main pieces of logic:
     
@@ -108,29 +110,157 @@ JavaDoc outputs are bundled with the appropriate packages in the file tree, and 
     
     Firstly, the Connect window is the main focal point of the application and as such the creation of a \verb!Connect! object signifies the start of the Enigma application. \verb!Connect#Connect()! creates a new \verb!Server! object with a random port number and initiates the process of creating the UI for the window.
     
+    As with most Swing-utilising classes, event handlers are used to process events triggered by user input -- such as a button press -- and in this case the main event handler will be that of the connect button, as seen in \ref{fig:connect_window}. When a valid IP address is input and the button is clicked, the \verb!connect()! method is run:
     
+    \begin{lstlisting}
+private void connect(String address, String remote_port) {
+  try {
+    // Display a loading screen
+    Connect.this.showLoading();
+    
+    // As we are the initialiser,
+    // generate a session ID
+    String id = ""+(new Random().nextInt(100));
+    
+    // Create a new Session to store data for the remote server
+    Session session = Server.createClient(address,
+                      remote_port,
+                      ""+port,
+                      new User("remote user"),
+                      id);
+                      
+    // Store the Session in the server's session index
+    Connect.this.server.getSessionIndex().addSession(session);
+
+    // Send our desired agreement method
+    session.sendAuth("method",
+                     "agreement",
+                     new AppPrefs().getPrefs()
+                                   .get("default_asym_cipher","RSA"),
+                                        id);
+                                        
+    // Send our public key and certificate
+    session.sendAuth("cert",
+                     "agreement",
+                     Base64.encodeBytes(new Certificate(new File("./cert"))
+                                            .toString()
+                                            .getBytes()),
+                     id);
+    
+    // Store the remote server's IP address
+    new AppPrefs().getPrefs().put("last_connections",
+                   address+":"+port+";"+new AppPrefs().getPrefs()
+                                                      .get("last_connections",""));
+  } catch (Exception e) {
+    [...] // Display an error
+  } finally {
+    try {
+      // Always reinstate the UI
+      Connect.this.recreateUI();
+    } catch (ParseException e) {
+      e.printStackTrace();
+      System.exit(1);
+    }
+  }
+}
+    \end{lstlisting}
+    
+    Here we make use of a method \verb!Server#createClient()!, which is a bit of a misnomer based around a legacy concept within the application where a local user would run both a server and a "client," for sending and receiving data, respectively. This was designed as such due to some restrictions on the use of sockets (see \textsection\ref{sec:probs}), however this was removed for simplicity and due to the confusion introduced by running a "client" locally.
+    
+    \verb!Server#createClient()! is a simple, static method that creates a \verb!Session! object with the supplied attributes and returns it, along with a \verb!Conversation! object for the chat window.
   
     \subsubsection{Chat Window}
+    \label{subsubsec:chat}
     
-    \begin{center}
-        \includegraphics[scale=0.7]{./Figures/Ch6/6-3-1-2-chat_window.pdf}
-     \end{center}
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.7]{./Figures/Ch6/6-3-1-2-chat_window.pdf}
+      \label{fig:chat_window}
+      \caption{Chat Window}
+     \end{figure}
+    
+    The conversation has three tasks:
+    
+    \begin{enumerate}
+      \item Display received messages.
+      \item Take the user's input and send the message to the relevant \verb!Session! object for encryption and transmission, and then display that message in the window (if sent).
+      \item Provide access to the following functionality:
+        \begin{enumerate}
+          \item Opening/closing the log window.
+          \item Regenerating the session keys.
+          \item Viewing the remote user's certificate.
+          \item Toggling encryption on and off.
+        \end{enumerate}
+    \end{enumerate}
+    
+    Each are relatively simple as most of the hard work is handed off to other objects within the \verb!Server!'s jurisdiction. 
+    
+    \paragraph{The display of messages} is implemented using a \verb!JTextPane! which, unlike a \verb!JTextArea!, honours the use of font styling, colours and post-creation programmatic string insertion. The \verb!updateMessage()! method takes a user name and a message:
+    
+    \begin{lstlisting}
+public synchronized void updateMessage(String name, String message) throws BadLocationException {
+  StyledDocument d = messages.getStyledDocument();
+      
+      SimpleAttributeSet kw = new SimpleAttributeSet();
+      StyleConstants.setBold(kw,true);
+      
+  d.insertString(d.getLength(),name+": ",kw);
+  d.insertString(d.getLength(), message+"\n", new SimpleAttributeSet()); // Use a blank attribute set for the actual message text
+}
+    \end{lstlisting}
+    
+    Two new Java classes are required: \verb!StyledDocument! and \verb!SimpleAttributeSet!. The former converts the messages \verb!JTextPane! in to an object that can be formatted, and the latter is a set of attributes that can be applied as formatting to the text we are appending to the text pane. 
+    
+    \verb!Conversation! windows are somewhat different from other interfaces in that they are persistent to a connection -- conversations windows are stored in \verb!Session! objects (as we will see later). Because of this, when a message is received, the handler retrieves the \verb!Conversation! object and calls \verb!updateMessage()!.
+    
+    \paragraph{Sending messages} is handled entirely by \verb!Session! objects, and so when a user enters text and hits enter or clicks "send," the \verb!Session#sendMessage()! method is called.
+    
+    Displaying the log window, viewing the remote user's certificate and regenerating the session keys are all similarly simplistic in their implementation. The latter utilises the \verb!Session#sendAuth()! method to regenerate a key and send it, however this is discussed in detail later. The other two buttons simply toggle the current display status of the two windows.
+    
+    Toggling the encryption status is slightly more complex, however. The current status of encryption for the conversation must be checked, and turning it on or off depending on the result, also checking if the user allows for unencrypted conversations.
     
     \subsubsection{Log Window}
     
-    \begin{center}
-        \includegraphics[scale=0.5]{./Figures/Ch6/6-3-1-2-log_window.pdf}
-     \end{center}
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.5]{./Figures/Ch6/6-3-1-2-log_window.pdf}
+      \label{fig:log_window}
+      \caption{Log Viewer}
+     \end{figure}
+    
+    The log window itself is a simple setup (\verb!LogWindow!): a Swing \verb!JFrame! wrapper with a disabled \verb!JTextArea! and a method for handling input to be appended to the text area. The complexity behind it, however, is in the \verb!LogHandler! class. \verb!LogHandler! extends \verb!java.util.logging.Handler!, but why not just have a \verb!LogWindow! object and have each class manually update the text area? Using a \verb!Handler! implementation is all about \emph{extensibility}: it provides built-in capability for handling logging level settings (e.g. only log warnings, information, errors, etc.), along with applying formatters and filters. In the current version of Enigma, only the \verb!Conversation! class needs to log information and so the log handler does little data modification and simply passes the messages on to a \verb!LogWindow! object.
+    
+    For the full code behind the logging system, see \emph{com.cyanoryx.uni.enigma.gui.Log*.java}.
     
     \subsubsection{Preferences Window}
     
-    \begin{center}
-        \includegraphics[scale=0.7]{./Figures/Ch6/6-3-1-2-preferences_window.pdf}
-     \end{center}
+    User preference changed are handled by a single, unified preferences window, created by a \verb!com.cyanoryx.uni.enigma.gui.Preferences! class (which should be distinguished from \verb!Preferences! in the \emph{java.util.prefs} namespace). It is another simple class that implements a \verb!JFrame! containing multiple \verb!JTabbedPane! elements separating out preferences in to their relevant categories. 
     
-    Each was developed using the Swing framework, as mentioned, but the "look and feel" of the components were designated to match the JDK's interpretation of the system's theme, meaning that the components will be very similar to those used in native applications thus making the application more portable, at least in terms of appearance. 
+     \begin{figure}
+      \centering
+      \includegraphics[scale=0.7]{./Figures/Ch6/6-3-1-2-preferences_window.pdf}
+      \label{fig:pref_window}
+      \caption{Preferences}
+     \end{figure}
+    
+    Upon loading, each preference component is created with its value equal to the currently stored value, or if there is none, a default value. Each preference is governed by an event listener appropriate to the data type of the option:
+    
+    \begin{enumerate}
+      \item \verb!ItemListener! -- boolean preferences use \verb!ItemListener#itemStateChanged()! to register for a checkbox state change.
+      \item \verb!ActionListener! -- preferences with multiple choices implemented as drop down combo boxes register with \verb!ActionListener#actionPerformed()! to monitor item selection.
+      \item \verb!DocumentListener! -- string based preferences, such as user name, are monitored using the update registering methods in \verb!DocumentListener! to detect update, deleted or insert text.
+    \end{enumerate}
+    
+    When an event is generated, the updated preference is stored, meaning that the user never has to press any "save" or "apply" buttons.
+    
+    In the future, it would perhaps be interesting to retrieve the list of available settings and their datatypes, and automatically generate a preference interface based on this. However, this may pose problems for preferences with multiple choices (like in drop down boxes), as all the options will not be saved in the preferences storage.
+    
+    See \textsection\ref{subsec:prefs} for the actual implementation of preference storage.
+    
+    Each window was developed using the Swing framework, as mentioned, but the "look and feel" of the components were designated to match the JDK's interpretation of the system's theme, meaning that the components will be very similar to those used in native applications thus making the application more portable, at least in terms of appearance. 
     
   \subsection{Preferences}
+  \label{subsec:prefs}
   
   It is necessary to have some persistent data between application sessions, for example the user's display name and their cipher preferences. There are many simple and many complex methodologies to solve this problem, the simplest seemingly being saving preferences to a text file with a custom format. However, as with any proprietary format it will be non-portable from the outset, and likely difficult to maintain in the future. Large amounts of "boiler--plate" code will be required to manage aspects like text-encoding, storage location, file formats, and so on which will unnecessarily add to development time and likely create bugs.
   
@@ -434,14 +564,26 @@ public void endElement(String uri,
     
     So, how do these classes fit together in the final system? We've so far given distinct diagrams, and provided abstract descriptions of classes and how they relate, but this is hard to conceive as a whole system.
     
-     \textcolor{red}{Overview of packet routing}
+    \begin{center}
+      \includegraphics[scale=0.5]{./Figures/Ch6/6-4-5.pdf}
+    \end{center}
+    
+    This figure shows the process of \verb!Server! creation, through to client connection and and message receipt.
 
 \section{Algorithm Implementation}
   \emph{Packages covered in this section: com.cyanoryx.uni.crypto.*}
   
   \subsection{Interfaces and Abstraction}
   
+  One of the major points of the Enigma application is the ability to easily introduce new symmetric or asymmetric algorithms in to the application. To do this, we use a well known concept of object-oriented programming: abstraction. Abstraction, in its basic form, is the process of representing some data or logic but hiding the actual implementation. A good example of this is our \verb!LogHandler! earlier, which provides an abstraction of outputting log information -- the developer/program is provided with an interface with, for example, a \verb!log()! method that displays a supplied string in a log window. The implementation of the log function is irrelevant to the developer, all they need to know is that they can use it to reliably log information. Because of this, the logic behind logging data can be changed as necessary assuming it still has the same output -- this is known as a "black box."
+  
+  In Java, abstraction is implemented using \emph{interfaces}. An interface defines methods along with their input and output data types, and any class that \emph{implements} this interface must create the logic for these methods. How are interfaces applicable to Enigma? Producing a program that encrypts data using multiple libraries can be difficult as each may have subtle differences in how they expect to receive and output data. For example, a block cipher $A$ may implement a \verb!encrypt()! method that takes portions of data as byte arrays, whereas a cipher $B$ may take the entire plaintext as \verb!String!. To solve this, an interface will be introduced with an \verb!encrypt! method that requires all implementing classes use it -- this results in a standard implementation of all algorithms, meaning a developer knows without a doubt what to input and what to expect back.
+  
+  This is particularly applicable to Enigma as it means code repetition when dynamically switching between algorithms is reduced significantly.
+  
   \subsection{Key Agreement and Certficates}
+  
+  
   
   \subsection{Ciphers}
 

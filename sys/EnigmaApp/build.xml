@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="EnigmaApp">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../../../../../../../../Applications/eclipse"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="EnigmaApp.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="dep/xerces.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="EnigmaApp.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="AES (1)">
+        <java classname="com.cyanoryx.uni.crypto.aes.AES" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="AppPrefs (1)">
+        <java classname="com.cyanoryx.uni.enigma.utils.AppPrefs" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="B64Test">
+        <java classname="com.cyanoryx.uni.enigma.net.server.B64Test" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="Client">
+        <java classname="com.cyanoryx.uni.enigma.net.client.Client" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="Connect">
+        <java classname="com.cyanoryx.uni.enigma.gui.Connect" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="ConnectWindowParentRunner">
+        <java classname="com.cyanoryx.uni.enigma.gui.ConnectWindowParentRunner" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="Conversation (1)">
+        <java classname="com.cyanoryx.uni.enigma.gui.Conversation" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="ConversationThread">
+        <java classname="com.cyanoryx.uni.enigma.gui.ConversationThread" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="Decrypt (1)">
+        <java classname="com.cyanoryx.uni.crypto.rsa.Decrypt" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="Encrypt (1)">
+        <java classname="com.cyanoryx.uni.crypto.rsa.Encrypt" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="GenerateCertificate">
+        <java classname="com.cyanoryx.uni.crypto.cert.GenerateCertificate" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="GenerateKeys (1)">
+        <java classname="com.cyanoryx.uni.crypto.rsa.GenerateKeys" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="LogTest">
+        <java classname="com.cyanoryx.uni.enigma.gui.LogTest" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="LogWindow">
+        <java classname="com.cyanoryx.uni.enigma.gui.LogWindow" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="Preferences (1)">
+        <java classname="com.cyanoryx.uni.enigma.gui.Preferences" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+    <target name="Server (1)">
+        <java classname="com.cyanoryx.uni.enigma.net.server.Server" failonerror="true" fork="yes">
+            <classpath refid="EnigmaApp.classpath"/>
+        </java>
+    </target>
+
+    <target name="jar">
+        <mkdir dir="bin/jar"/>
+        <jar destfile="bin/jar/Enigma.jar" basedir="bin">
+            <manifest>
+                <attribute name="Main-Class" value="com.cyanoryx.uni.enigma.gui.Connect"/>
+            </manifest>
+        </jar>
+    </target>
+</project>

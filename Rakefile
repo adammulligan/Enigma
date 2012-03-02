@@ -14,18 +14,6 @@ desc 'Build project for distribution'
 task :build do
   # Check if git branch has changes
   # if it doesn't continue, otherwise throw an error
-  # latex Thesis.tex
-  # bibtex Thesis.aux
-  # mkdir build
-  # cp:
-  #   README
-  #   docs/report/Thesis.pdf
-  #     mkdir build/latex_src
-  #     build latex from source
-  #     cp docs/report/* ./build/latex_src (minus logs, etc)
-  # javac sys/EnigmaApp/src
-  # cp sys/EnigmaApp
-  #
   # Final structure should be:
   #
   # build/
@@ -40,6 +28,19 @@ task :build do
   #   README.md
   Dir.mkdir(@build_dir) unless File.directory?(@build_dir)
 
+  Dir.chdir("sys/EnigmaApp") do
+    enigma_loc = @build_dir+'/enigma';
+    Dir.mkdir(enigma_loc)
+
+    FileUtils.cp_r('./dep',enigma_loc)
+    FileUtils.cp_r('./src/',enigma_loc)
+
+    puts 'Running ant...'
+    `ant && ant jar`
+
+    FileUtils.cp('./bin/jar/Enigma.jar',enigma_loc)
+  end
+
   # LaTeX compilation
   Dir.chdir("docs/report") do
     # Run latex three times because:
@@ -50,11 +51,9 @@ task :build do
     latex_src = "#{@build_dir}/latex_src"
     Dir.mkdir(latex_src) unless File.directory?(latex_src)
 
-    ignored_extensions = [".toc",".log",".bbl",".lot",".aux",".blg",".lof",".synctex",".out",".class"]
+    ignored_extensions = [".toc",".log",".bbl",".lot",".aux",".blg",".lof",".synctex",".out",".class",".graffle"]
     Find.find("./") do |file|
       next if ignored_extensions.include?(File.extname(file)) || File.fnmatch?('*TSWLatexianTemp*',file)
-
-      puts file
 
       if File.directory?(file)
         FileUtils.cp_r file, latex_src+'/'+file
@@ -78,6 +77,17 @@ def cleanup
   puts "Removing directory #{@build_dir}. Continue?"
 
   case STDIN.gets.chomp.downcase
-  when 'y' then FileUtils.rm_rf @build_dir
+  when 'y' then FileUtils.rm_rf @build_dir  unless !File.exists?(@build_dir)
+  end
+
+  jar_dir='sys/EnigmaApp/bin/jar'
+  puts "Removing directory #{jar_dir}. Continue?"
+  case STDIN.gets.chomp.downcase
+  when 'y' then FileUtils.rm_rf jar_dir  unless !File.exists?(jar_dir)
+  end
+
+  puts "Removing directory ./project.tgz. Continue?"
+  case STDIN.gets.chomp.downcase
+  when 'y' then FileUtils.rm_rf "./project.tgz" unless !File.exists?("./project.tgz")
   end
 end

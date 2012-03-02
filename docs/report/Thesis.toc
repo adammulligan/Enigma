@@ -2,9 +2,9 @@
 \vspace {1em}
 \contentsline {chapter}{Acknowledgements}{iii}{dummy.2}
 \vspace {1em}
-\contentsline {chapter}{List of Figures}{ix}{dummy.4}
-\contentsline {chapter}{List of Tables}{x}{dummy.6}
-\contentsline {chapter}{Abbreviations}{xi}{dummy.8}
+\contentsline {chapter}{List of Figures}{x}{dummy.4}
+\contentsline {chapter}{List of Tables}{xi}{dummy.6}
+\contentsline {chapter}{Abbreviations}{xii}{dummy.8}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.11}
 \contentsline {section}{\numberline {1.1}What it's about}{1}{section.12}
 \contentsline {section}{\numberline {1.2}Goals and Intentions}{1}{section.13}
@@ -46,128 +46,173 @@
 \contentsline {subsubsection}{\numberline {3.3.1.3}Fermat's Little Theorem}{19}{subsubsection.119}
 \contentsline {subsubsection}{\numberline {3.3.1.4}Miller--Rabin Primality Test}{21}{subsubsection.148}
 \contentsline {subsubsection}{\numberline {3.3.1.5}Solovay--Strassen Primality Test}{23}{subsubsection.208}
-\contentsline {subsubsection}{\numberline {3.3.1.6}AKS Primality Test}{25}{subsubsection.281}
-\contentsline {subsubsection}{\numberline {3.3.1.7}Maurer's Algorithm}{27}{subsubsection.334}
-\contentsline {subsubsection}{\numberline {3.3.1.8}BigInteger Generation}{27}{subsubsection.335}
-\contentsline {subsubsection}{\numberline {3.3.1.9}Primality Test Outcomes}{27}{subsubsection.336}
-\contentsline {paragraph}{Running Times}{28}{section*.341}
-\contentsline {paragraph}{Conclusion}{28}{section*.343}
-\contentsline {subsubsection}{\numberline {3.3.1.10}A Note on Random Number Generators}{29}{subsubsection.344}
-\contentsline {subsection}{\numberline {3.3.2}Strong Primes}{30}{subsection.348}
-\contentsline {section}{\numberline {3.4}Integers}{31}{section.352}
-\contentsline {subsection}{\numberline {3.4.1}Factorisation}{31}{subsection.353}
-\contentsline {section}{\numberline {3.5}Public-key Cryptography}{31}{section.355}
-\contentsline {subsection}{\numberline {3.5.1}RSA}{31}{subsection.356}
-\contentsline {subsubsection}{\numberline {3.5.1.1}The RSA Problem}{31}{subsubsection.357}
-\contentsline {subsubsection}{\numberline {3.5.1.2}RSA}{32}{subsubsection.362}
-\contentsline {subsubsection}{\numberline {3.5.1.3}Key Generation}{32}{subsubsection.363}
-\contentsline {paragraph}{Key Distribution}{34}{section*.441}
-\contentsline {subsubsection}{\numberline {3.5.1.4}Encryption}{34}{subsubsection.442}
-\contentsline {subsubsection}{\numberline {3.5.1.5}Decryption}{36}{subsubsection.498}
-\contentsline {subsubsection}{\numberline {3.5.1.6}Formal Proof}{37}{subsubsection.554}
-\contentsline {subsubsection}{\numberline {3.5.1.7}Textbooks and OAEP}{38}{subsubsection.555}
-\contentsline {paragraph}{The Mask Generation Function (MGF)}{40}{section*.567}
-\contentsline {subsection}{\numberline {3.5.2}Diffie-Hellman}{47}{subsection.914}
-\contentsline {subsubsection}{\numberline {3.5.2.1}Implementation}{47}{subsubsection.915}
-\contentsline {section}{\numberline {3.6}Other Variations of Public-key Cryptography}{47}{section.916}
-\contentsline {chapter}{\numberline {4}Symmetric Cryptography}{48}{chapter.917}
-\contentsline {chapter}{\numberline {5}Identification and Authentication}{49}{chapter.918}
-\contentsline {section}{\numberline {5.1}Overview and Intentions}{49}{section.919}
-\contentsline {section}{\numberline {5.2}Basic and Common Schemes}{49}{section.920}
-\contentsline {section}{\numberline {5.3}Digital Signatures}{49}{section.921}
-\contentsline {section}{\numberline {5.4}Certificates}{49}{section.922}
-\contentsline {section}{\numberline {5.5}Other Methods}{49}{section.923}
-\contentsline {chapter}{\numberline {6}Enigma: A Testbed}{50}{chapter.924}
-\contentsline {section}{\numberline {6.1}Overview and Intentions}{50}{section.925}
-\contentsline {section}{\numberline {6.2}Engineering Methodologies and Planning}{50}{section.926}
-\contentsline {subsection}{\numberline {6.2.1}Methodology}{50}{subsection.927}
-\contentsline {subsection}{\numberline {6.2.2}Documentation}{51}{subsection.928}
-\contentsline {section}{\numberline {6.3}Application Development}{51}{section.930}
-\contentsline {subsection}{\numberline {6.3.1}User Interface}{51}{subsection.931}
-\contentsline {subsubsection}{\numberline {6.3.1.1}GUI Frameworks}{52}{subsubsection.932}
-\contentsline {section}{\numberline {6.4}Protocol Implementation}{52}{section.933}
-\contentsline {section}{\numberline {6.5}Algorithm Implementation}{52}{section.934}
-\contentsline {section}{\numberline {6.6}Usage}{52}{section.935}
-\contentsline {section}{\numberline {6.7}Program Listing}{52}{section.936}
-\contentsline {chapter}{\numberline {7}Cryptanalysis}{53}{chapter.937}
-\contentsline {section}{\numberline {7.1}Public-key Cryptography}{53}{section.938}
-\contentsline {subsection}{\numberline {7.1.1}RSA}{53}{subsection.939}
-\contentsline {subsubsection}{\numberline {7.1.1.1}Brute Force}{53}{subsubsection.940}
-\contentsline {subsubsection}{\numberline {7.1.1.2}Elementary Attacks}{54}{subsubsection.941}
-\contentsline {paragraph}{Small Exponent}{54}{section*.942}
-\contentsline {subparagraph}{Private Exponent}{54}{section*.943}
-\contentsline {subparagraph}{Public Exponent}{54}{section*.944}
-\contentsline {paragraph}{Key Exposure}{54}{section*.945}
-\contentsline {paragraph}{Coppersmith's Short Pad Attack}{54}{section*.946}
-\contentsline {subparagraph}{Hastad's Broadcast Attack}{54}{section*.947}
-\contentsline {paragraph}{Related Message Attack}{54}{section*.948}
-\contentsline {paragraph}{Forward Search Attack}{55}{section*.949}
-\contentsline {paragraph}{Common Modulus Attack}{55}{section*.950}
-\contentsline {paragraph}{Cycling Attack}{55}{section*.951}
-\contentsline {paragraph}{Message Concealing}{55}{section*.952}
-\contentsline {subsubsection}{\numberline {7.1.1.3}System and Implementation Attacks}{55}{subsubsection.953}
-\contentsline {paragraph}{Timing}{55}{section*.954}
-\contentsline {paragraph}{Random Faults}{55}{section*.955}
-\contentsline {paragraph}{Bleichenbacher's Attack}{55}{section*.956}
-\contentsline {subsection}{\numberline {7.1.2}Certificates and Authentication}{55}{subsection.957}
-\contentsline {subsubsection}{\numberline {7.1.2.1}Implementation Attacks}{55}{subsubsection.958}
-\contentsline {paragraph}{SSL BEAST}{55}{section*.959}
-\contentsline {paragraph}{Authority Security and Impersonation}{55}{section*.960}
-\contentsline {section}{\numberline {7.2}Symmetric Cryptography}{56}{section.961}
-\contentsline {subsection}{\numberline {7.2.1}Brute-force}{56}{subsection.962}
-\contentsline {subsection}{\numberline {7.2.2}XSL Attack}{56}{subsection.963}
-\contentsline {subsection}{\numberline {7.2.3}Biryukov and Khovratovich}{56}{subsection.964}
-\contentsline {subsection}{\numberline {7.2.4}Related Key Attack}{56}{subsection.965}
-\contentsline {subsection}{\numberline {7.2.5}Known-key Distinguishing Attack}{56}{subsection.966}
-\contentsline {subsection}{\numberline {7.2.6}Bogdanov, Khovratovich, and Rechberger}{56}{subsection.967}
-\contentsline {subsection}{\numberline {7.2.7}Side-channel attacks}{56}{subsection.968}
-\contentsline {section}{\numberline {7.3}Hash Functions}{56}{section.969}
-\contentsline {subsection}{\numberline {7.3.1}Birthday Attacks}{56}{subsection.970}
-\contentsline {subsection}{\numberline {7.3.2}Collision and Compression}{56}{subsection.971}
-\contentsline {subsection}{\numberline {7.3.3}Chaining Attack}{56}{subsection.972}
-\contentsline {section}{\numberline {7.4}Emerging Threats}{56}{section.973}
-\contentsline {subsection}{\numberline {7.4.1}Quantum Cryptography and Cryptanalysis}{56}{subsection.974}
-\contentsline {subsection}{\numberline {7.4.2}Ron was wrong, Whit is right}{57}{subsection.975}
-\contentsline {subsubsection}{\numberline {7.4.2.1}Sony PlayStation 3}{57}{subsubsection.976}
-\contentsline {section}{\numberline {7.5}A comment on theory}{59}{section.977}
-\contentsline {chapter}{\numberline {8}Outcomes and Further Research}{60}{chapter.978}
-\contentsline {section}{\numberline {8.1}Fulfilment of Specification}{60}{section.979}
-\contentsline {section}{\numberline {8.2}Testing}{60}{section.980}
-\contentsline {subsection}{\numberline {8.2.1}Test Driven Development}{60}{subsection.981}
-\contentsline {subsection}{\numberline {8.2.2}Unit Testing}{60}{subsection.982}
-\contentsline {subsection}{\numberline {8.2.3}Code Coverage}{60}{subsection.983}
-\contentsline {subsection}{\numberline {8.2.4}Functional Testing}{60}{subsection.984}
-\contentsline {section}{\numberline {8.3}Problems and Evaluation}{61}{section.985}
-\contentsline {section}{\numberline {8.4}Limitations}{61}{section.986}
-\contentsline {subsection}{\numberline {8.4.1}Standards Compliance}{61}{subsection.987}
-\contentsline {subsection}{\numberline {8.4.2}Hardware Implementation}{61}{subsection.988}
-\contentsline {section}{\numberline {8.5}Project Management}{61}{section.989}
-\contentsline {section}{\numberline {8.6}Summary}{61}{section.990}
+\contentsline {subsubsection}{\numberline {3.3.1.6}Lehmann Primality Test}{26}{subsubsection.281}
+\contentsline {subsubsection}{\numberline {3.3.1.7}AKS Primality Test}{27}{subsubsection.310}
+\contentsline {subsubsection}{\numberline {3.3.1.8}Maurer's Algorithm}{28}{subsubsection.323}
+\contentsline {paragraph}{Trial Division}{29}{section*.326}
+\contentsline {paragraph}{Algorithm Steps}{29}{section*.340}
+\contentsline {subsubsection}{\numberline {3.3.1.9}BigInteger Generation}{29}{subsubsection.342}
+\contentsline {subsubsection}{\numberline {3.3.1.10}Primality Test Outcomes}{30}{subsubsection.343}
+\contentsline {paragraph}{Running Times}{30}{section*.348}
+\contentsline {paragraph}{Conclusion}{31}{section*.350}
+\contentsline {subsubsection}{\numberline {3.3.1.11}A Note on Random Number Generators}{31}{subsubsection.351}
+\contentsline {subsection}{\numberline {3.3.2}Strong Primes}{32}{subsection.355}
+\contentsline {section}{\numberline {3.4}Integers}{33}{section.359}
+\contentsline {subsection}{\numberline {3.4.1}Factorisation}{33}{subsection.360}
+\contentsline {section}{\numberline {3.5}Public-key Cryptography}{34}{section.362}
+\contentsline {subsection}{\numberline {3.5.1}RSA}{34}{subsection.363}
+\contentsline {subsubsection}{\numberline {3.5.1.1}The RSA Problem}{34}{subsubsection.364}
+\contentsline {subsubsection}{\numberline {3.5.1.2}RSA}{34}{subsubsection.369}
+\contentsline {subsubsection}{\numberline {3.5.1.3}Key Generation}{34}{subsubsection.370}
+\contentsline {paragraph}{Key Distribution}{37}{section*.448}
+\contentsline {subsubsection}{\numberline {3.5.1.4}Encryption}{37}{subsubsection.449}
+\contentsline {subsubsection}{\numberline {3.5.1.5}Decryption}{39}{subsubsection.505}
+\contentsline {subsubsection}{\numberline {3.5.1.6}Formal Proof}{40}{subsubsection.561}
+\contentsline {subsubsection}{\numberline {3.5.1.7}Textbooks and OAEP}{41}{subsubsection.562}
+\contentsline {paragraph}{The Mask Generation Function (MGF)}{43}{section*.574}
+\contentsline {subsection}{\numberline {3.5.2}Diffie--Hellman}{52}{subsection.921}
+\contentsline {subsubsection}{\numberline {3.5.2.1}Implementation}{53}{subsubsection.928}
+\contentsline {section}{\numberline {3.6}Other Variations of Public-key Cryptography}{59}{section.1135}
+\contentsline {subsection}{\numberline {3.6.1}ElGamal}{59}{subsection.1136}
+\contentsline {paragraph}{Key Generation and Sharing}{59}{section*.1137}
+\contentsline {paragraph}{Encryption}{60}{section*.1143}
+\contentsline {paragraph}{Decryption}{60}{section*.1148}
+\contentsline {subsubsection}{\numberline {3.6.1.1}Textbook Algorithm Insecurity}{60}{subsubsection.1150}
+\contentsline {subsection}{\numberline {3.6.2}Rabin}{61}{subsection.1151}
+\contentsline {paragraph}{Key Generation}{61}{section*.1152}
+\contentsline {paragraph}{Encryption}{61}{section*.1157}
+\contentsline {paragraph}{Decryption}{61}{section*.1159}
+\contentsline {section}{\numberline {3.7}Uses and going forward}{61}{section.1161}
+\contentsline {subsection}{\numberline {3.7.1}Problems}{63}{subsection.1162}
+\contentsline {chapter}{\numberline {4}Symmetric Cryptography}{65}{chapter.1171}
+\contentsline {chapter}{\numberline {5}Identification and Authentication}{66}{chapter.1172}
+\contentsline {section}{\numberline {5.1}Overview and Intentions}{66}{section.1173}
+\contentsline {section}{\numberline {5.2}Basic and Common Schemes}{66}{section.1174}
+\contentsline {section}{\numberline {5.3}Digital Signatures}{66}{section.1175}
+\contentsline {section}{\numberline {5.4}Certificates}{66}{section.1176}
+\contentsline {section}{\numberline {5.5}Other Methods}{66}{section.1177}
+\contentsline {chapter}{\numberline {6}Enigma: A Testbed}{67}{chapter.1178}
+\contentsline {section}{\numberline {6.1}Overview and Intentions}{67}{section.1179}
+\contentsline {section}{\numberline {6.2}Engineering Methodologies and Planning}{67}{section.1180}
+\contentsline {subsection}{\numberline {6.2.1}Methodology}{67}{subsection.1181}
+\contentsline {subsection}{\numberline {6.2.2}Documentation}{68}{subsection.1182}
+\contentsline {section}{\numberline {6.3}Application Development}{69}{section.1184}
+\contentsline {subsection}{\numberline {6.3.1}User Interface}{69}{subsection.1185}
+\contentsline {subsubsection}{\numberline {6.3.1.1}GUI Frameworks}{69}{subsubsection.1186}
+\contentsline {paragraph}{SWT}{69}{section*.1187}
+\contentsline {subsubsection}{\numberline {6.3.1.2}Designs}{70}{subsubsection.1188}
+\contentsline {subsubsection}{\numberline {6.3.1.3}Connect Window}{72}{subsubsection.1194}
+\contentsline {subsubsection}{\numberline {6.3.1.4}Chat Window}{74}{subsubsection.1250}
+\contentsline {subsubsection}{\numberline {6.3.1.5}Log Window}{75}{subsubsection.1251}
+\contentsline {subsubsection}{\numberline {6.3.1.6}Preferences Window}{75}{subsubsection.1252}
+\contentsline {subsection}{\numberline {6.3.2}Preferences}{75}{subsection.1253}
+\contentsline {subsubsection}{\numberline {6.3.2.1}Usage}{77}{subsubsection.1292}
+\contentsline {subsection}{\numberline {6.3.3}Internationalisation}{78}{subsection.1297}
+\contentsline {subsection}{\numberline {6.3.4}Drawable Graphics}{80}{subsection.1355}
+\contentsline {section}{\numberline {6.4}Protocol Implementation}{81}{section.1382}
+\contentsline {subsection}{\numberline {6.4.1}Overview}{81}{subsection.1383}
+\contentsline {subsubsection}{\numberline {6.4.1.1}Goals and Objectives}{81}{subsubsection.1384}
+\contentsline {subsection}{\numberline {6.4.2}Server Design}{82}{subsection.1388}
+\contentsline {subsubsection}{\numberline {6.4.2.1}Server}{82}{subsubsection.1389}
+\contentsline {subsubsection}{\numberline {6.4.2.2}Session}{83}{subsubsection.1395}
+\contentsline {subsection}{\numberline {6.4.3}Protocol Model}{84}{subsection.1396}
+\contentsline {subsubsection}{\numberline {6.4.3.1}Routing and How It Works}{84}{subsubsection.1397}
+\contentsline {subsection}{\numberline {6.4.4}Parsing XML}{84}{subsection.1399}
+\contentsline {subsubsection}{\numberline {6.4.4.1}SAX and Xerces}{85}{subsubsection.1400}
+\contentsline {paragraph}{The InputHandler}{86}{section*.1404}
+\contentsline {subsubsection}{\numberline {6.4.4.2}Packets}{88}{subsubsection.1457}
+\contentsline {subsubsection}{\numberline {6.4.4.3}Packet Handling}{89}{subsubsection.1461}
+\contentsline {paragraph}{The PacketQueue}{89}{section*.1462}
+\contentsline {paragraph}{The PacketListener}{90}{section*.1463}
+\contentsline {paragraph}{The QueueThread}{90}{section*.1464}
+\contentsline {paragraph}{The ProcessThread}{91}{section*.1492}
+\contentsline {subsubsection}{\numberline {6.4.4.4}Handlers}{91}{subsubsection.1493}
+\contentsline {subsection}{\numberline {6.4.5}Fitting the Protocol Components Together}{92}{subsection.1498}
+\contentsline {section}{\numberline {6.5}Algorithm Implementation}{92}{section.1499}
+\contentsline {subsection}{\numberline {6.5.1}Interfaces and Abstraction}{92}{subsection.1500}
+\contentsline {subsection}{\numberline {6.5.2}Key Agreement and Certficates}{92}{subsection.1501}
+\contentsline {subsection}{\numberline {6.5.3}Ciphers}{92}{subsection.1502}
+\contentsline {section}{\numberline {6.6}Usage}{92}{section.1503}
+\contentsline {section}{\numberline {6.7}Program Listing}{92}{section.1504}
+\contentsline {chapter}{\numberline {7}Cryptanalysis}{93}{chapter.1505}
+\contentsline {section}{\numberline {7.1}Public-key Cryptography}{93}{section.1506}
+\contentsline {subsection}{\numberline {7.1.1}RSA}{93}{subsection.1507}
+\contentsline {subsubsection}{\numberline {7.1.1.1}Brute Force}{93}{subsubsection.1508}
+\contentsline {subsubsection}{\numberline {7.1.1.2}Elementary Attacks}{94}{subsubsection.1509}
+\contentsline {paragraph}{Small Exponent}{94}{section*.1510}
+\contentsline {subparagraph}{Private Exponent}{94}{section*.1511}
+\contentsline {subparagraph}{Public Exponent}{94}{section*.1512}
+\contentsline {paragraph}{Key Exposure}{95}{section*.1513}
+\contentsline {paragraph}{Coppersmith's Short Pad Attack}{95}{section*.1514}
+\contentsline {subparagraph}{Hastad's Broadcast Attack}{95}{section*.1515}
+\contentsline {paragraph}{Related Message Attack}{95}{section*.1516}
+\contentsline {paragraph}{Forward Search Attack}{95}{section*.1517}
+\contentsline {paragraph}{Common Modulus Attack}{95}{section*.1518}
+\contentsline {paragraph}{Cycling Attack}{95}{section*.1519}
+\contentsline {paragraph}{Message Concealing}{95}{section*.1520}
+\contentsline {subsubsection}{\numberline {7.1.1.3}System and Implementation Attacks}{95}{subsubsection.1521}
+\contentsline {paragraph}{Timing}{95}{section*.1522}
+\contentsline {paragraph}{Random Faults}{95}{section*.1523}
+\contentsline {paragraph}{Bleichenbacher's Attack}{96}{section*.1524}
+\contentsline {subsection}{\numberline {7.1.2}Certificates and Authentication}{96}{subsection.1525}
+\contentsline {subsubsection}{\numberline {7.1.2.1}Implementation Attacks}{96}{subsubsection.1526}
+\contentsline {paragraph}{SSL BEAST}{96}{section*.1527}
+\contentsline {paragraph}{Authority Security and Impersonation}{96}{section*.1528}
+\contentsline {section}{\numberline {7.2}Symmetric Cryptography}{96}{section.1529}
+\contentsline {subsection}{\numberline {7.2.1}Brute-force}{97}{subsection.1530}
+\contentsline {subsection}{\numberline {7.2.2}XSL Attack}{97}{subsection.1531}
+\contentsline {subsection}{\numberline {7.2.3}Biryukov and Khovratovich}{97}{subsection.1532}
+\contentsline {subsection}{\numberline {7.2.4}Related Key Attack}{97}{subsection.1533}
+\contentsline {subsection}{\numberline {7.2.5}Known-key Distinguishing Attack}{97}{subsection.1534}
+\contentsline {subsection}{\numberline {7.2.6}Bogdanov, Khovratovich, and Rechberger}{97}{subsection.1535}
+\contentsline {subsection}{\numberline {7.2.7}Side-channel attacks}{97}{subsection.1536}
+\contentsline {section}{\numberline {7.3}Hash Functions}{97}{section.1537}
+\contentsline {subsection}{\numberline {7.3.1}Birthday Attacks}{97}{subsection.1538}
+\contentsline {subsection}{\numberline {7.3.2}Collision and Compression}{97}{subsection.1539}
+\contentsline {subsection}{\numberline {7.3.3}Chaining Attack}{97}{subsection.1540}
+\contentsline {section}{\numberline {7.4}Emerging Threats}{97}{section.1541}
+\contentsline {subsection}{\numberline {7.4.1}Quantum Cryptography and Cryptanalysis}{97}{subsection.1542}
+\contentsline {subsection}{\numberline {7.4.2}Ron was wrong, Whit is right}{98}{subsection.1543}
+\contentsline {subsubsection}{\numberline {7.4.2.1}Sony PlayStation 3}{98}{subsubsection.1544}
+\contentsline {section}{\numberline {7.5}A comment on theory}{100}{section.1545}
+\contentsline {chapter}{\numberline {8}Outcomes and Further Research}{101}{chapter.1546}
+\contentsline {section}{\numberline {8.1}Fulfilment of Specification}{101}{section.1547}
+\contentsline {section}{\numberline {8.2}Testing}{101}{section.1548}
+\contentsline {subsection}{\numberline {8.2.1}Test Driven Development}{101}{subsection.1549}
+\contentsline {subsection}{\numberline {8.2.2}Unit Testing}{101}{subsection.1550}
+\contentsline {subsection}{\numberline {8.2.3}Code Coverage}{101}{subsection.1551}
+\contentsline {subsection}{\numberline {8.2.4}Functional Testing}{101}{subsection.1552}
+\contentsline {section}{\numberline {8.3}Problems and Evaluation}{102}{section.1553}
+\contentsline {section}{\numberline {8.4}Limitations}{102}{section.1554}
+\contentsline {subsection}{\numberline {8.4.1}Standards Compliance}{102}{subsection.1555}
+\contentsline {subsection}{\numberline {8.4.2}Hardware Implementation}{102}{subsection.1556}
+\contentsline {section}{\numberline {8.5}Project Management}{102}{section.1557}
+\contentsline {section}{\numberline {8.6}Summary}{102}{section.1558}
 \vspace {2em}
-\contentsline {chapter}{\numberline {A}Enigma Application Specification}{62}{appendix.991}
-\contentsline {section}{\numberline {A.1}Introduction}{62}{section.992}
-\contentsline {subsection}{\numberline {A.1.1}Purpose}{62}{subsection.993}
-\contentsline {subsection}{\numberline {A.1.2}Scope}{62}{subsection.994}
-\contentsline {subsection}{\numberline {A.1.3}Definitions}{62}{subsection.995}
-\contentsline {subsection}{\numberline {A.1.4}Overview}{62}{subsection.996}
-\contentsline {section}{\numberline {A.2}Overall Description}{62}{section.997}
-\contentsline {subsection}{\numberline {A.2.1}Product Perspective}{62}{subsection.998}
-\contentsline {subsection}{\numberline {A.2.2}Product Functions}{62}{subsection.999}
-\contentsline {subsection}{\numberline {A.2.3}User Characteristics}{62}{subsection.1000}
-\contentsline {subsection}{\numberline {A.2.4}Constraints}{62}{subsection.1001}
-\contentsline {subsection}{\numberline {A.2.5}Assumptions and dependencies}{62}{subsection.1002}
-\contentsline {chapter}{\numberline {B}Enigma Protocol Specification}{63}{appendix.1003}
-\contentsline {section}{\numberline {B.1}Introduction}{63}{section.1004}
-\contentsline {section}{\numberline {B.2}Requirements}{63}{section.1006}
-\contentsline {section}{\numberline {B.3}History}{64}{section.1010}
-\contentsline {section}{\numberline {B.4}Terminology}{64}{section.1011}
-\contentsline {section}{\numberline {B.5}Format}{64}{section.1012}
-\contentsline {section}{\numberline {B.6}Commands}{64}{section.1013}
-\contentsline {subsection}{\numberline {B.6.1}Connection}{64}{subsection.1014}
-\contentsline {subsection}{\numberline {B.6.2}Authentication}{65}{subsection.1015}
-\contentsline {subsection}{\numberline {B.6.3}Messaging}{66}{subsection.1016}
-\contentsline {subsection}{\numberline {B.6.4}Errors}{66}{subsection.1017}
-\contentsline {chapter}{\numberline {C}Licenced Software Usage}{67}{appendix.1018}
-\contentsline {chapter}{\numberline {D}Enigma: User Manual}{69}{appendix.1023}
+\contentsline {chapter}{\numberline {A}Enigma Application Software Requirements Specification}{103}{appendix.1559}
+\contentsline {section}{\numberline {A.1}Introduction}{104}{section.1560}
+\contentsline {subsection}{\numberline {A.1.1}Purpose}{104}{subsection.1561}
+\contentsline {subsection}{\numberline {A.1.2}Scope}{104}{subsection.1562}
+\contentsline {subsection}{\numberline {A.1.3}Definitions}{104}{subsection.1563}
+\contentsline {subsection}{\numberline {A.1.4}Overview}{104}{subsection.1564}
+\contentsline {section}{\numberline {A.2}Overall Description}{104}{section.1565}
+\contentsline {subsection}{\numberline {A.2.1}Product Perspective}{104}{subsection.1566}
+\contentsline {subsection}{\numberline {A.2.2}Product Functions}{104}{subsection.1567}
+\contentsline {subsection}{\numberline {A.2.3}User Characteristics}{104}{subsection.1568}
+\contentsline {subsection}{\numberline {A.2.4}Constraints}{104}{subsection.1569}
+\contentsline {subsection}{\numberline {A.2.5}Assumptions and dependencies}{104}{subsection.1570}
+\contentsline {chapter}{\numberline {B}Enigma Protocol Specification}{105}{appendix.1571}
+\contentsline {section}{\numberline {B.1}Introduction}{105}{section.1572}
+\contentsline {section}{\numberline {B.2}Requirements}{105}{section.1574}
+\contentsline {section}{\numberline {B.3}History}{106}{section.1578}
+\contentsline {section}{\numberline {B.4}Terminology}{106}{section.1579}
+\contentsline {section}{\numberline {B.5}Format}{106}{section.1580}
+\contentsline {section}{\numberline {B.6}Commands}{107}{section.1581}
+\contentsline {subsection}{\numberline {B.6.1}Connection}{107}{subsection.1582}
+\contentsline {subsection}{\numberline {B.6.2}Authentication}{107}{subsection.1583}
+\contentsline {subsection}{\numberline {B.6.3}Messaging}{108}{subsection.1584}
+\contentsline {subsection}{\numberline {B.6.4}Errors}{108}{subsection.1585}
+\contentsline {chapter}{\numberline {C}Licenced Software Usage}{110}{appendix.1586}
+\contentsline {chapter}{\numberline {D}Enigma: User Manual}{112}{appendix.1591}
 \vspace {2em}
-\contentsline {chapter}{Bibliography}{70}{dummy.1024}
+\contentsline {chapter}{Bibliography}{113}{dummy.1592}
