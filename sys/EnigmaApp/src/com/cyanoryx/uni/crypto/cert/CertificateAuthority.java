@@ -3,6 +3,7 @@ package com.cyanoryx.uni.crypto.cert;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.UUID;
@@ -48,7 +49,9 @@ public class CertificateAuthority {
 	
 	public boolean verify(Certificate cert) throws DataFormatException {
 		byte[] signature = cert.getSignature();
+		System.out.println(Arrays.toString(signature));
 		byte[] key		 = cert.getSubject_key();
+		System.out.println(Arrays.toString(key));
 		
 		RSA_PSS rsa = new RSA_PSS(this.pub);
 		return rsa.verify(key, signature);

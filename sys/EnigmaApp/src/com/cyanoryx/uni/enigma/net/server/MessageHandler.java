@@ -37,7 +37,7 @@ public class MessageHandler implements PacketListener {
 			if (ss!=null) {
 				String message = packet.getChildValue("body");
 				
-				if (ss.getAuthenticated()) {
+				if (ss.getAuthenticated() && (ss.getStatus()==Session.AUTHENTICATED)) {
 					if (p.get("default_sym_cipher", "AES").equalsIgnoreCase("aes")) {
 						AES aes = new AES();
 						Key k = new Key(KeySize.K256);

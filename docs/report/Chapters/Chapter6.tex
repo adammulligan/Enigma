@@ -587,6 +587,10 @@ public void endElement(String uri,
   
   This is the standard flow for authentication and key agreement. This takes place primarily in \verb!Connect#connect()! and \verb!AuthHandler#notify()!, which can be found in \emph{com.cyanoryx.uni.enigma.gui} and \emph{com.cyanoryx.uni.enigma.net.server}, respectively.
   
+  \paragraph{Key Generation} is performed through an option in the toolbar -- Options > Generate Keys... -- and requires no user input other than having previously set the Certificate Authority's key location in the preferences.
+    
+  This utility automatically generates a public/private key pair for the user and then signs it with the Certificate Authority's private key to produce their own certificate which will be used by other entities to confirm their identities. In the Real World, user's would not have access to the private keys of the CA, however as this application is for research and will not utilise an actual CA we will assume the ownership of CA private keys.
+  
   \subsection{Ciphers}
   
   Now that we have a shared session key, messages can now be encrypted by either entity and transmitted over the network securely. 

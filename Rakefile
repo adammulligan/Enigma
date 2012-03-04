@@ -9,23 +9,13 @@ require 'find'
 include Archive::Tar
 
 @build_dir = Dir.getwd + '/dist'
+@tar_file  = 'project.tgz'
 
-desc 'Build project for distribution'
+desc 'A highly un-optimised and verbose (i.e. made quickly) project builder for distribution'
 task :build do
   # Check if git branch has changes
   # if it doesn't continue, otherwise throw an error
-  # Final structure should be:
-  #
-  # build/
-  #   Enigma/
-  #     src/
-  #     bin/
-  #     dep/
-  #     res/
-  #   report/
-  #     Thesis.pdf
-  #     latex_src/
-  #   README.md
+
   Dir.mkdir(@build_dir) unless File.directory?(@build_dir)
 
   Dir.chdir("sys/EnigmaApp") do
@@ -39,12 +29,15 @@ task :build do
     `ant && ant jar`
 
     FileUtils.cp('./bin/jar/Enigma.jar',enigma_loc)
+    FileUtils.cp('./cert_id_rsa',enigma_loc)
+    FileUtils.cp('./cert_id_rsa.pub',enigma_loc)
   end
 
   # LaTeX compilation
   Dir.chdir("docs/report") do
     # Run latex three times because:
     # http://en.wikibooks.org/wiki/LaTeX/Bibliography_Management#Why_won.27t_LaTeX_generate_any_output.3F
+    puts 'Building latex source...'
     `pdflatex Thesis.tex && bibtex Thesis && pdflatex Thesis.tex && pdflatex Thesis.tex`
     FileUtils.cp 'Thesis.pdf', "#{@build_dir}/Thesis.pdf"
 
@@ -63,8 +56,11 @@ task :build do
     end
   end
 
-  tgz = Zlib::GzipWriter.new(File.open('project.tgz', 'wb'))
+  puts 'Tarring everything...'
+  tgz = Zlib::GzipWriter.new(File.open(@tar_file, 'wb'))
   Minitar.pack(@build_dir, tgz)
+
+  puts "Results saved in #{@build_dir}, tarred to #{@tar_file}."
 end
 
 task :clean do
@@ -86,8 +82,8 @@ def cleanup
   when 'y' then FileUtils.rm_rf jar_dir  unless !File.exists?(jar_dir)
   end
 
-  puts "Removing directory ./project.tgz. Continue?"
+  puts "Removing #{@tar_file}. Continue?"
   case STDIN.gets.chomp.downcase
-  when 'y' then FileUtils.rm_rf "./project.tgz" unless !File.exists?("./project.tgz")
+  when 'y' then FileUtils.rm_rf @tar_file unless !File.exists?(@tar_file)
   end
 end

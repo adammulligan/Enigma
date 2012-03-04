@@ -249,7 +249,6 @@ public class Session {
 		p.setAttribute("stage",stage);
 		p.getChildren().add(new Packet(type,body));
 
-		p.writeXML(new BufferedWriter(new OutputStreamWriter(System.out)));
 		p.writeXML(getWriter());
 	}
 	

@@ -107,7 +107,6 @@ public class Preferences extends JFrame {
 				@Override
 				public void itemStateChanged(ItemEvent arg0) {
 					Preferences.this.prefs.putBoolean("allow_unauthenticated_conversations", (arg0.getStateChange()==1) ? true : false);
-					System.out.println("Changed allow_unauthenticated_conversations to "+Preferences.this.prefs.getBoolean("allow_unauthenticated_conversations", false));
 				}
 			});
 			security_panel1.add(allow_unauthenticated_conversations);
@@ -127,8 +126,8 @@ public class Preferences extends JFrame {
 
 		JPanel security_panel2 = new JPanel(new GridLayout(7,2));
 		
-				  String[]  default_asym_cipher_choices = { "RSA", "DH" };
-				  JLabel    default_asym_cipher_label   = new JLabel("Default key agreement method: ");
+				  String[]  default_asym_cipher_choices = { "RSA" };
+				  JLabel    default_asym_cipher_label   = new JLabel("Default agreement method: ");
 			final JComboBox default_asym_cipher         = new JComboBox(default_asym_cipher_choices);
 			
 			default_asym_cipher.setSelectedItem(Preferences.this.prefs.get("default_asym_cipher","RSA"));
@@ -136,12 +135,14 @@ public class Preferences extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					Preferences.this.prefs.put("default_asym_cipher", default_asym_cipher.getSelectedItem().toString());
-					System.out.println("Changed default_asym_cipher to "+Preferences.this.prefs.get("default_asym_cipher","RSA"));
 				}
 			});
 			
-				  JLabel     key_location_label = new JLabel("Key Location: ");
-			final JTextField key_location		= new JTextField();
+			// NOTE
+			// key_location is a misnomer due to changes in design. key_location is actually the location
+			// of the user's certificate
+				  JLabel     key_location_label = new JLabel("Certificate Location: ");
+			final JTextField key_location		= new JTextField(new AppPrefs().getPrefs().get("key_location",""));
 			
 			key_location.getDocument().addDocumentListener(new DocumentListener() {
 				@Override
@@ -153,12 +154,27 @@ public class Preferences extends JFrame {
 				
 				public void update_prefs() {
 					Preferences.this.prefs.put("key_location", key_location.getText());
-					System.out.println("Updating key_location to "+key_location.getText());
 				}
 			});
 			
-			      JLabel     ca_key_location_label  = new JLabel("Certificate Authority Public-Key Location: ");
-			final JTextField ca_key_location		= new JTextField();
+				  JLabel     priv_key_location_label = new JLabel("Private Key Location: ");
+			final JTextField priv_key_location       = new JTextField(new AppPrefs().getPrefs().get("priv_key_location",""));
+			
+			priv_key_location.getDocument().addDocumentListener(new DocumentListener() {
+				@Override
+				public void changedUpdate(DocumentEvent arg0) { update_prefs(); }
+				@Override
+				public void insertUpdate(DocumentEvent arg0) { update_prefs(); }
+				@Override
+				public void removeUpdate(DocumentEvent arg0) { update_prefs(); }
+				
+				public void update_prefs() {
+					Preferences.this.prefs.put("priv_key_location", priv_key_location.getText());
+				}
+			});
+			
+			      JLabel     ca_key_location_label  = new JLabel("CA Public-Key Location: ");
+			final JTextField ca_key_location		= new JTextField(new AppPrefs().getPrefs().get("ca_key_location",""));
 				
 			ca_key_location.getDocument().addDocumentListener(new DocumentListener() {
 				@Override
@@ -170,7 +186,6 @@ public class Preferences extends JFrame {
 				
 				public void update_prefs() {
 					Preferences.this.prefs.put("ca_key_location", ca_key_location.getText());
-					System.out.println("Updating ca_key_location to "+ca_key_location.getText());
 				}
 			});
 			
@@ -178,6 +193,8 @@ public class Preferences extends JFrame {
 			security_panel2.add(default_asym_cipher);
 			security_panel2.add(key_location_label);
 			security_panel2.add(key_location);
+			security_panel2.add(priv_key_location_label);
+			security_panel2.add(priv_key_location);
 			security_panel2.add(ca_key_location_label);
 			security_panel2.add(ca_key_location);
 		
@@ -194,7 +211,6 @@ public class Preferences extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					Preferences.this.prefs.put("default_sym_cipher", default_sym_cipher.getSelectedItem().toString());
-					System.out.println("Changed default_sym_cipher to "+Preferences.this.prefs.get("default_sym_cipher","RSA"));
 				}
 			});
 			

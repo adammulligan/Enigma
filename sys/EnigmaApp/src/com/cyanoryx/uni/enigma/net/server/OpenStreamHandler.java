@@ -45,7 +45,6 @@ public class OpenStreamHandler implements PacketListener{
 				if (session.getStatus()==Session.CONNECTED) {
 					Session s = Server.createClient(session.getSocket().getInetAddress().getHostAddress(),packet.getAttribute("return-port"),session.getLocalPort(),session.getUser(),session.getID());
 					s.setAuthenticated(auth);
-					s.setStatus(Session.AUTHENTICATED);
 					s.setCipherType(CipherAlgorithm.AES);
 					s.setCipherKey(new Key(KeySize.K256).getKey());
 					index.addSession(s);

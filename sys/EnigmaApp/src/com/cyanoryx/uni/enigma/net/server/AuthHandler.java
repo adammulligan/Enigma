@@ -30,7 +30,6 @@ public class AuthHandler implements PacketListener {
 	
 	@Override
 	public void notify(Packet packet) {
-		Session s = packet.getSession();
 		Preferences p = new AppPrefs().getPrefs();
 		
 		Session stored_session = index.getSession(packet.getAttribute("id"));
@@ -49,18 +48,17 @@ public class AuthHandler implements PacketListener {
 				} else if (type.equalsIgnoreCase("cert")) {
 					// FOR: <auth stage="agreement" type="cert">Base64 encoded Enigma certificate</auth>
 					if (stored_session.getAgreementType()==KeyAlgorithm.RSA) {
-						//String ca_key_location = p.get("ca_key_location","/");
 						
 						Certificate cert = new Certificate(new String(Base64.decode(packet.getChildValue("cert"))));
-						//CertificateAuthority ca = new CertificateAuthority(new PublicKey(new File(ca_key_location+"id_rsa.pub")));
 						
-						//if (p.getBoolean("require_cert", true)) ca.verify(cert);
 						stored_session.setPublicKey(new PublicKey(new String(cert.getSubject_key())));
 						
 						RSA_OAEP rsa = new RSA_OAEP(stored_session.getPublicKey());
 						
 						byte[] key_bytes = new Key(KeySize.K256).getKey();
 						String key 		 = Base64.encodeBytes(rsa.encrypt(key_bytes));
+						
+						stored_session.setStatus(Session.AUTHENTICATED);
 						
 						stored_session.sendAuth("key", "agreement", key, stored_session.getID());
 						stored_session.setCipherKey(key_bytes);
@@ -70,10 +68,11 @@ public class AuthHandler implements PacketListener {
 					if (stored_session.getAgreementType()==KeyAlgorithm.RSA) {
 						byte[] key = Base64.decode(packet.getChildValue("key"));
 						
-						RSA_OAEP rsa = new RSA_OAEP(new PrivateKey(new File("./id_rsa")));
+						RSA_OAEP rsa = new RSA_OAEP(new PrivateKey(new File(new AppPrefs().getPrefs().get("priv_key_location","./id_rsa"))));
 						key = rsa.decrypt(key);
 						
 						stored_session.setCipherKey(key);
+						stored_session.setStatus(Session.AUTHENTICATED);
 					}
 				}
 			} else if (stage.equalsIgnoreCase("streaming")) {
@@ -92,7 +91,6 @@ public class AuthHandler implements PacketListener {
 						stored_session.getWindow().update(stored_session.getUser().getName()+" turned off encryption...");
 					} else {
 						stored_session.setAuthenticated(true);
-						stored_session.setStatus(Session.AUTHENTICATED);
 						stored_session.getWindow().update(stored_session.getUser().getName()+" turned on encryption...");
 					}
 				}

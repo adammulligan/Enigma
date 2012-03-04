@@ -6,26 +6,55 @@
 
 \section{Introduction}
 
-\subsection{Purpose}
+This document lists basic requirements for the Enigma application. All these conditions must be met for the proper working of the application and for it to work as expected. This is not a high-level design specification, but an overview.
 
 \subsection{Scope}
 
-
-
-\subsection{Definitions}
-
-\subsection{Overview}
+This document applies to the overall Enigma application that will function as an instant-messaging server. The individual cryptographic algorithms are not specified here.
 
 \section{Overall Description}
 
-\subsection{Product Perspective}
+The purpose of the Enigma application is to provide a test bed for public-key and asymmetric encryption algorithms so that they can be tested in a real-world use environment and evaluate performance using external tools.
 
 \subsection{Product Functions}
 
+\subsubsection{Primary Functions}
+
+\begin{itemize}
+  \item To connect to and handshake with a remote Enigma server.
+  \item To receive and accept connection requests from remote Enigma servers.
+  \item To send ASCII text messages between two entities connected through Enigma servers.
+  \item To be able to ``toggle" encryption of messages on/off, allowing for secure and insecure sessions.
+  \item To use public-key cryptography to securely agree on a shared session key for use in symmetric ciphers.
+  \item To securely encrypt and decrypt messages given a designated cipher function and a key.
+  \item To verify the identity of a remote entity using a public-key certificate.
+\end{itemize}
+
+\subsection{Interfaces and Accessibility}
+
+The application will have a graphical user interface (GUI) that will use the native components of the host operating system.
+
 \subsection{User Characteristics}
+
+The user will likely be:
+
+\begin{itemize}
+  \item A developer or someone who is knowledgeable about computer systems.
+  \item A person who is connected to a developer and is aiding in testing/use for analysis, and thus has instructions for use.	
+\end{itemize}
 
 \subsection{Constraints}
 
-The software should \textbf{not} be considered for use in an environment where sensitive information is required to be shared which, if released, would pose a threat to life, cause injury to persons or damage to property, or any other result which could be considered damaging or illegal.
+The software should \textbf{not} be considered for use in an environment where sensitive information is required to be shared which, if released, would pose a threat to life, cause injury or damage to persons or property, or any other result which could be considered damaging or illegal.
+
+No guarantees of running-time can be made, and neither the encryption, decryption or transmission of data should be considered real-time.
+
+The software must be used purely for research purposes.
 
 \subsection{Assumptions and dependencies}
+
+\begin{itemize}
+  \item The host computer(s) are capable of running at least Java 6.
+  \item The source must be compiled with the appropriate library dependencies.
+  \item Two entities wishing to communicate must be connected via a network, be it a local connection or wider (such as the internet).
+\end{itemize}

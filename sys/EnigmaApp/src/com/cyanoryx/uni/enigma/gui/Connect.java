@@ -12,7 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -32,8 +35,13 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.MaskFormatter;
 
 import com.cyanoryx.uni.common.Base64;
+import com.cyanoryx.uni.common.FileIO;
 import com.cyanoryx.uni.crypto.cert.Certificate;
+import com.cyanoryx.uni.crypto.cert.CertificateAuthority;
 import com.cyanoryx.uni.crypto.cert.KeyAlgorithm;
+import com.cyanoryx.uni.crypto.rsa.KeyGenerator;
+import com.cyanoryx.uni.crypto.rsa.PrivateKey;
+import com.cyanoryx.uni.crypto.rsa.PublicKey;
 import com.cyanoryx.uni.enigma.net.protocol.CipherAlgorithm;
 import com.cyanoryx.uni.enigma.net.protocol.Session;
 import com.cyanoryx.uni.enigma.net.protocol.User;
@@ -237,6 +245,70 @@ public class Connect extends JFrame {
     menu.add(file);
     
     JMenu tools = new JMenu("Tools");
+    
+    JMenuItem key_gen = new JMenuItem("Generate Keys...");
+    key_gen.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent arg0) {
+    	java.util.prefs.Preferences prefs = new AppPrefs().getPrefs();
+    	
+    	if (prefs.get("ca_key_location","").equalsIgnoreCase("")) {
+    		JOptionPane.showMessageDialog(Connect.this,
+					"Could not find CA keys.",
+					"Error",
+					JOptionPane.ERROR_MESSAGE);
+    		return;
+    	}
+    	  
+    	KeyGenerator kg = new KeyGenerator(1024);
+  		
+  		BigInteger[] pair = kg.generatePair();
+  		
+  		String priv_key = pair[0]+","+pair[2];
+  		String pub_key  = pair[0]+","+pair[1];
+  		
+  		String output_loc = "./";
+  		
+  		try {
+  			String pub_key_loc = prefs.get("ca_key_location","");
+  			String priv_key_loc = pub_key_loc.split(".pub")[0];
+  			
+  			System.out.println(pub_key_loc);
+  			System.out.println(priv_key_loc);
+  			
+  			CertificateAuthority ca = new CertificateAuthority(new PublicKey(new File(pub_key_loc)),new PrivateKey(new File(priv_key_loc)));
+  			
+  			FileIO.writeFile(priv_key,new File(output_loc+"id_rsa"));
+  			FileIO.writeFile(pub_key,new File(output_loc+"id_rsa.pub"));
+  			
+  			prefs.put("priv_key_location", output_loc+"id_rsa");
+  			
+  			Certificate c = ca.generate(prefs.get("default_asym_cipher", "rsa").getBytes(),
+						  new PublicKey(pub_key),
+						  pub_key.getBytes(),
+						  prefs.get("local_user_name", "User"),
+						  Calendar.getInstance(),
+						  new GregorianCalendar(Calendar.getInstance().get(Calendar.YEAR)+3, 01, 01));
+  			
+  			FileIO.writeFile(c.toString(),new File(output_loc+"cert"));
+  			
+  			JOptionPane.showMessageDialog(Connect.this,
+					"Keys saved to "+output_loc,
+					"Saved",
+					JOptionPane.INFORMATION_MESSAGE);
+  		} catch (Exception e) {
+  			e.printStackTrace();
+  			JOptionPane.showMessageDialog(Connect.this,
+						"Could not generate keys.",
+						"Error",
+						JOptionPane.ERROR_MESSAGE);
+  		}
+      }
+    });
+    tools.add(key_gen);
+    
+    tools.addSeparator();
+    
     JMenuItem options = new JMenuItem("Options");
     options.addActionListener(new ActionListener() {
       @Override
@@ -277,7 +349,6 @@ public class Connect extends JFrame {
       Connect.this.server.getSessionIndex().addSession(session);
       
       session.setAuthenticated(use_auth);
-      session.setStatus(Session.AUTHENTICATED);
       session.setAgreementType(KeyAlgorithm.searchByID(prefs.get("default_asym_cipher","RSA")));
       session.setCipherType(CipherAlgorithm.searchByID(prefs.get("default_sym_cipher","AES")));
       
@@ -287,7 +358,7 @@ public class Connect extends JFrame {
                        id);
       session.sendAuth("cert",
                        "agreement",
-                       Base64.encodeBytes(new Certificate(new File("./cert"))
+                       Base64.encodeBytes(new Certificate(new File(new AppPrefs().getPrefs().get("key_location","./cert")))
                                               .toString()
                                               .getBytes()),
                        id);

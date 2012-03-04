@@ -139,7 +139,6 @@ public class Conversation implements WindowListener{
 					} else {
 						Conversation.this.session.sendAuth("toggle", "streaming", "on", Conversation.this.session.getID());
 						Conversation.this.session.setAuthenticated(true);
-						Conversation.this.session.setStatus(Session.AUTHENTICATED);
 						session.setCipherType(CipherAlgorithm.AES);
 						session.sendAuth("method", "agreement", new AppPrefs().getPrefs().get("default_asym_cipher","RSA"), Conversation.this.session.getID());
 						session.sendAuth("cert"  , "agreement", Base64.encodeBytes(new com.cyanoryx.uni.crypto.cert.Certificate(new File("./cert")).toString().getBytes()), Conversation.this.session.getID());
@@ -220,7 +219,6 @@ public class Conversation implements WindowListener{
         getFrame().getContentPane().add(messages, gbc_textArea);
         
         messageInput = new JTextField();
-        messageInput.requestFocus();
         messageInput.addKeyListener(new KeyListener(){
         	@Override
 			public void keyReleased(KeyEvent k) {
