@@ -92,15 +92,18 @@ public class AES_Utils {
 	 * @return
 	 */
 	public static byte FFMul(byte a, byte b) {
-		byte r = 0, t;
+		byte r = 0;
 		
 		while (a != 0) {
 			if ((a & 1) != 0) r = (byte)(r ^ b);
 			
-			t = (byte)(b & 0x80);
+			// Repeatedly multiply by (1)
 			b = (byte)(b << 1);
 			
-			if (t != 0) b = (byte)(b ^ 0x1b);
+			// If the result is of degree 8
+			// add m(x)
+			if ((byte)(b & 0x80) != 0)
+			    b = (byte)(b ^ 0x1b);
 			
 			a = (byte)((a & 0xff) >> 1);
 		}

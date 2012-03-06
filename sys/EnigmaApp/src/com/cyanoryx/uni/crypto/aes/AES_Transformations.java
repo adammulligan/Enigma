@@ -92,9 +92,7 @@ public class AES_Transformations {
 		new_state[0] = state[0];
 		
 		for (int i=1;i<=3;i++) {
-			int offset=i;
-			
-			System.arraycopy(state[i],offset,new_state[i],0,4-i);
+			System.arraycopy(state[i],i,new_state[i],0,4-i);
 			System.arraycopy(state[i],0,new_state[i],4-i,i);
 		}
 		
@@ -204,7 +202,7 @@ public class AES_Transformations {
 		
 		// Initial round starts from index 0
 		// All further rounds start from 16 bits * round, i.e. 16 bytes ahead of the last round
-		int index = r==0 ? 0 : (r*16); 
+		int index = r*16; 
 		
 		// According to FIPS-197, number of columns should always equals 4
 		for (int col=0;col<4;col++) {
