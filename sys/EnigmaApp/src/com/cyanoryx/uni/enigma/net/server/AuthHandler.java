@@ -12,6 +12,7 @@ import com.cyanoryx.uni.common.Base64;
 import com.cyanoryx.uni.crypto.aes.Key;
 import com.cyanoryx.uni.crypto.aes.KeySize;
 import com.cyanoryx.uni.crypto.cert.Certificate;
+import com.cyanoryx.uni.crypto.cert.CertificateAuthority;
 import com.cyanoryx.uni.crypto.cert.KeyAlgorithm;
 import com.cyanoryx.uni.crypto.rsa.PrivateKey;
 import com.cyanoryx.uni.crypto.rsa.PublicKey;
@@ -50,8 +51,11 @@ public class AuthHandler implements PacketListener {
 					if (stored_session.getAgreementType()==KeyAlgorithm.RSA) {
 						
 						Certificate cert = new Certificate(new String(Base64.decode(packet.getChildValue("cert"))));
+						CertificateAuthority ca = new CertificateAuthority(new PublicKey(new File(new AppPrefs().getPrefs().get("ca_key_location","./cert_id_rsa.pub"))));
 						
 						stored_session.setPublicKey(new PublicKey(new String(cert.getSubject_key())));
+						
+						System.out.println(ca.verify(cert));
 						
 						RSA_OAEP rsa = new RSA_OAEP(stored_session.getPublicKey());
 						

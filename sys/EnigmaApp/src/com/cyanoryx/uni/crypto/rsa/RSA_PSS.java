@@ -160,7 +160,7 @@ public class RSA_PSS {
 		if (M.length > this.md.getDigestLength()) {
 			System.out.println(M.length);
 			System.out.println(this.md.getDigestLength());
-			throw new DataFormatException("Message too long");
+			//throw new DataFormatException("Message too long");
 		}
 		
 		/*
@@ -253,7 +253,7 @@ public class RSA_PSS {
 		 *     and stop.
 		 */
 		if (M.length > this.md.getDigestLength()) {
-		//	return false;
+			return false;
 		}
 
 		/*
@@ -266,7 +266,6 @@ public class RSA_PSS {
 		 * 3.  If emLen < hLen + sLen + 2, output "inconsistent" and stop.
 		 */
 		if (emLen < this.md.getDigestLength()*2 + 2) {
-			System.out.println(1);
 			return false;
 		}
 		
@@ -275,8 +274,7 @@ public class RSA_PSS {
        	 *     0xbc, output "inconsistent" and stop.
 		 */
 		if (EM[EM.length-1] != (byte)0xbc) {
-			System.out.println(2);
-			//return false;
+			return false;
 		}
 		
 		/*
@@ -297,7 +295,6 @@ public class RSA_PSS {
 		
 		byte[] MASK = {(byte)0xFF, 0x7F, 0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01};
 		if ((maskedDB[0] & ~MASK[8*emLen - emBits]) != 0) {
-			System.out.println(3);
 			return false;
 		}
 		
@@ -318,7 +315,6 @@ public class RSA_PSS {
 		 */
 		for (int i=0;i<(emLen - (this.md.getDigestLength()*2) - 2);i++) {
 			if (DB[i] != 0) {
-				System.out.println(4);
 				return false;
 			}
 		}
@@ -331,7 +327,6 @@ public class RSA_PSS {
 		 */
 		
 		if (DB[emLen - (this.md.getDigestLength()*2) - 2] != 0x1) {
-			System.out.println(5);
 			return false;
 		}
 		

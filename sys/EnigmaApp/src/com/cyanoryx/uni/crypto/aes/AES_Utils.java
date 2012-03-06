@@ -1,10 +1,6 @@
 package com.cyanoryx.uni.crypto.aes;
 
-import java.io.IOException;
 import java.util.zip.DataFormatException;
-
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 /**
  * Utilities for AES implementations
@@ -12,31 +8,7 @@ import sun.misc.BASE64Encoder;
  * @author adammulligan
  *
  */
-@SuppressWarnings("restriction")
 public class AES_Utils {
-	/**
-	 * Converts a byte array to a Base64 String
-	 * 
-	 * @param bytes - Array of bytes
-	 * @return Base64 String
-	 */
-	public static String byteToBase64(byte[] bytes) {
-		BASE64Encoder enc = new BASE64Encoder();
-		return enc.encode(bytes);
-	}
-	
-	/**
-	 * Converts a Base64 encoded string to a byte array
-	 * 
-	 * @param b64m - Base64 encoded String
-	 * @return Array of bytes
-	 * @throws IOException
-	 */
-	public static byte[] base64ToByte(String b64m) throws IOException {
-		BASE64Decoder dec = new BASE64Decoder();
-		return dec.decodeBuffer(b64m);
-	}
-	
 	/**
 	 * Takes a linear array of size 16 and converts it into a 4x4 state array
 	 * As defined in FIPS197
@@ -120,17 +92,17 @@ public class AES_Utils {
 	 * @return
 	 */
 	public static byte FFMul(byte a, byte b) {
-		byte aa = a, bb = b, r = 0, t;
+		byte r = 0, t;
 		
-		while (aa != 0) {
-			if ((aa & 1) != 0) r = (byte)(r ^ bb);
+		while (a != 0) {
+			if ((a & 1) != 0) r = (byte)(r ^ b);
 			
-			t = (byte)(bb & 0x80);
-			bb = (byte)(bb << 1);
+			t = (byte)(b & 0x80);
+			b = (byte)(b << 1);
 			
-			if (t != 0) bb = (byte)(bb ^ 0x1b);
+			if (t != 0) b = (byte)(b ^ 0x1b);
 			
-			aa = (byte)((aa & 0xff) >> 1);
+			a = (byte)((a & 0xff) >> 1);
 		}
 	      
 	    return r;

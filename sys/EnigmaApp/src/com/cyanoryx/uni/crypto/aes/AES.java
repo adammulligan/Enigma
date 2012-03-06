@@ -1,7 +1,5 @@
 package com.cyanoryx.uni.crypto.aes;
 
-import java.security.InvalidAlgorithmParameterException;
-import java.security.SecureRandom;
 import java.util.zip.DataFormatException;
 
 /**
@@ -45,30 +43,6 @@ public class AES {
 	
 	public Mode getMode() {
 		return this.mode;
-	}
-	
-	public void setIV(byte[] IV) throws InvalidAlgorithmParameterException {
-		int blockSize = this.getKey().getKeySize().getBlockSizeBytes();
-		if (IV.length != blockSize)
-			throw new InvalidAlgorithmParameterException("Invalid initialisation vector block size");
-		
-		// Copy, rather than point to same copy of iv.
-		// Idea from watne.seis720.project.AES_Common
-        this.IV = new byte[blockSize];
-        System.arraycopy(IV, 0, this.IV, 0, blockSize);
-	}
-	
-	public byte[] getIV() {
-		return this.IV;
-	}
-	
-	public byte[] generateIV() {
-		byte[] iv = new byte[this.getKey().getKeySize().getBlockSizeBytes()];
-		
-		SecureRandom rng = new SecureRandom();
-		rng.nextBytes(iv);
-		
-		return iv;
 	}
 	
 	/**
