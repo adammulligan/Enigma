@@ -15,7 +15,15 @@ No installation is required, the application is self-contained in a Java jar arc
 \section{Cryptosystems}
 
   \subsection{Generating Keys}
+  
+  Generating keys is simple and most of the work is done for you. First ensure that the location of the bundled Certificate Authority keys (public) is set in the preferences. Select "Generate Keys..." from the Tools menu (Tools $>$ Generate Keys...) and a keypair and a certificate are automatically generated and their locations set in the preferences. No further configuration is required.
+  
+  Symmetric cipher keys are generated randomly for each session and cannot be manually selected through the user interface.
 
   \subsection{Notes on Maintaining Secrecy}
   
-\section{Troubleshooting}
+  Your private key is the very basis of the security behind sharing a cipher key and thus maintaining secrecy. If your private key is believed to be lost or stolen then a new keypair should be generated immediately.
+  
+  
+  
+\section{Troubleshooting} 

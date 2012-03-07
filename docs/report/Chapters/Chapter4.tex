@@ -4,3 +4,570 @@
 \label{Chapter4}
 \lhead{Chapter 4. \emph{Symmetric Cryptography}} 
 
+\section{Introduction}
+
+Symmetric cryptography is a type of \emph{secret-key cryptosystem}, meaning that the encryption and decryption transformations use the same key and the encryption function is one-to-one (and thus invertible). More specifically we can define a symmetric algorithm as a cryptosystem with keys $k_{encrypt}$ and $k_{decrypt}$, where $k_{encrypt} = k_{decrypt}$. This is known as having a shared secret.
+
+Simplified, encryption can be written as:
+
+\begin{center}
+  $c = e_k(m)$
+\end{center}
+
+Where $c$ is the ciphertext, $e$ the cipher function, $k$ the key, and $m$ the plaintext message. Decryption, this being a \emph{symmetric} cipher, is almost exactly the same:
+
+\begin{center}
+  $m = e_k(c)$
+\end{center}
+
+Symmetric key algorithms can be implemented in two forms: stream and block ciphers, however we will only be looking at block ciphers. 
+
+\begin{enumerate}
+  \item \textbf{Stream Ciphers} encrypt and decrypt data one character at a time.
+  \item \textbf{Block Ciphers} differ in that they work on fixed-length groups of data using a transformation.
+\end{enumerate}
+
+  \subsection{Differences and Which To Use}
+  
+  We are considering here fundamental properties of \emph{basic} block and stream ciphers.
+
+    \subsubsection{Block Ciphers}
+    
+    A block cipher is a function that maps $n$-bit blocks of plaintext to $n$-bit blocks of ciphertext using a transformation function. 
+    
+    \begin{center}
+       \begin{tabular}{ | p{6cm} | p{6cm} |}
+          \hline
+          Pros & Cons \\ \hline \hline
+          It is impossible to insert or modify characters within a block without detection. & Single characters of messages are not able to be encrypted (unless the message comprises solely of one character) without the whole block having been received. \\ \hline
+          Frequency analysis impossible. & Error propagation is high (at least, relative to stream ciphers) as one error can affect a whole block. \\
+          \hline
+        \end{tabular}
+      \end{center}
+    
+    \subsubsection{Stream Ciphers}
+    
+    A stream cipher maps a single character $n$ to an encrypted character $n'$.
+    
+    \begin{center}
+       \begin{tabular}{ | p{6cm} | p{6cm} |}
+          \hline
+          Pros & Cons \\ \hline \hline
+          Low error propagation. & Low diffusion -- frequency analysis possible. \\ \hline
+          & New messages can be constructed by using parts of older messages. \\ 
+          \hline
+        \end{tabular}
+      \end{center}
+    
+    \subsubsection{Summary}
+
+    Overall, what can we say? The matter is mostly a balance of preference and perceived security. In this case, we will be using a block cipher known as the AES (Advanced Encryption Standard) algorithm, for a number of reasons:
+    
+    \begin{enumerate}
+      \item There are few modern stream ciphers that are well documented compared to AES\footnote{http://www.ecrypt.eu.org/stream/ was an initiative to find modern day stream ciphers for widespread use}
+      \item It is the current standard for encryption as defined by the United States National Institute of Standards and Technology, and is recommended by the United States National Security Agency for securing top secret information.
+      \item And perhaps most importantly, it is vastly more interesting to implement.
+    \end{enumerate}
+    
+    In reality, block ciphers and stream ciphers offer no security benefit over one another.
+
+\section{AES}
+  \subsection{Overview}
+  
+  AES itself is the name of the \emph{standard} whereas the actual name of the algorithm is known as \emph{Rijndael}, though we will refer to it as the AES algorithm. It is a symmetric block cipher with a block size of 128 bits and a key size of 128, 192, or 256 bits. 
+  
+  \subsection{Mathematical Preliminaries}
+  
+  AES mostly utilises basic bitwise arithmetic on fixed-size blocks, and so the mathematics behind it is not particularly complex. An understanding of bitwise operators like XOR, bit shifts, logical operators is required, but all other concepts are explained. However, there is one concept that can be difficult to understand relative to the algorithm without explanation: finite fields.
+  
+    \subsubsection{Finite Fields}
+    
+    Finite fields, like most things useful to cryptography, are an important part of number theory alongside cryptography. We have used them previously in the Diffie-Hellman protocol, however they were left with little explanation. 
+    
+    Finite fields are, perhaps unsurprisingly, a type of field with a finite number of elements and are a subclass of two other algebraic structures:
+    
+    \begin{enumerate}
+      \item A field is a ring of elements that are non-zero and are formed under multiplication.
+      \item A ring is a set of elements with only two operations (addition and multiplication), that must follow a set of properties:
+      \begin{enumerate}
+        \item It is an abelian group under addition.
+        \item Under multiplication, it satisfies the closure, associativity and identity axioms.
+        \item Elements are commutative.
+        \item Elements satisfy the distribution axiom: $a \times (b + c) = a \times b + a \times c$
+      \end{enumerate}
+    \end{enumerate}
+    
+    How is this useful to AES? Only two operations are required for our transformations of bytes -- addition (XOR) and multiplication -- and we want to limit our calculations to a finite number of possible elements ($2^8$), both of which a finite field offers. As we will explain later, this also means we can use an irreducible polynomial that limits calculations to be within one byte.
+    
+  \subsection{Algorithm}
+  \label{subsec:aes_algo}
+    
+    Officially the Rijndael algorithm is a cipher with multiple block and key sizes, however we will only be following the AES standard of a fixed block size (16 bytes) and three key sizes (128,192 and 256 bits).
+    
+    Given a 16-byte (128 bit) message, which is equal to one block, we have bytes $b$ such that:
+    
+    \begin{center}
+      $\begin{pmatrix}
+        b_0 & b_1 & b_2 & b_3 \\
+        b_4 & b_5 & b_6 & b_7 \\
+        b_8 & b_9 & b_{10} & b_{11} \\
+        b_{12} & b_{13} & b_{14} & b_{15}
+      \end{pmatrix}$
+    \end{center}
+    
+    The AES algorithm, like most modern symmetric block ciphers, consists of a number of "rounds" in which the block of data is transformed. We define this round transformation as \verb!Round(State,RoundKey)!, where State is the current 16 byte block selected out of the overall text and the RoundKey is a key derived from the input key using a key schedule as defined in \textsection\ref{subsubsec:aes_keys}. The number of rounds is dependent on the key size:
+    
+   
+      \begin{center}
+      \begin{tabular}{r|c|c|}
+        \multicolumn{1}{r}{}
+         &  \multicolumn{1}{c}{Key Length (bits)}
+         & \multicolumn{1}{c}{Number of Rounds} \\
+        \cline{2-3}
+        AES-128 & 128 & 10 \\
+        \cline{2-3}
+        AES-192 & 192 & 12 \\
+        \cline{2-3}
+        AES-256 & 256 & 14 \\
+        \cline{2-3}
+      \end{tabular}
+      \end{center}
+      
+    The \verb!Round! function consists of four functions:
+    
+    \begin{verbatim}
+Round(State,RoundKey) {
+  SubBytes(State)
+  ShiftRows(State)
+  MixColumns(State)
+  AddRoundKey(State,RoundKey)
+}
+\end{verbatim}
+
+    It should be noted that the final round, irrelevant of key size, is different in that it does not compute a \verb!MixColumns! transformation.
+    
+    \subsubsection{Transformations}
+    
+    The four internal functions within AES are known as \emph{transformations} because they modify the current block of data in some way. Each function is invertible, and as such we will only be describing the transformations for \emph{encryption} -- decryption is simply running the round in reverse.
+    
+    All functions work within a finite field. Addition is performed in GF($2$), which presents an easy implementation as bytes are represented in base-2 and so two bytes can be added together using XOR\cite{Gladman:2007aa}:
+    
+    \begin{center}
+      \verb!01010111! $\oplus$ \verb!10000011! $\equiv$ \verb!11010100!
+    \end{center}
+    
+    However, multiplication is more complicated. Given two elements within this field, each can have powers of $n^7$ meaning multiplication of the two will result in $n^{14}$ which is a value outside of the field (thus meaning it cannot be represented within a byte). To handle this, all polynomial multiplications are calculated modulo an irreducible polynomial $f(x)$ over the field GF($2^8$):
+    
+    \begin{center}
+      $f(x) = x^8 + x^4 + x^3 + x + 1$
+    \end{center}
+    
+    \paragraph{SubBytes}
+    
+    transforms the state block by replacing each byte value with a corresponding value in a substitution table known as an \emph{S-Box}. The S-Box is calculated by\cite{Standards:2001aa}:
+    
+    \begin{enumerate}
+      \item Taking the multiplicative inverse in the finite field GF($2^8$).
+      \item Apply an affine transformation:
+        \begin{center}
+          $b_i = b_i \oplus b_{(i+4) \mod 8} \oplus b_{(i+5) \mod 8} \oplus b_{(i+6) \mod 8} \oplus b_{(i+7) \mod 8} \oplus c_i$
+        \end{center}
+        
+        where $b_i$ is the $i^{th}$ bit of the byte, and $c_i$ is the $i^{th}$ bit of the byte \verb!63!.
+    \end{enumerate}
+    
+    Given the S-Box table consisting of 16 rows and 16 columns (0-9a-f), and a byte $b$, we determine the substitution from the table to be the $i^{th}$ row and $j^{th}$ column where $i$ is the leftmost four bits of the byte, and $j$ the rightmost four.
+    
+    The purpose of this transformation is to introduce non-linearity to what is effectively a substitution cipher. Without this, the cipher would be susceptible to a differential analysis attack, meaning an attacker can exploit the difference between two plaintext and ciphertext pairs.
+    
+    \paragraph{ShiftRows} is a simple transformation the cyclically shifts the last three rows of the state with given offsets. Given a byte $b_{i,j}$ in a matrix, it's new position after transformation is $b_{i,j} = b_{i,(c+i) \mod 4}, 0 \leq c < 4$. The first row is unaffected.
+    
+    \begin{center}
+    $State = \begin{pmatrix}
+      b_{0,0} & b_{0,1} & b_{0,2} & b_{0,3} \\
+      b_{1,0} & b_{1,1} & b_{1,2} & b_{1,3} \\
+      b_{2,0} & b_{2,1} & b_{2,2} & b_{2,3} \\
+      b_{3,0} & b_{3,1} & b_{3,2} & b_{3,3} \\
+    \end{pmatrix}$
+    
+    $State' = \begin{pmatrix}
+      b_{0,0} & b_{0,1} & b_{0,2} & b_{0,3} \\
+      b_{1,1} & b_{1,2} & b_{1,3} & b_{1,0} \\
+      b_{2,2} & b_{2,3} & b_{2,0} & b_{2,1} \\
+      b_{3,3} & b_{3,0} & b_{3,1} & b_{3,2} \\
+    \end{pmatrix}$
+    \end{center}
+    
+    \paragraph{MixColumns}
+    
+    handles each column in a state as 4-byte words, and considers them as polynomials over the finite field GF($2^8$) multiplied modulo $x^4 + 1$ with the polynomial $a(x) = \verb!03!x^3 + \verb!01!x^2 + \verb!01!x + \verb!02!$. $a(x)$ is represented as a matrix:
+    
+    \begin{center}
+      $\begin{bmatrix}
+        02 & 03 & 01 & 01 \\
+        01 & 02 & 03 & 01 \\
+        01 & 01 & 02 & 03 \\
+        03 & 01 & 01 & 02
+      \end{bmatrix}$
+    \end{center}
+    
+    Given a column $c$, we get:
+    
+    \begin{center}
+      $ \begin{bmatrix}
+        b_{0,c} \\ b_{1,c} \\ b_{2,c} \\ b_{3,c}
+      \end{bmatrix} =
+      \begin{bmatrix}
+        02 & 03 & 01 & 01 \\
+        01 & 02 & 03 & 01 \\
+        01 & 01 & 02 & 03 \\
+        03 & 01 & 01 & 02
+      \end{bmatrix}
+      \begin{bmatrix}
+        b_{0,c}^{'} \\ b_{1,c}^{'} \\ b_{2,c}^{'} \\ b_{3,c}^{'}
+      \end{bmatrix}$
+    \end{center}
+    
+    The purpose of \verb!MixColumns! along with \verb!ShiftRows! is to introduce a higher level of entropy in the message space where, due to the fundamentals of natural languages, low entropy distribution is highly likely.
+    
+    \paragraph{AddRoundKey} uses a bitwise XOR operation to add the current round key to the state. As with \verb!MixColumns!, the state is handled column-by-column in 4-byte words, which are XOR'd with the matching 4-byte words in a 16-byte round key block.
+    \label{para:addroundkey}
+    
+    \begin{center}
+      $\begin{bmatrix}
+        b_{0,0} & b_{0,1} & b_{0,2} & b_{0,3} \\
+        b_{1,1} & b_{1,2} & b_{1,3} & b_{1,0} \\
+        b_{2,2} & b_{2,3} & b_{2,0} & b_{2,1} \\
+        b_{3,3} & b_{3,0} & b_{3,1} & b_{3,2} \\
+      \end{bmatrix} \oplus
+      \begin{bmatrix}
+        k_{0,0} & k_{0,1} & k_{0,2} & k_{0,3} \\
+        k_{1,1} & k_{1,2} & k_{1,3} & k_{1,0} \\
+        k_{2,2} & k_{2,3} & k_{2,0} & k_{2,1} \\
+        k_{3,3} & k_{3,0} & k_{3,1} & k_{3,2} \\
+      \end{bmatrix}$
+    \end{center}
+    
+    Which, for a given column $c$, equates to $[b_{0,c},b_{1,c},b_{2,c},b_{3,c}] \oplus [k_{0,c},k_{1,c},k_{2,c},k_{3,c}]$.
+    
+    The purpose of this transformation is apparent: apply the secret to the message.
+    
+    \subsubsection{Keys}
+    \label{subsubsec:aes_keys}
+    
+    Keys are input or generated as random $n$-bit byte arrays, where $n \in \{128,192,256\}$. This key is converted in to a \emph{key schedule} as defined by a key expansion method, which consists of $p$ key blocks (known as round keys) where $p$ is equal to the number of rounds for the given key size. When on the $p^{th}$ round of encryption, the $p^{th}$ key schedule block is added to the current state block (\textsection\ref{para:addroundkey}).
+    
+    Taking each column, as usual, in a block as a 4-byte word and starting with word $(i+4)$ where the first four words are the initial key, there are four steps to generating a word to become part of the key schedule:
+    
+    \begin{enumerate}
+      \item \textbf{RotWord} -- similar to \verb!ShiftRows!, it cyclically rotates a word $[b_0,b_1,b_2,b_3]$ in to $[b_1,b_2,b_3,b_0]$.
+      \item \textbf{SubWord} -- \verb!SubWord! replaces each byte with a corresponding value from the S-Box table, using the same logic as  \verb!SubBytes!.
+      \item \textbf{XOR} -- the word is XOR'd with the $(i^{th}-4)$ word.
+      \item \textbf{Rcon} -- the Rcon table is a \emph{round constant word array}, the matching columns of which are XOR'd with the current word.
+    \end{enumerate}
+    
+    However, this only occurs for the first word in each 4 word block of the key schedule, and for 256-bit keys the \verb!RotWord! step is omitted completely. The remaining 3 words simply XOR the $(i^{th}-1)$ and $(i^{th}-4)$ blocks.
+    
+    An excellent animation that covers all aspects of the AES process can be found at \cite{Straubing:2005aa}.
+  
+  \subsection{Modes of Operation}
+  
+  Like most block ciphers, AES has a number of \emph{modes of operation}. The simplest of which is what we've been describing so far: divide the plaintext in to $n$-bit blocks (where the message length $m_l > n$ and transform each block. This is know as the electronic-codebook (ECB). There are four most-prevalent modes: ECB, CBC (Cipher Block Chaining), CFB (Cipher Feedback), and OFB (Output Feedback).
+  
+  \paragraph{ECB} mode is as above:
+    
+  \begin{center}
+    Where $C$ is a ciphertext block, $P$ and plaintext and $E$ the encryption function, 
+    $C_i = E_k(P_i)$, $P_i = D_k(C_i)$
+  \end{center}
+  
+  Blocks are enciphered independently of all other blocks, and so any errors in a block do not \emph{propagate} throughout the rest of the ciphertext, meaning the majority of the ciphertext will still be able to be decrypted.
+  
+  However, this independence of blocks means that malicious blocks can be substituted into a ciphertext. Alongside this, we are open to frequency analysis and other ciphertext-only attacks. ECB is generally not recommended for use in a production environment.
+  
+  \paragraph{CBC} mode involves XOR'ing the first plaintext block with a random bit string known as the initialisation vector (IV) and then for each block the plaintext is XOR'ed with the previous block.
+  
+  \begin{center}
+    $C_0 = IV$ and for $i$th block $C_i = E_k(P_i \oplus C_{i-1})$, $P_i = D_k(C_i) \oplus C_{i-1}$
+  \end{center}
+  
+  CBC is dependent on the correct ordering of the block chain, consequently rearranging the blocks or modifying any will affect the output of decryption. While this is beneficial in preventing attacks, it has an affect on error propagation. As a block $c_i$ is dependent on $c_{i-1}$, if $c_{i-1}$ contains any error, the decryption of block $c_i$ will also be affected, which also opens the algorithm up to attacks by altering the bits of $c_{i-1}$. However blocks $c_{i+2}$ are not affected by errors in $c_i$, providing a form of error recovery.
+  
+  \paragraph{CFB} mode is similar to CBC in that it is effectively the reverse of the CBC operation and also making use of an initialisation vector.
+  
+  \begin{center}
+    $C_0 = IV$, $C_i = E_k(C_{i-1}) \oplus P_i$, $P_i = E_k(C_{i-1} \oplus C_i$
+  \end{center}
+  
+  \paragraph{OFB,} interestingly, turns the block cipher effectively in to a stream cipher.   
+  
+  \begin{center}
+    $C_i = P_i \oplus O_i, P_i = C_i \oplus O_i$, \\
+    where $O_i = E_k(I_i)$ and $I_0 = IV$, $I_i = O_{i-1}$.
+  \end{center}
+  
+  OFB excels over other modes with regards to the avoidance of error propagation and can recover from bit errors in blocks. Conversely, the \emph{loss} of block bits results in the keystream alignment being damaged meaning decryption is not possible.
+  
+  We will be implementing ECB, as it is clearer to explain, with a discussion on how to implement other modes. And because the purpose of this is not to develop a perfectly secure algorithm. The underlying algorithm is not affected by any of these modes, as each block is still encrypted and decrypted using the transformations listed in \textsection\ref{subsec:aes_algo}. This means that implementing these modes as either an option or a permanent modification is relatively easy in terms of development time.
+  
+  \subsection{Implementation}
+  
+  As with the public-key algorithms, the AES algorithm will be realised using Java so that it can be referenced later by the Enigma application.
+  
+    \subsubsection{A Note on Block Representation}
+    
+    As is apparently obvious and shown in the algorithm description, blocks are 4 by 4 arrays of bytes. However, copying parts of blocks (represented as Java \verb!byte[]!) and running calculations on them is awkward to visualise as the blocks will have to be made up of multi-dimensional arrays. As such, throughout the implementation we will use both a multi-dimensional array block representation and a one-dimensional array representation, the difference of which is made clear wherever each is used. \textsection\ref{subsubsec:aes_commonutils} defines two methods that will convert between the two representations.
+    
+    \subsubsection{Key Generation}
+    
+    Key generation is simple as keys are just random bit strings of a length equal to the desired key size. We have created an \verb!enum! called \verb!KeySize! (the idea of which is partially from a project identified by the package \emph{watne.seis720.project}) which takes the key size as input to a constructor, and provides helper methods such as \verb!getNumberOfRounds()! to provide a persistent method of retrieving the current requirements for the key size without having to have hard-coded values within transformations and methods.
+    
+    Keys are represented as an object \verb!Key! with constructor \verb!Key(KeySize k)! meaning it is provided with a \verb!KeySize! enum object which defines the size of the key to be generated. \\
+    
+    \begin{lstlisting}
+public Key(KeySize k) throws DataFormatException {
+  byte[] key = new byte[k.getKeySizeBytes()];
+  this.ksize = k;
+  
+  SecureRandom rng = new SecureRandom();
+  rng.nextBytes(key);
+}
+\end{lstlisting}
+    
+    This is perhaps misleading as random number generators tend to take a seed and a length and return a random number. However in this case we provide the generator with a byte array the size of the key needed and it fills it with random data.
+    
+    As the \verb!Key! object represents a key within a session, it also provides a method to return the expanded version of the key, however this will be covered in \textsection\ref{subsubsec:aes_transformations}.
+    
+    \subsubsection{Constants}
+    
+    The S-Boxes used by the \verb!SubBytes! transformation can be computed on-the-fly, however given that the values are always the same and independent of any plaintext or ciphertext input, it makes little sense to do so. As such, we use pre-computed S-Boxes that are stored in a class \verb!AES_Constants! as a multi-dimensional array.
+    
+    Alongside the the S-Boxes, \verb!AES_Constants! also stores the matrices used for the \verb!MixColumn! and \verb!InvMixColumn! transformation as they are also fixed, rendering calculation of them on-access redundant. 
+    
+    \subsubsection{Common Utilities}
+    \label{subsubsec:aes_commonutils}
+    
+    \paragraph{State Representation} varies between methods. As we said previously, occasionally it is more useful to work on blocks as one-dimensional arrays rather than multi-dimensional, and as such we will need utilities that convert between the two types: \verb!arrayTo4xArray()! and \verb!array4xToArray()!. They are both reasonably simple -- the latter loops through each of the 4 rows of bytes and appends them to a 16-byte array using \verb!System.arraycopy()!: \\
+    
+    \begin{lstlisting}
+for (int i=0;i<4;i++) {
+  System.arraycopy(array[i],0,array1x,(i*4),4);
+}
+\end{lstlisting}
+
+    The former does the same, but in reverse, copying each section of 4 bytes from a 16-byte array in to the matching row in a multi-dimensional array: \\
+    
+    \begin{lstlisting}
+for (int i=0;i<4;i++) {
+  System.arraycopy(array,(i*4),array4x[i],0,4);
+}
+\end{lstlisting}
+    
+    \paragraph{Padding} is required for messages that are not divisible by the block size, 16. Adding zero bytes to ``fill out" a byte array will work, however after decryption how will we know how many padding bytes to remove? \cite{Kaliski:2000aa}, section 6.1.1, defines the padding string as consisting of $8-(||M|| \mod 8)$ bytes with the value $8-(||M|| \mod 8)$ for a message $M$. For example, for a message of length 6, we get:
+    
+    \begin{center}
+      $M' = M \ || \ 0202$
+    \end{center}
+    
+    As the padding bytes are each equal the number of padding bytes used, we know how many to remove. However, in our case we are using block lengths of 16 and so our padding strings will consist of $16-(||M|| \mod 16)$ bytes equalling $16-(||M|| \mod 16)$.
+    
+    \paragraph{Multiplication Over the Finite Field} could be completed arithmetically, however it is far simpler and more efficient to convert it in to using bitwise arithmetic. For example, the irreducible polynomial $m(x) = x^8 + x^4 + x^3 + x + 1$ can be represented as the byte \verb!0x11b!, and thus addition over the finite field can be calculated through XOR'ing the byte with \verb!0x11b!. \\
+    
+    \textcolor{red}{Add more from gladman}
+    
+    \begin{lstlisting}
+public static byte FFMul(byte a, byte b) {
+  byte r = 0;
+  
+  while (a != 0) {
+    if ((a & 1) != 0) r = (byte)(r ^ b);
+    
+    // Repeatedly multiply by (1)
+    b = (byte)(b << 1);
+    
+    // If the result is of degree 8
+    // add m(x)
+    if ((byte)(b & 0x80) != 0)
+        b = (byte)(b ^ 0x1b);
+    
+    a = (byte)((a & 0xff) >> 1);
+  }
+      
+    return r;
+}
+\end{lstlisting}
+  
+    \subsubsection{Transformations}
+    \label{subsubsec:aes_transformations}
+    
+    \textsection\ref{subsec:aes_algo} explicitly defines the transformation algorithms used here. Refer to that section for detailed, non-programmatic descriptions.
+    
+    \paragraph{SubBytes}
+    
+    We have already decided that S-Box values are to be pre-computed and stored statically, so retrieving the S-Box value for each byte in a bock (the purpose of \verb!SubBytes!) is trivial. \\
+    
+    \begin{lstlisting}
+for (int i=0;i<block.length;i++) {
+  for (int j=0;j<4;j++) {
+    block[i][j] = AES_Transformations.getSBoxValue(block[i][j]);
+  }
+}
+\end{lstlisting}
+
+    Here we are looping through each row and then column of a block and retrieving the S-Box value using a helper function: \\
+    
+    \begin{lstlisting}
+public static byte getSBoxValue(byte o) {
+  // Get 4 left-most and right-most bits
+  int i = ((o & 0xf0) >> 4);
+  int j = (o & 0x0f);
+
+  return AES_Constants.SBOX[i][j];
+}
+\end{lstlisting}
+    
+    \paragraph{ShiftRows}
+    
+    cyclically shifts the byte in the last three rows of a state block. With starting row $r = 0$ in the set ${0,1,2,3}$, each row is shift $r$ times. \\
+    
+    \begin{lstlisting}
+public static byte[][] shiftRows(byte[][] state) {
+  byte[][] new_state = new byte[4][4];
+		
+  // Keep first row
+  new_state[0] = state[0];
+		
+  for (int i=1;i<=3;i++) {
+    // Copy r columns to the end of the new state
+    System.arraycopy(state[i],i,new_state[i],0,4-i);
+    // Copy the 4-r columns to the start of the new state
+    System.arraycopy(state[i],0,new_state[i],4-i,i);
+  }
+		
+  return new_state;
+}
+\end{lstlisting}
+    
+    \paragraph{MixColumns}
+    
+    iterates through blocks column by column and considers each column as a four variable ploynomial. As such we multiply each byte in a column with the predefined \verb!MixColumn! matrix, and then XOR all the multiplication results together.  \\
+    
+    \begin{lstlisting}
+for (int col=0;col<4;col++) {
+  column[col] = AES_Utils.FFMul(AES_Constants.MIXCOL[col][0], state[0][i]) ^
+    AES_Utils.FFMul(AES_Constants.MIXCOL[col][1], state[1][i]) ^
+    AES_Utils.FFMul(AES_Constants.MIXCOL[col][2], state[2][i]) ^
+    AES_Utils.FFMul(AES_Constants.MIXCOL[col][3], state[3][i]);				
+}
+\end{lstlisting}
+    
+    \paragraph{AddRoundKey}
+    
+    uses an XOR operation to add the round key to the current state block. For a given row $r$, we iterate through the bytes in the expanded key (\textsection\ref{para:aes_keyexp}) with indexes in the interval $[16r,(16r)+16]$ and XOR them in order with each byte in the block. \\
+    
+    \begin{lstlisting}
+byte[] exp_key = key.getExpandedKey();
+		
+// Initial round starts from index 0
+// All further rounds start from 16 bits * round, i.e.
+// 16 bytes ahead of the last round
+int index = r*16; 
+		
+for (int col=0;col<4;col++) {
+  for (int row=0;row<4;row++) {
+    state[row][col] = (byte)(block[row][col]^exp_key[index++]);
+  }
+}
+\end{lstlisting}
+    
+    \paragraph{KeyExpansion}
+    \label{para:aes_keyexp}
+    
+    is the most complex of the transformations, and is actually part of the \verb!Key! class. The algorithm itself is defined fully in \textsection\ref{subsec:aes_algo} However, as shown in \cite{Wagner:2003ly}, this can be done in one encapsulated method. Following along the same lines, we use single bytes rather than 4-byte words as defined in \cite{Standards:2001aa}. Our implementation of key expansion is a simplified (and more readable) version of the method found in \cite{Wagner:2003ly}. \\
+    
+\begin{lstlisting}
+// Make following FIPS-197 pseudo-code easier and use their conventions
+int Nk = this.getKeySize().getKeySizeWords();
+int Nr = this.getKeySize().getNumberOfRounds();
+int Nb = 4;
+
+this.expanded_key = new byte[Nb*4*(Nr+1)];
+
+byte[] cur_word = new byte[4];
+  
+int i;  
+for(int j=4*Nk; j < 4*Nb*(Nr+1); j+=4) {
+   i = j/4;
+   
+   // Get the next 4 bytes (word) of the key
+   for (int k=0;k<4;k++) cur_word[k] = this.expanded_key[j-4+k];
+   
+   if (i % Nk == 0) {
+     // Loop through the current word
+     for (int k=0;k<4;k++) {
+       // Determine which byte of the word to use
+        byte temp = cur_word[(k==3) ? 0 : k+1];
+        // Determine rcon value
+        byte rcon = (k == 0) ? AES_Constants.RCON[(i/Nk)-1] : 0;
+        // xor each byte in the word with temp value and rcon value
+        cur_word[k] = (byte)(AES_Transformations.getSBoxValue(temp) ^ rcon);
+     }
+   // As defined in FIPS-197...
+   // For 256-bit keys we apply SubWord() to
+   // expanded_key[i-1] before xoring below
+   } else if ((Nk==8) && ((i%Nk)==4)) {
+     for (int k=0;k<4;k++)
+       cur_word[k] = AES_Transformations.getSBoxValue(cur_word[k]);
+   }
+   
+   // The actual work..
+   // xor each byte of the current word with the
+   // matching byte in the 4 words behind
+   for (int k=0;k<4;k++) {
+     this.expanded_key[j+k] = (byte)(this.expanded_key[j - 4*Nk + k]
+                              ^ cur_word[k]);
+   }
+}
+\end{lstlisting}
+    
+    \subsubsection{Algorithm}
+    
+    Now that the transformations and common utilities have been defined, it is trivial to implement the actual algorithm that executes the rounds on each block.
+    
+    We define a method \verb!encrypt()! that given a byte array will return an enciphered byte array by looping through each block of the given plaintext and enciphering it before placing it back in to a final ciphertext byte array at the relevant array index. The work is done by a method \verb!cipher()!: \\
+    
+    \begin{lstlisting}
+private byte[] cipher(byte[] block) throws DataFormatException {
+  // Conver the given 1x16 byte array in to a 4x4 array that
+  // can be used by the transformation functions
+  byte[][] state = AES_Utils.arrayTo4xArray(block);
+  
+  state = AES_Transformations.addRoundKey(state, this.getKey(), 0);
+  
+  // Iterate over the block for the number of rounds defined by the 
+  // type of key
+  for (int r=1;r<this.getKey().getKeySize().getNumberOfRounds();r++) {
+    state = AES_Transformations.subBytes(state);
+    state = AES_Transformations.shiftRows(state);
+    state = AES_Transformations.mixColumns(state);
+    state = AES_Transformations.addRoundKey(state, this.getKey(), r);
+  }
+  
+  // The final round excludes the mix columns transformation
+  state = AES_Transformations.subBytes(state);
+  state = AES_Transformations.shiftRows(state);
+  state = AES_Transformations.addRoundKey(state, this.getKey(),
+                                                 this.getKey()
+                                                    .getKeySize()
+                                                    .getNumberOfRounds());
+  
+  return AES_Utils.array4xToArray(state);
+}
+\end{lstlisting}
+
+  \verb!decrypt()! and \verb!invcipher()! work identically, except \verb!invcipher()! carries out the inverse transformations defined in \textsection\ref{subsubsec:aes_transformations}.
+  
+  These methods are contained within an object \verb!AES!, which upon instantiation requires the setting of a plain- or cipher-text and a key.
+  \subsection{Summary}
+  
+  As we can see, AES is relatively simple to implement in an efficient way. 
