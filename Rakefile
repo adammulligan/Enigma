@@ -44,6 +44,7 @@ task :build do
     latex_src = "#{@build_dir}/latex_src"
     Dir.mkdir(latex_src) unless File.directory?(latex_src)
 
+    puts 'Copying latex source...'
     ignored_extensions = [".toc",".log",".bbl",".lot",".aux",".blg",".lof",".synctex",".out",".class",".graffle"]
     Find.find("./") do |file|
       next if ignored_extensions.include?(File.extname(file)) || File.fnmatch?('*TSWLatexianTemp*',file)
