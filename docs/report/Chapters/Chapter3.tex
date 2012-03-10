@@ -83,6 +83,7 @@ We, however, will be using them for a far more interesting\footnote{http://xkcd.
     A prime sieve is a fast algorithm to find prime numbers, the most commonly used being the \emph{sieve of Erastothenes} and \emph{sieve of Atkin}. Prime sieves operate by generating a list of integers up to a defined limit $n$: $\{2,3,4,...,n\}$ and progressively removing the composite integers in line with particular rules. However, this is very slow for the generation of individual large primes, and so is immediately discounted from possible use in a cryptographic algorithm.
     
     \subsubsection{Fermat's Little Theorem}
+    \label{subsubsec:fermat}
     
     \textbf{Note:} Fermat's theorem is no longer considered to be a true probabilistic primality test as it cannot determine the difference between probable primes and composite integers known as Carmichael numbers\footnote{Carmichael numbers are similar to Fermat primes as they satisfy the congruence $b^{n-1} \equiv 1 \mod{n}$. The conditions for a number to be in the Carmichael set are more complex than this, however the details are out of the scope of this section.}. The theorem can still be used to prove the compositeness of a number.
     
@@ -383,6 +384,7 @@ Integers are a well-define concept, and you would have had great difficulty gett
     The RSA cryptosystem -- an implementation of the RSA problem -- is the most popular asymmetric cryptosystem, mostly due to its ease of implementation and the simple concepts behind it. It's primary purpose is to provide privacy and confidentiality, and we will be using it as part of a key agreement scheme for use in symmetric ciphers.
      
     \subsubsection{Key Generation}
+    \label{subsubsec:rsa_keygen}
     
     A fundamental property of a public-key cryptosystem is the ability to generate and handle public- and private-keys, both of which come in pairs of corresponding keys. They complete the encryption and decryption transformations, respectively. 
     
@@ -443,6 +445,7 @@ Integers are a well-define concept, and you would have had great difficulty gett
     And thus $m^{ed} \equiv m \mod p$.
     
     \subsubsection{Textbooks and OAEP}
+    \label{subsubsec:oaep}
     
     So far we have looked at what are known as "textbook algorithms" -- algorithms that are not suited for us in the real world. Generally they are constructed around the basic core mathematics of the problem, without any additional measures to counteract basic attacks, like frequency analysis. 
     
