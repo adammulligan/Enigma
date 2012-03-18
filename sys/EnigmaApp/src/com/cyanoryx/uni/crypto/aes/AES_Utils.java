@@ -85,7 +85,7 @@ public class AES_Utils {
 	/**
 	 * Finite Field multiplication of two bytes over the field GF(2^8)
 	 * 
-	 * TODO comment this
+	 * Process defined by Neal Wagner's \The Laws of Cryptography\.
 	 * 
 	 * @param n
 	 * @param o

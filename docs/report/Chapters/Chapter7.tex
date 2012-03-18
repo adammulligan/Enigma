@@ -4,6 +4,8 @@
 \label{Chapter7}
 \lhead{Chapter 7. \emph{Cryptanalyis}} 
 
+In this chapter, we will not be discussing the theoretical attacks on cryptosystems, but briefly the ones that in recent times have been realised.
+
 \section{Public-key Cryptography}
 
   \subsection{RSA}
@@ -14,17 +16,14 @@
     
     \subsubsection{Brute Force}
     
-      The first attack we should mention is known as the \emph{brute-force} attack: factorising the integer modulus $N$ to determine the prime numbers used to generate the keys. This has been discussed throughout the paper, and due to the simplicity (to an extent) of the attack, we will not extensively cover it. It is interesting to note that there are no (publicly available) efficient algorithms with an acceptable running time for factoring large prime multiples. The current fastest algorithm is the \emph{General Number Field Sieve}, which runs on $\exp\left( \left(\sqrt[3]{\frac{64}{9}} + o(1)\right)(\log n)^{\frac{1}{3}}(\log \log n)^{\frac{2}{3}}\right) =L_n\left[\frac{1}{3},\sqrt[3]{\frac{64}{9}}\right]$ time, with an $n$-bit integer. See \cite{Briggs:1998aa} for an interesting introduction to GNFS.
+      The first attack we should mention is known as the \emph{brute-force} attack: factorising the integer modulus $N$ to determine the prime numbers used to generate the keys. This has been discussed throughout the paper, and due to the simplicity (to an extent) of the attack, we will not extensively cover it. It is interesting (and important) to note that there are no (publicly available) efficient algorithms with an acceptable running time for factoring large prime multiples. The current fastest algorithm is the \emph{General Number Field Sieve}, which runs on $\exp\left( \left(\sqrt[3]{\frac{64}{9}} + o(1)\right)(\log n)^{\frac{1}{3}}(\log \log n)^{\frac{2}{3}}\right) =L_n\left[\frac{1}{3},\sqrt[3]{\frac{64}{9}}\right]$ time, with an $n$-bit integer. See \cite{Briggs:1998aa} for an interesting introduction to GNFS.
       
       If an algorithm for factoring large integers in reasonable time periods is ever discovered, RSA will be rendered entirely insecure. However, until then we will only consider attacks that can decrypt RSA ciphertext \emph{without} factoring the modulus $N$.
     
     \subsubsection{Elementary Attacks}
     
-      \paragraph{Small Exponent}
-  
-        \subparagraph{Private Exponent}
-        \subparagraph{Public Exponent}
-        
+      \paragraph{Small Public Exponent}
+
           It is common belief that using a small encryption exponent $e$ does not adversely affect the capabilities of the RSA algorithm. For example, it is suggested $e=3$.
           
           This is best shown as an example. If Alice wishes to send a message $m$ to three associates with the public moduli $n_{\{1,2,3\}}$ and exponent $e=3$, she would send $c_i = m^3$ mod $n_i$. Through a eavesdropping, an attacker Mallory could use Gauss's Algorithm all three values of $c$ to find:
@@ -42,58 +41,24 @@
           Using the Chinese Remainder Theorem, we can determine that $x = m^3$, and thus $m = \sqrt[3]{x}$. Also, if a message $m < n^{\frac{1}{e}}$ we can calculate the $e^{th}$ root of $(c=m^e)$ to get the plaintext message.
           
           It should be noted that this attack cannot be considered a "break" of the algorithm. Both these attacks can be mitigated through the use of salting -- adding randomly generated bits to messages before encryption. Another simple, but not recommended, solution is to make $e \geq 2^{16}+1$.
-                    
+          
           Due to the use of hashing and salting, this attack does not affect RSA cryptosystems such as RSA OAEP, the system implemented for Enigma.
-        
-      \paragraph{Key Exposure}
-      \paragraph{Coppersmith's Short Pad Attack}
-        \subparagraph{Hastad's Broadcast Attack}
-      \paragraph{Related Message Attack}
-      \paragraph{Forward Search Attack}
-      \paragraph{Common Modulus Attack} 
-      
-        A previously common solution to managing the keys of multiple entities within one network was creating a central authority that would select a modulus $N$, and then share exponent pairs $e_i$ and $d_i$ with the entities. While this attack relies on the ability to factor prime multiples, given $(e_i,d_i)$, an attacker could determine the decryption exponents for all other entities within the network. 
-      
-      \paragraph{Cycling Attack}
-      
-        	
-      
-      \paragraph{Message Concealing}
-    
-    \subsubsection{System and Implementation Attacks}
-      \paragraph{Timing}
-      \paragraph{Random Faults}
-      \paragraph{Bleichenbacher's Attack}
-  
+	
+	 \paragraph{Bleichenbacher's Attack} was detailed in 2006 by Daniel Bleichenbacher during a talk at the \emph{Crypto} conference. Bleichenbacher showed that it was trivial to forge an RSA signature by constructing a value that is a perfect cube. 
+          
+          We will discuss a recent upbringing of this issue in \textsection\ref{subsec:ronwhit}.
+
   \subsection{Certificates and Authentication}
   
     \subsubsection{Implementation Attacks}
     
-      \paragraph{SSL BEAST}
+      \paragraph{SSL BEAST} was a blow to the SSL/TLS armour used in secure HTTP (HTTPS) communications. It is different from most attacks on SSL, in that rather than focusing on the authentication properties of SSL it aims for the confidentiality of the protocol.
     
       \paragraph{Authority Security and Impersonation}
       
         The underlying security of the certification system is based upon a trusted third party (TTP) that verifies the chain of trust -- the certificate authority (CA) -- and so ``a chain is only as strong as its weakest link" appears to be quite apt. If, through social or technical means, an attacker can gain access to the private keys or construction information for the private keys of a CA, they will be able to issue certificates as they wish until the breach is noticed and the CA can be removed from the chain.
     
         This is not a theoretical attack by any means. In July 2011, Mozilla -- the developers of many open source products such as Firefox and Thunderbird -- was informed that a fraudulent SSL certificate belonging to Google, Inc. had been issued by CA \emph{DigiNotar}. As it happens, DigiNotar's network had been breached allegedly without their knowledge, giving the attacker access to their private keys and thus allowing certificates to be issued arbitrarily. In this case, it was shown to be used by unknown entities in Iran to conduct a man-in-the-middle against Google services \cite{Google:2011ah}.
-
-\section{Symmetric Cryptography}
-
-  This sections covers attacks affecting the AES symmetric cipher.
-
-  \subsection{Brute-force}
-  \subsection{XSL Attack}
-  \subsection{Biryukov and Khovratovich}
-  \subsection{Related Key Attack}
-  \subsection{Known-key Distinguishing Attack}
-  \subsection{Bogdanov, Khovratovich, and Rechberger}
-  \subsection{Side-channel attacks}
-
-\section{Hash Functions}
-
-  \subsection{Birthday Attacks}
-  \subsection{Collision and Compression}
-  \subsection{Chaining Attack}
 
 \section{Emerging Threats}
 
@@ -111,6 +76,7 @@
     An interesting current field of study is post-quantum cryptography: algorithms designed such that a cryptanalyst with a powerful quantum computer (should they become prevalent, or even plausibly workable in the future) cannot easily break. See \cite{Bernstein:2009aa}.
   
   \subsection{Ron was wrong, Whit is right}
+  \label{subsec:ronwhit}
   
     In early February 2012, a paper entitled ``Ron was wrong, Whit was right" -- a slight jab at RSA co-creator Ronald Rivest and nod towards cryptographer Whitfield Diffie -- swept through the headlines of the cryptographic communities. Written by researchers at the \emph{School of Computer and Communication Studies, \'{E}cole Polytechnique F\'{e}d\'{e}rale De Lausanne}. The paper detailed a "sanity check" of a subsection of RSA public keys that can be found online, and analysed them to test the randomness of the inputs used to calculate the keys.
     
@@ -179,6 +145,4 @@
 
 \section{A comment on theory}
 
-It is interesting to note, based upon history, that in all likelihood these theoretical attacks are currently being implemented. Though 
-
-However, the topic of real-world security flaws and those that take advantage of them is extensive and could easily be covered by its own paper, if not several. It is left up to the reader's imagination to consider the many possible vulnerabilities currently being utilised unbeknownst to the vast majority of the community, and also to forget this idea lest they never use a networked device again.
+It is interesting to note, based upon history, that in all likelihood these theoretical attacks are currently being implemented. However, the topic of real-world security flaws and those that take advantage of them is extensive and could easily be covered by its own paper, if not several. It is left up to the reader's imagination to consider the many possible vulnerabilities currently being utilised unbeknownst to the vast majority of the community, and also to forget this idea lest they never use a networked device again.

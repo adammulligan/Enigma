@@ -11,6 +11,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -68,6 +69,39 @@ public class Preferences extends JFrame {
 			});
 			locale_panel.add(lbl_locale);
 			locale_panel.add(locale);
+			
+			JLabel lbl_local_port = new JLabel("Default Port: ");
+			final JTextField local_port = new JTextField(prefs.get("local_port", ""));
+			local_port.getDocument().addDocumentListener(new DocumentListener() {
+				@Override
+				public void changedUpdate(DocumentEvent arg0) { update_prefs(); }
+				@Override
+				public void insertUpdate(DocumentEvent arg0) { update_prefs(); }
+				@Override
+				public void removeUpdate(DocumentEvent arg0) { update_prefs(); }
+				
+				public void update_prefs() {
+					int port;
+					try {
+						// Try and parse the input as an integer
+						// And silently fail if it doesn't work
+						// And thus prevent thread issues
+						port = Integer.parseInt(local_port.getText());
+						if (port>65535) {
+							JOptionPane.showMessageDialog(Preferences.this,
+									"Port must be between 60000 and 65535",
+									"",
+									JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+						Preferences.this.prefs.put("local_port", local_port.getText());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			locale_panel.add(lbl_local_port);
+			locale_panel.add(local_port);
 		
 		preference_wrapper.addTab("General", null, locale_panel, "");
 		
@@ -203,7 +237,7 @@ public class Preferences extends JFrame {
 		JPanel security_panel3 = new JPanel(new GridLayout(7,2));
 		
 				  String[]  default_sym_cipher_choices = { "AES" };
-				  JLabel    default_sym_cipher_label   = new JLabel("Default key agreement method: ");
+				  JLabel    default_sym_cipher_label   = new JLabel("Default symmetric cipher: ");
 			final JComboBox default_sym_cipher         = new JComboBox(default_sym_cipher_choices);
 			
 			default_sym_cipher.setSelectedItem(Preferences.this.prefs.get("default_sym_cipher","AES"));

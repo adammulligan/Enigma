@@ -54,39 +54,39 @@ public class RSA_PSS {
   public byte[] sign(byte[] M) throws DataFormatException {
     /*
      *  1. EMSA-PSS encoding: Apply the EMSA-PSS encoding operation (Section
-         *     9.1.1) to the message M to produce an encoded message EM of length
-         *     \ceil ((modBits - 1)/8) octets such that the bit length of the
-         *     integer OS2IP (EM) (see Section 4.2) is at most modBits - 1, where
-         *     modBits is the length in bits of the RSA modulus n:
-         *     
-         *         EM = EMSA-PSS-ENCODE (M, modBits - 1).
+     *     9.1.1) to the message M to produce an encoded message EM of length
+     *     \ceil ((modBits - 1)/8) octets such that the bit length of the
+     *     integer OS2IP (EM) (see Section 4.2) is at most modBits - 1, where
+     *     modBits is the length in bits of the RSA modulus n:
+     *     
+     *         EM = EMSA-PSS-ENCODE (M, modBits - 1).
      */
     byte[] EM = EMSA_PSS_ENCODE(M);
     
     /*
      * 2. RSA signature:
      *
-         *     a. Convert the encoded message EM to an integer message
-         *        representative m (see Section 4.2):
+     *     a. Convert the encoded message EM to an integer message
+     *        representative m (see Section 4.2):
      *
-         *           m = OS2IP (EM).
+     *           m = OS2IP (EM).
      */
     BigInteger m = new BigInteger(1,EM);
     
     /*
      * b. Apply the RSASP1 signature primitive (Section 5.2.1) to the RSA
-         *    private key K and the message representative m to produce an
-         *    integer signature representative s:
-         *    
-         *        s = RSASP1 (K, m).
+     *    private key K and the message representative m to produce an
+     *    integer signature representative s:
+     *    
+     *        s = RSASP1 (K, m).
      */
     BigInteger s = RSASP1(m);
     
     /*
      * c. Convert the signature representative s to a signature S of
-         *    length k octets (see Section 4.1):
-         *    
-         *        S = I2OSP (s, k).
+     *    length k octets (see Section 4.1):
+     *    
+     *        S = I2OSP (s, k).
      */
     byte[] S = Bytes.toFixedLenByteArray(s,this.emBits);
     
@@ -158,9 +158,9 @@ public class RSA_PSS {
      *     long" and stop.
      */
     if (M.length > this.md.getDigestLength()) {
-      System.out.println(M.length);
-      System.out.println(this.md.getDigestLength());
-      //throw new DataFormatException("Message too long");
+//      System.out.println(M.length);
+//      System.out.println(this.md.getDigestLength());
+      throw new DataFormatException("Message too long");
     }
     
     /*
@@ -186,11 +186,11 @@ public class RSA_PSS {
     
     /*
      * 5.  Let
-         *       M' = (0x)00 00 00 00 00 00 00 00 || mHash || salt;
-         *
-         *    M' is an octet string of length 8 + hLen + sLen with eight
-         *    initial zero octets.
-         */
+     *       M' = (0x)00 00 00 00 00 00 00 00 || mHash || salt;
+     *
+     *    M' is an octet string of length 8 + hLen + sLen with eight
+     *    initial zero octets.
+     */
     this.md.update(new byte[8]); // Eight zero-octets
     this.md.update(mHash);
     
@@ -207,7 +207,7 @@ public class RSA_PSS {
     
     /*
      * 8.  Let DB = PS || 0x01 || salt; DB is an octet string of length
-          *     emLen - hLen - 1.
+     *     emLen - hLen - 1.
      */
     byte[] DB = Bytes.concat(PS, new byte[]{0x01}, salt);
     
@@ -224,7 +224,7 @@ public class RSA_PSS {
     
     /*
      * 11. Set the leftmost 8emLen - emBits bits of the leftmost octet in
-          *     maskedDB to zero.
+     *     maskedDB to zero.
      */
     byte[] MASK = {(byte)0xFF, 0x7F, 0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01};
     int maskBits = 8*emLen - emBits;
@@ -270,7 +270,7 @@ public class RSA_PSS {
     
     /*
      * 4.  If the rightmost octet of EM does not have hexadecimal value
-          *     0xbc, output "inconsistent" and stop.
+     *     0xbc, output "inconsistent" and stop.
      */
     if (EM[EM.length-1] != (byte)0xbc) {
       return false;
@@ -320,9 +320,9 @@ public class RSA_PSS {
     
     /*
      * 10. If the emLen - hLen - sLen - 2 leftmost octets of DB are not zero
-         *     or if the octet at position emLen - hLen - sLen - 1 (the leftmost
-         *     position is "position 1") does not have hexadecimal value 0x01,
-         *     output "inconsistent" and stop.
+     *     or if the octet at position emLen - hLen - sLen - 1 (the leftmost
+     *     position is "position 1") does not have hexadecimal value 0x01,
+     *     output "inconsistent" and stop.
      */
     
     if (DB[emLen - (this.md.getDigestLength()*2) - 2] != 0x1) {

@@ -95,8 +95,19 @@ public class Connect extends JFrame {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     
     Random rng = new Random();
-    port = rng.nextInt(100) + 60000;
-    server = new Server(port,"localhost");
+    
+    if (new AppPrefs().getPrefs().get("local_port", "").equalsIgnoreCase("")) {
+	    port = rng.nextInt(100) + 60000;
+    } else {
+    	try {
+    		port = Integer.parseInt(new AppPrefs().getPrefs().get("local_port",""));
+    		server = new Server(port,"localhost");
+    	} catch (Exception e) {
+    		port = rng.nextInt(100) + 60000;
+    		server = new Server(port,"localhost");
+    	}
+    }
+    
     new Thread(server).start();
     
     System.out.println("Starting server on port "+port+"...");
@@ -223,10 +234,12 @@ public class Connect extends JFrame {
     JMenu file = new JMenu("File");
     file.addSeparator();
     
-    JMenu recent_connections = new JMenu("Recent Connections");
+    final JMenu recent_connections = new JMenu("Recent Connections");
     
     String[] ips = new AppPrefs().getLastConnections();
+    
     for (final String i : ips) {
+      if (i.equalsIgnoreCase("")) continue;
       JMenuItem ip = new JMenuItem(i);
       ip.addActionListener(new ActionListener() {
         @Override
@@ -239,6 +252,21 @@ public class Connect extends JFrame {
       });
       recent_connections.add(ip);
     }
+    
+    final JMenuItem clear_recent_connections = new JMenuItem("Clear");
+    clear_recent_connections.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			recent_connections.removeAll();
+			new AppPrefs().clearLastConnections();
+			
+			recent_connections.addSeparator();
+		    recent_connections.add(clear_recent_connections);
+		}
+    });
+    
+    recent_connections.addSeparator();
+    recent_connections.add(clear_recent_connections);
     
     file.add(recent_connections);
     
@@ -272,9 +300,6 @@ public class Connect extends JFrame {
   		try {
   			String pub_key_loc = prefs.get("ca_key_location","");
   			String priv_key_loc = pub_key_loc.split(".pub")[0];
-  			
-  			System.out.println(pub_key_loc);
-  			System.out.println(priv_key_loc);
   			
   			CertificateAuthority ca = new CertificateAuthority(new PublicKey(new File(pub_key_loc)),new PrivateKey(new File(priv_key_loc)));
   			

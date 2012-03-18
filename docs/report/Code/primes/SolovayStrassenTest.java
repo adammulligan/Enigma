@@ -6,13 +6,17 @@ public class SolovayStrassenTest implements PrimeTest {
     BigInteger n_one = n.subtract(BigInteger.ONE);
 
     for (int i=0;i<iterations;i++) {
-      BigInteger a = new BigInteger(n.subtract(BigInteger.valueOf(2L)).bitLength(),new Random()).add(BigInteger.valueOf(2L));
+      BigInteger a = new BigInteger(n.subtract(BigInteger.valueOf(2L))
+                                     .bitLength(),
+                             new Random()).add(BigInteger.valueOf(2L));
       int x=jacobiSymbol(a,n);
 
       // r = a^(n-1)/2 mod n
       BigInteger r = a.modPow(n_one.divide(BigInteger.valueOf(2L)),n);
       // if (a|n)=0 or r!=x and r!=(n-1)
-      if (x==0 || (r.compareTo(BigInteger.valueOf(x))!=0) && (r.compareTo(n_one)!=0)) {
+      if (x==0
+          || (r.compareTo(BigInteger.valueOf(x))!=0)
+          && (r.compareTo(n_one)!=0)) {
         return false;
       }
     }
@@ -40,14 +44,16 @@ public class SolovayStrassenTest implements PrimeTest {
           a = a.divide(TWO); // a / 2
           res = n.mod(EIGHT); // n % 8
 
-          if (res.compareTo(THREE) == 0 || res.compareTo(FIVE) == 0) j = -1*j;
+          if (res.compareTo(THREE) == 0
+              || res.compareTo(FIVE) == 0) j = -1*j;
         }
             
         BigInteger temp = a;
         a = n;
         n = temp;
         
-        if (a.mod(FOUR).compareTo(THREE) == 0 && n.mod(FOUR).compareTo(THREE) == 0) j = -1 * j;
+        if (a.mod(FOUR).compareTo(THREE) == 0
+            && n.mod(FOUR).compareTo(THREE) == 0) j = -1 * j;
         a = a.mod(n);
       }
         

@@ -6,37 +6,48 @@
 
 \section{Fulfilment of Specification}
 
+All points in the specification (see \textsection\ref{AppendixA}) were met fully, and the requirements have been fulfilled entirely.
 
+\section{Comparison to Standard Libraries}
 
-\section{Testing}
-
-
-
-\subsection{Test Driven Development}
-
-A fairly new (or at least recently popular) development methodology was used for the algorithms 
-
-\subsection{Unit Testing}
-
-
-
-\subsection{Code Coverage}
-
-
-
-\subsection{Functional Testing}
-
-Functional testing is a subset of black box testing that involves (mostly automatically) testing that user interface components work properly and buttons do what they're designed to do. However, it was decided in the case of Enigma that due to the low complexity of the software and use-flow, functional testing could be done manually to ensure that the software worked as properly.
-
-\section{Problems and Evaluation}
-\label{sec:probs}
-
-\section{Limitations}
-
-\subsection{Standards Compliance}
-
-\subsection{Hardware Implementation}
+  \subsection{Asymmetric Cryptography}
+  
+    \begin{center}
+      \begin{tabular}{ | l | l |}
+        \hline
+        Library & Average Time (20 iterations; nanoseconds) \\ \hline \hline
+        Enigma &  \\ \hline
+        Cryptix &  \\ \hline
+        BouncyCastle & \\ \hline
+        JDK & \\ \hline
+        \hline
+      \end{tabular}
+    \end{center}
+  
+  \subsection{Symmetric Cryptography}
+  
+    \begin{center}
+      \begin{tabular}{ | l | l |}
+        \hline
+        Library & Average Time (20 iterations; nanoseconds) \\ \hline \hline
+        Enigma &  \\ \hline
+        Cryptix &  \\ \hline
+        BouncyCastle & \\ \hline
+        JDK & \\ \hline
+        \hline
+      \end{tabular}
+    \end{center}
 
 \section{Summary}
 
-Our final recommendation? Don't. Implementing your own algorithm is a bad idea
+Our aim in this project was to produce, from scratch and using only technical documentation, implementations of cryptographic algorithms that could be used in a real world application. This objective was completed successfully, and a large amount of new knowledge has been gained. However, the final recommendation? Do not do this. Cryptographic implementations have long been standardised and produced in mature libraries that are easy to use.
+
+The main point is this: if you are doing something so unusual with cryptography such that you need to implement algorithms yourself, then you shouldn't be doing that. If you aren't doing something unusual, then you can use the libraries already available.
+
+This brings us back to the quote from Bruce Schneier given at the beginning of this report: 
+
+\textit{``Anyone can design a security system that he cannot break. So when someone announces, ``Here’s my security system, and I can`t break it,” your first reaction should be, “Who are you?” If he`s someone who has broken dozens of similar systems, his system is worth looking at. If he`s never broken anything, the chance is zero that it will be any good.''}
+
+Non-standard and custom implementations are only truly safe when they have been created by developers experienced in the production of cryptosystems and tested thoroughly.
+
+The author hopes that this report has been of interest to you, or at least beneficial to your knowledge of information security, cryptosystems and how difficult it really is to get it right.

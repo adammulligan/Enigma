@@ -121,9 +121,9 @@ private BigInteger RSAVP1(BigInteger s) {
     
     \paragraph{EMSA--PSS--ENCODE} differs from the original signature-with-appendix scheme created by Bellare and Rogaway, almost entirely in the small details. For example, applying a hash function instead of a mask generation function. 
     
-    The structure of the final encoded string is somewhat similar to that in RSA--OAEP. \\
+    The structure of the final encoded string is somewhat similar to that in RSA--OAEP \cite{Jonsson:2003aa}. \\
     
-    \begin{figure}
+    \begin{center}
 \lstset{stringstyle={},numbers=none}
 \begin{lstlisting}
                                   +-----------+
@@ -151,7 +151,7 @@ private BigInteger RSAVP1(BigInteger s) {
          EM =  |    maskedDB       |     H    |bc|
                +-------------------+----------+--+
 \end{lstlisting}
-    \end{figure}
+    \end{center}
 
     \begin{enumerate}
       \item A message $M$ is hashed, and then this hash is concatenated with eight zero-bytes (\verb!Padding1!) and a random-byte string, with length equal to the digest length of the hash function, known as a salt.
@@ -165,14 +165,15 @@ private BigInteger RSAVP1(BigInteger s) {
     \paragraph{Given the message} $M$ and encoded message $EM$, EMSA--PSS-VERIFY works similarly in that it encodes the given message and compares the computed signatures to the one received, along with some interstitial error checking to remove unnecessary calculation if the verification fails early on (for example, in correct padding separator bytes).
     
     \begin{enumerate}
-      \item Hash the message $M$, and check to see if the rightmost byte of $EM$ is \verb!0xbc!.
+      \item Hash the message so $H = M$, and check to see if the rightmost byte of $EM$ is \verb!0xbc!.
       \item Create $maskedDB$ to be (the maximum size \verb!BigInteger! - the maximum hash length - 1) bits of $EM$ and the next (maximum hash length) bits of $M$.
-      \item Mask the hash of $M$ to be (the maximum size \verb!BigInteger! - the maximum hash length - 1) bits, and XOR it with $maskedDB$.
-      \item 
-      \item
+      \item Mask the hash of $M$ to be (the maximum size \verb!BigInteger! - the maximum hash length - 1) bits, and XOR it with $maskedDB$, creating $DB$.
+      \item Let \verb!salt! be the last $n$ bytes of of $DB$ where $n$ is a predefined salt length.
+      \item Create the byte array $M'$ such that \\ $M = $ \verb!(0x) 00 00 00 00 00 00 00 00 || Hash(!$M$\verb!) || salt!.
+      \item Let $H' = Hash(M')$ and if $H = H'$, the signature is valid, otherwise not.
     \end{enumerate}
     
-    \paragraph{Keys} are handled using the same infrastructure as RSA--OAEP. A \verb!Key! object with descendants \verb!PrivateKey! and !PublicKey! store the exponent and modulus, and is passed in when the \verb!RSA_PSS! object is first instantiated. This means that keys stored on disk or in memory can be imported without the developer parsing them manually.
+    \paragraph{Keys} are handled using the same infrastructure as RSA--OAEP. A \verb!Key! object with descendants \verb!PrivateKey! and \verb!PublicKey! store the exponent and modulus, and is passed in when the \verb!RSA_PSS! object is first instantiated. This means that keys stored on disk or in memory can be imported without the developer parsing them manually.
 
 \section{Certificates}
 \label{sec:certs}

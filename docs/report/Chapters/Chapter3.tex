@@ -12,6 +12,95 @@ In this section we will make the assumption that any attackers who may try to br
 
 Throughout, where appropriate, programming examples are provided in Java.
 
+\section{Mathematics}
+\newtheorem{mathdef}{Definition}[section]
+\newtheorem{mathexample}{Example}[section]
+\newtheorem{mathfact}{Fact}[section]
+
+This section will cover some of the basic mathematical concepts that will be used throughout the report, and form a foundation of understanding for the more complex abstract methods that will be used.
+
+\subsection{Notation}
+
+\begin{enumerate}
+	\item $\mathbb{Z}$ is the set of all integers.
+	\item $\mathbb{R}$ is the set of all real numbers.
+	\item $[a,b]$ is the set of integers $n$ such that $a\le n \le b$.
+	\item $|A|$ is the cardinality of a finite set, i.e. the number of elements.
+	\item $n \in A$ denotes that an element $n$ exists in set $A$.
+	\item $A \subseteq B$ denotes that set $A$ is a subset of set $B$.
+	\item $A \subset B$ denotes that $A$ is a subset of $B$, but $A \neq B$.
+	\item $\lceil a \rceil$ is the smallest integer greater than or equal to $a$.
+	\item $\lfloor a \rfloor$ is the largest integer less than or equal to $a$.
+	\item A function (mapping) denoted as $f : A \rightarrow B$ signifies that every element $a$ in $A$ is mapped to exactly one element $b$ in $B$. This can also be written as $f(a) = b$.
+\end{enumerate}
+
+\subsection{Number Theory}
+
+We will begin by defining some fundamental rules of number theory. 
+
+\begin{mathdef}
+	Let $a,b$ be integers. $a$ divides $b$ if an integer $c$ exists such that $b = ac$. We define this as $a$ divides $b$, or $a|b$.
+\end{mathdef}
+
+\begin{mathdef}
+	An integer $c$ is a common divisor if $c|a$ and $c|b$.
+\end{mathdef}
+
+\begin{mathdef}
+	An integer $c$ is the greatest common divisor of $a$ and $b$, if:
+	\begin{enumerate}
+		\item $c$ is a common divisor of $a,b$.
+		\item when $d|a$ and $d|b$, $d|c$.
+		\item $c\ge0$
+	\end{enumerate}
+	This is denoted as $c = $ gcd$(a,b)$.
+\end{mathdef}
+
+\begin{mathdef}
+	An integer $a$ is prime if:
+	\begin{enumerate}
+		\item $a\ge2$
+		\item the only positive divisors are $1$ and $a$.
+	\end{enumerate}
+	Otherwise, the number is referred to as composite.
+\end{mathdef}
+
+\begin{mathfact}
+	There are an infinite number of prime numbers.
+\end{mathfact}
+
+\begin{mathdef}
+	If $a$ is prime and $a|bc$, then $a|b$ and $a|c$.
+\end{mathdef}
+
+\begin{mathdef}
+	Integers $a$ and $b$ are relatively prime (coprime) to one another, if gcd$(a,b)=1$.
+\end{mathdef}
+
+\begin{mathdef}
+	The function $\phi$ is known as the Euler Phi function. Where $n\ge1$, $\phi(n)$ is the number of integers in the interval $[1,n]$ that are relatively prime to $n$.
+	\begin{enumerate}
+		\item If $n$ is prime, then $\phi(n) = n - 1$.
+		\item $\phi(n)$ is multiplicative: if gcd$(m,n) = 1$, then $\phi(mn) = \phi(m) \cdot  \phi(n)$.
+	\end{enumerate}
+\end{mathdef}
+
+\subsubsection{Modulo Arithmetic}
+
+\begin{mathdef}
+	Where $a$ and $b$ are integers, $a$ is congruent to $b$ modulo $n$ (denoted as $a \equiv b  \mod n$. $n$ is known as the modulus. Congruence is reflexive, transitive and and symmetric. That is to say, for every $a,b,c \in \mathbb{Z}$:
+	\begin{enumerate}
+		\item $a \equiv a  \mod n$
+		\item if $a \equiv b  \mod n$, then $b \equiv a  \mod n$
+		\item if $a \equiv b  \mod n$ and $b \equiv c  \mod n$, then $a \equiv c  \mod n$
+	\end{enumerate}
+	This is known as an equivalence relation.
+\end{mathdef}
+
+\begin{mathdef}
+	The set of all integers modulo $n$ is denoted as $\mathbb{Z}_n$.
+\end{mathdef}
+
 \section{Modular Arithmetic and Congruence}
 
   As we know, the core concept of modular arithmetic is to return the remainder of the division of two integers, represented as $a(mod \ n)$. It is said that $b$ is congruent to $a(mod \ n)$ if $b \equiv a(mod \ n)$. Congruences play a great part in cryptography -- one of the very first uses was the Caesar Cipher. Messages were made secret -- encrypted -- by shifting letters forward by an integer $n$, where $0 < n \leq 25$.
@@ -130,7 +219,7 @@ We, however, will be using them for a far more interesting\footnote{http://xkcd.
     The implementation of this in Java is as so:
     
     \lstinputlisting{./Code/primes/MillerRabinTest.java}
-    \emph{This file can be found at latex\_src/Code/primes/FermatTesting.java}
+    \emph{This file can be found at latex\_src/Code/primes/MillerRabinTesting.java}
     
     In some cases the number of iterations is known as the \emph{security parameter}.
     
@@ -381,7 +470,7 @@ Integers are a well-define concept, and you would have had great difficulty gett
     
     \subsubsection{RSA}
     
-    The RSA cryptosystem -- an implementation of the RSA problem -- is the most popular asymmetric cryptosystem, mostly due to its ease of implementation and the simple concepts behind it. It's primary purpose is to provide privacy and confidentiality, and we will be using it as part of a key agreement scheme for use in symmetric ciphers.
+    The RSA cryptosystem -- an implementation of the RSA problem -- is the most popular asymmetric cryptosystem, mostly due to its ease of implementation and the simple concepts behind it. Its primary purpose is to provide privacy and confidentiality, and we will be using it as part of a key agreement scheme for use in symmetric ciphers.
      
     \subsubsection{Key Generation}
     \label{subsubsec:rsa_keygen}
@@ -423,7 +512,7 @@ Integers are a well-define concept, and you would have had great difficulty gett
     
     \subsubsection{Formal Proof}
     
-    Given any message $m$ such that $m \in \mathbb{Z}_n$, as the decryption transformation ($D(m)$) is an inverse of the encryption transformation ($E(m)$), we have: 
+    Given any message $m$ such that $m \in \mathbb{Z}_n$, as the decryption transformation $D(m)$ is an inverse of the encryption transformation $E(m)$, we have: 
     \begin{center}
       $E(D(m)) = D(E(m)) = m^{ed} \mod n$
     \end{center}
@@ -681,7 +770,7 @@ Due to its popularity, we will be using RSA as our main method of key exchange.
 
 Now that we have formally defined the mathematics behind public-key cryptography and implemented them from prime number generation through to key generation and actual encipherment/decipherment, what can it be used for practically? 
 
-In the context of our instant messaging application, could a secure public-key scheme like RSA be used to encrypt outgoing messages? Technically speaking, yes; however, practically, no primarily because of running time concerns: {\color{red}Add citation} public-key cryptography is significantly slower than using symmetric-key cryptography. The solution to this is to utilise both schemes such that they complement one another -- this is known as a digital envelope scheme.
+In the context of our instant messaging application, could a secure public-key scheme like RSA be used to encrypt outgoing messages? Technically speaking, yes; however, practically, no primarily because of running time concerns: public-key cryptography is significantly slower than using symmetric-key cryptography (see below). The solution to this is to utilise both schemes such that they complement one another -- this is known as a digital envelope scheme.
 
 \begin{center}
   \includegraphics[scale=0.6]{./Figures/3-7a.pdf}
@@ -696,6 +785,61 @@ This is the standard process for sending an encrypted message $m$ via public-key
 In this case, Alice generates and encrypts a key $k$ with Bob's public key and sends it to him, Bob then decrypts this and stores the key. Both Alice and Bob are now have the session key.
 
 This is a simple and easy to implement solution using existing -- and open source -- technologies (without requiring any custom hardware) that we will be utilising as a key exchange mechanism in the Enigma application.
+
+\subsection{Asymmetric and symmetric algorithm comparison}
+
+We have claimed that symmetric cryptographic algorithms are faster than asymmetric, but is that proven when creating even the simplest of implementations? Here we have written a short program that can be used to run an asymmetric and symmetric algorithm (using the Java SDK's built in libraries) and timed with the average length of execution calculated.
+
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+    	Algorithm & Average Time (20 iterations; nanoseconds) \\ \hline \hline
+    	RSA & $14595750$ \\ \hline
+    	AES & $428150$ \\ \hline \hline
+    	\textbf{Difference} & 14167600  \\
+    \hline
+    \end{tabular}
+\end{center}
+
+As we can see, the symmetric algorithm (AES in this case) is \emph{considerably} faster than the asymmetric for encrypting data. \\
+
+\begin{lstlisting}
+byte[] tmp = new byte[16];
+new Random().nextBytes(tmp);
+
+RSA_OAEP rsa = new RSA_OAEP(new PublicKey(new File("./id_rsa")));
+
+final long rsa_startTime = System.nanoTime();
+final long rsa_endTime;
+try {
+  rsa.encrypt(tmp);
+} finally {
+  rsa_endTime = System.nanoTime();
+}
+final long rsa_duration = (rsa_endTime - rsa_startTime);
+
+System.out.println("Asymmetric time: "+rsa_duration+"ns");
+
+AES aes = new AES();
+aes.setKey(new Key(KeySize.K256));
+aes.setMode(Mode.ECB);
+aes.setPlainText(tmp);
+
+final long aes_startTime = System.nanoTime();
+final long aes_endTime;
+try {
+  aes.encrypt();
+} finally {
+  aes_endTime = System.nanoTime();
+}
+final long aes_duration = aes_endTime - aes_startTime;
+
+System.out.println("Symmetric time:  "+aes_duration+"ns");
+
+System.out.println((rsa_duration > aes_duration)
+               ? "AES faster by    "+(rsa_duration-aes_duration)+"ns"
+               : "RSA faster by    "+(aes_duration-rsa_duration)+"ns");
+\end{lstlisting}
 
 \subsection{Problems}
 

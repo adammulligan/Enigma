@@ -7,7 +7,8 @@ public class MillerRabinTest implements PrimeTest {
 
     if (n.equals(BigInteger.ZERO) || // n==0
         n.equals(BigInteger.ONE)  || // n==1
-        n.mod(BigInteger.valueOf(2L)).equals(BigInteger.ZERO)) { // n is even
+        // n is even
+        n.mod(BigInteger.valueOf(2L)).equals(BigInteger.ZERO)) { 
       return false;
     }
 
@@ -28,7 +29,8 @@ public class MillerRabinTest implements PrimeTest {
       do {
         int min = BigInteger.ONE.bitLength();
         int max = n_one.bitLength();
-        a = new BigInteger(new Random().nextInt(max - min + 1)+min,new Random());
+        a = new BigInteger(new Random().nextInt(max - min + 1)
+                           +min,new Random());
       } while (BigInteger.ONE.compareTo(a) > 0 || a.compareTo(n) >= 0);
 
       // y = a^r mod n

@@ -42,9 +42,11 @@ public class Encrypt {
     this.ciphertext = new BigInteger[converted_bytes.length];
 
     // The actual encryption!
-    // Loop through the array of bigint bytes m, and create an array making c = m
+    // Loop through the array of bigint bytes m,
+    // and create an array making c = m
     for(int i=0;i<converted_bytes.length;i++) {
-      this.ciphertext[i] = converted_bytes[i].modPow(this.E, this.N);
+      this.ciphertext[i] = converted_bytes[i].modPow(this.E,
+                                                     this.N);
     }
   }
   

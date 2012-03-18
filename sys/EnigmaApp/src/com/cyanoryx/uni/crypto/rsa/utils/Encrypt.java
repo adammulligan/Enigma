@@ -1,4 +1,4 @@
-package com.cyanoryx.uni.crypto.rsa;
+package com.cyanoryx.uni.crypto.rsa.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,13 +6,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 import java.util.zip.DataFormatException;
 
 import com.cyanoryx.uni.common.FileIO;
+import com.cyanoryx.uni.crypto.rsa.PublicKey;
+import com.cyanoryx.uni.crypto.rsa.RSA_OAEP;
 
 public class Encrypt {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NoSuchAlgorithmException {
 		File input_file, key_file, output_file;
 		
 		Scanner kb = new Scanner(System.in);

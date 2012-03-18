@@ -34,4 +34,12 @@ public class AppPrefs {
     
     return connections;
   }
+  
+  /**
+   * Removes all previous connections saved
+   * 
+   */
+  public void clearLastConnections() {
+	 this.getPrefs().put("last_connections",""); 
+  }
 }

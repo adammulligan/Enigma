@@ -4,23 +4,23 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+/**
+ * Certificate display window for conversations.
+ * 
+ * @author adammulligan
+ *
+ */
 public class Certificate {
 
 	private JFrame      frame;
 	private JTextArea   certText;
 	private JScrollPane pane;
 
-	/**
-	 * Create the application.
-	 */
 	public Certificate(String data) {
 		initialize();
 		setText(data);
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 550, 300);

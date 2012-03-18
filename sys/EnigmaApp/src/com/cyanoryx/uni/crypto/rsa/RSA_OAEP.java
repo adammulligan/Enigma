@@ -15,41 +15,43 @@ public class RSA_OAEP {
   
   private MessageDigest md;
   
-  public RSA_OAEP(Key key) {
+  public RSA_OAEP(Key key) throws NoSuchAlgorithmException {
     this.key = key;
     
     this.E = this.key.getExponent();
     this.N = this.key.getN();
     
-    try {
-      this.md = MessageDigest.getInstance("sha1");
-    } catch (NoSuchAlgorithmException e1) {
-      e1.printStackTrace();
-    }
+    this.md = MessageDigest.getInstance("sha1");
   }
   
   /**
-   * Encrypts a byte[] using RSA-OAEP and returns a byte[] of encrypted values
+   * Encrypts a byte[] using RSA-OAEP and returns a byte[]
+   * of encrypted values
    * 
    * @param byte[] M byte array to be encrypted
    * @return byte[] C byte array of encrypted values
    * @throws DataFormatException
    */
-  public byte[] encrypt(byte[] M) throws DataFormatException, InternalError {
+  public byte[] encrypt(byte[] M) throws DataFormatException,
+                                         InternalError {
     if (this.key instanceof PrivateKey) {
-      throw new InternalError("A public key must be passed for encryption");
+      throw new InternalError("A public key must be " +
+      		"passed for encryption");
     }
     
-    // The comments documenting this function are from RFC 2437 PKCS#1 v2.0
+    // The comments documenting this function are from 
+    // RFC 2437 PKCS#1 v2.0
     
     /*
        1. Length checking:
     
-          a. If the length of L is greater than the input limitation for the
-             hash function (2^61 - 1 octets for SHA-1), output "label too
-             long" and stop.
+          a. If the length of L is greater than the input
+             limitation for the hash function 
+             (2^61 - 1 octets for SHA-1), output
+             "label too long" and stop.
     
-          b. If mLen > k - 2hLen - 2, output "message too long" and stop.
+          b. If mLen > k - 2hLen - 2, output "message too long"
+             and stop.
      */
     int mLen = M.length;
     
@@ -81,13 +83,15 @@ public class RSA_OAEP {
     
     // e. Let dbMask = MGF(seed, k - hLen - 1).
     MGF1 mgf1 = new MGF1(this.md);
-    byte[] dbMask = mgf1.generateMask(seed, k - this.md.getDigestLength() - 1);
+    byte[] dbMask = mgf1.generateMask(seed,
+        k - this.md.getDigestLength() - 1);
 
     // f. Let maskedDB = DB \xor dbMask.
     byte[] maskedDB = Bytes.xor(DB, dbMask);
 
     // g. Let seedMask = MGF(maskedDB, hLen).
-    byte[] seedMask = mgf1.generateMask(maskedDB, this.md.getDigestLength());
+    byte[] seedMask = mgf1.generateMask(maskedDB,
+    		this.md.getDigestLength());
 
     // h. Let maskedSeed = seed \xor seedMask.
     byte[] maskedSeed = Bytes.xor(seed, seedMask);
@@ -134,26 +138,31 @@ public class RSA_OAEP {
   }
   
   /**
-   * Takes a byte[] of encrypted values and uses RSAES-OAEP-DECRYPT to decrypt them
+   * Takes a byte[] of encrypted values and uses
+   * RSAES-OAEP-DECRYPT to decrypt them
    * 
    * @param byte[] C Array of encrypted values
    * @return byte[] M Array of decrypted values
    * @throws DataFormatException
    */
-  public byte[] decrypt(byte[] C) throws DataFormatException, InternalError {
+  public byte[] decrypt(byte[] C) throws DataFormatException,
+                                         InternalError {
     if (this.key instanceof PublicKey) {
-      throw new InternalError("A private key must be passed for decryption");
+      throw new InternalError("A private key must be " +
+      		"passed for decryption");
     }
     
     /*
        1. Length checking:
 
-          a. If the length of L is greater than the input limitation for the
-             hash function (2^61 - 1 octets for SHA-1), output "decryption
-             error" and stop. (NOTE: labels are not used in this implementation)
+          a. If the length of L is greater than the input
+             limitation for the hash function 
+             (2^61 - 1 octets for SHA-1), output "decryption
+             error" and stop. (NOTE: labels are not used in
+             this implementation)
     
-          b. If the length of the ciphertext C is not k octets, output
-             "decryption error" and stop.
+          b. If the length of the ciphertext C is not k
+             octets, output "decryption error" and stop.
      */
     int k = (this.N.bitLength()+7)/8;
     
@@ -200,13 +209,13 @@ public class RSA_OAEP {
     /*
        3. EME-OAEP decoding:
 
-          a. If the label L is not provided, let L be the empty string. Let
-             lHash = Hash(L), an octet string of length hLen (see the note
-             in Section 7.1.1).
+          a. If the label L is not provided, let L be the empty string.
+             Let lHash = Hash(L), an octet string of length hLen
+             (see the note in Section 7.1.1).
     
-          b. Separate the encoded message EM into a single octet Y, an octet
-             string maskedSeed of length hLen, and an octet string maskedDB
-             of length k - hLen - 1 as
+          b. Separate the encoded message EM into a single octet Y,
+             an octet string maskedSeed of length hLen, and an octet
+             string maskedDB of length k - hLen - 1 as
     
                 EM = Y || maskedSeed || maskedDB.
      */
@@ -216,17 +225,21 @@ public class RSA_OAEP {
     System.arraycopy(EM, 1, maskedSeed, 0, maskedSeed.length);
   
     byte[] maskedDB = new byte[k - this.md.getDigestLength() -1];
-    System.arraycopy(EM, 1 + this.md.getDigestLength(), maskedDB, 0, maskedDB.length);
+    System.arraycopy(EM,
+    		         1 + this.md.getDigestLength(),
+    		         maskedDB, 0, maskedDB.length);
     
     //  c. Let seedMask = MGF (maskedDB, hLen).
     MGF1 mgf1 = new MGF1(this.md);
-    byte[] seedMask = mgf1.generateMask(maskedDB, this.md.getDigestLength());
+    byte[] seedMask = mgf1.generateMask(maskedDB,
+    		                            this.md.getDigestLength());
   
     //  d. Let seed = maskedSeed ^ seedMask.
     byte[] seed = Bytes.xor(maskedSeed, seedMask);
   
     //  e. Let dbMask = MGF (seed, k - hLen - 1).
-    byte[] dbMask = mgf1.generateMask(seed, k - this.md.getDigestLength() -1);
+    byte[] dbMask = mgf1.generateMask(seed,
+    		                          k - this.md.getDigestLength() -1);
   
     //  f. Let DB = maskedDB ^ dbMask.
     byte[] DB = Bytes.xor(maskedDB, dbMask);

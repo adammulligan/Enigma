@@ -180,7 +180,7 @@ Round(State,RoundKey) {
     
     The purpose of this transformation is to introduce non-linearity to what is effectively a substitution cipher. Without this, the cipher would be susceptible to a differential analysis attack, meaning an attacker can exploit the difference between two plaintext and ciphertext pairs.
     
-    \paragraph{ShiftRows} is a simple transformation the cyclically shifts the last three rows of the state with given offsets. Given a byte $b_{i,j}$ in a matrix, it's new position after transformation is $b_{i,j} = b_{i,(c+i) \mod 4}, 0 \leq c < 4$. The first row is unaffected.
+    \paragraph{ShiftRows} is a simple transformation the cyclically shifts the last three rows of the state with given offsets. Given a byte $b_{i,j}$ in a matrix, its new position after transformation is $b_{i,j} = b_{i,(c+i) \mod 4}, 0 \leq c < 4$. The first row is unaffected.
     
     \begin{center}
     $State = \begin{pmatrix}
@@ -372,8 +372,6 @@ for (int i=0;i<4;i++) {
     As the padding bytes are each equal the number of padding bytes used, we know how many to remove. However, in our case we are using block lengths of 16 and so our padding strings will consist of $16-(||M|| \mod 16)$ bytes equalling $16-(||M|| \mod 16)$.
     
     \paragraph{Multiplication Over the Finite Field} could be completed arithmetically, however it is far simpler and more efficient to convert it in to using bitwise arithmetic. For example, the irreducible polynomial $m(x) = x^8 + x^4 + x^3 + x + 1$ can be represented as the byte \verb!0x11b!, and thus addition over the finite field can be calculated through XOR'ing the byte with \verb!0x11b!. \\
-    
-    \textcolor{red}{Add more from gladman}
     
     \begin{lstlisting}
 public static byte FFMul(byte a, byte b) {

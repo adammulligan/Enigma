@@ -59,7 +59,7 @@ task :build do
 
   puts 'Tarring everything...'
   tgz = Zlib::GzipWriter.new(File.open(@tar_file, 'wb'))
-  Minitar.pack(@build_dir, tgz)
+  Minitar.pack("./dist", tgz)
 
   puts "Results saved in #{@build_dir}, tarred to #{@tar_file}."
 end

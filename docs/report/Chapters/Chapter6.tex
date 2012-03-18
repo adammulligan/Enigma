@@ -33,7 +33,7 @@ JavaDoc outputs are bundled with the appropriate packages in the file tree, and 
   
     \subsubsection{GUI Frameworks}
     
-      \paragraph{SWT} -- the Standard Widget Toolkit -- initially created by IBM and now maintained by the Eclipse Foundation, it's a modern alternative to Swing. Initially SWT was used (predominantly in tests) for the Enigma application, however as development continued it became more apparent that it was introducing a level of complexity to the interface code so much so that development slowed to an unmanageable speed. SWT benefits from its use of native component libraries, generally resulting in a more congruent user experience, however it falls down when it comes to ease of development.
+      \paragraph{SWT} -- the Standard Widget Toolkit -- initially created by IBM and now maintained by the Eclipse Foundation, it is a modern alternative to Swing. Initially SWT was used (predominantly in tests) for the Enigma application, however as development continued it became more apparent that it was introducing a level of complexity to the interface code so much so that development slowed to an unmanageable speed. SWT benefits from its use of native component libraries, generally resulting in a more congruent user experience, however it falls down when it comes to ease of development.
       
       \textbf{Pros and cons of Swing}
       
@@ -142,7 +142,8 @@ private void connect(String address, String remote_port) {
     // Send our public key and certificate
     session.sendAuth("cert",
                      "agreement",
-                     Base64.encodeBytes(new Certificate(new File("./cert"))
+                     Base64.encodeBytes(new Certificate(
+                                            new File("./cert"))
                                             .toString()
                                             .getBytes()),
                      id);
@@ -150,7 +151,7 @@ private void connect(String address, String remote_port) {
     // Store the remote server's IP address
     new AppPrefs().getPrefs().put("last_connections",
                    address+":"+port+";"+new AppPrefs().getPrefs()
-                                                      .get("last_connections",""));
+                                   .get("last_connections",""));
   } catch (Exception e) {
     [...] // Display an error
   } finally {
@@ -163,7 +164,7 @@ private void connect(String address, String remote_port) {
     }
   }
 }
-    \end{lstlisting}
+\end{lstlisting}
     
     Here we make use of a method \verb!Server#createClient()!, which is a bit of a misnomer based around a legacy concept within the application where a local user would run both a server and a "client," for sending and receiving data, respectively. This was designed as such due to some restrictions on the use of sockets (see \textsection\ref{sec:probs}), however this was removed for simplicity and due to the confusion introduced by running a "client" locally.
     
@@ -195,19 +196,21 @@ private void connect(String address, String remote_port) {
     
     Each are relatively simple as most of the hard work is handed off to other objects within the \verb!Server!'s jurisdiction. 
     
-    \paragraph{The display of messages} is implemented using a \verb!JTextPane! which, unlike a \verb!JTextArea!, honours the use of font styling, colours and post-creation programmatic string insertion. The \verb!updateMessage()! method takes a user name and a message:
+    \paragraph{The display of messages} is implemented using a \verb!JTextPane! which, unlike a \verb!JTextArea!, honours the use of font styling, colours and post-creation programmatic string insertion. The \verb!updateMessage()! method takes a user name and a message: \\
     
     \begin{lstlisting}
-public synchronized void updateMessage(String name, String message) throws BadLocationException {
+public synchronized void updateMessage(String name, String message)
+                 throws BadLocationException {
   StyledDocument d = messages.getStyledDocument();
       
       SimpleAttributeSet kw = new SimpleAttributeSet();
       StyleConstants.setBold(kw,true);
       
   d.insertString(d.getLength(),name+": ",kw);
-  d.insertString(d.getLength(), message+"\n", new SimpleAttributeSet()); // Use a blank attribute set for the actual message text
+  // Use a blank attribute set for the actual message text
+  d.insertString(d.getLength(), message+"\n", new SimpleAttributeSet());
 }
-    \end{lstlisting}
+\end{lstlisting}
     
     Two new Java classes are required: \verb!StyledDocument! and \verb!SimpleAttributeSet!. The former converts the messages \verb!JTextPane! in to an object that can be formatted, and the latter is a set of attributes that can be applied as formatting to the text we are appending to the text pane. 
     
@@ -281,13 +284,13 @@ public synchronized void updateMessage(String name, String message) throws BadLo
     \begin{lstlisting}
       Preferences p = new AppPrefs().getPrefs();
       p.get("preference_name","test");
-    \end{lstlisting}
+\end{lstlisting}
   
   \subsection{Internationalisation}
   
   Internationalisation, colloquially shortened to \emph{i18n} as 18 is the number of characters between the first and last letters, of an application is adding the possibility of easily creating new language sets that allow components and text in the application to be translated and shown in another language while retaining the ability to switch back to other languages. The purpose is to remove the need for software changes, and introduce a preference or setting that points the application to appropriate language set.
   
-  In this case, the language sets are stored in \verb!.properties! files:
+  In this case, the language sets are stored in \verb!.properties! files: \\
   
   \lstinputlisting{../../sys/EnigmaApp/bin/Enigma.properties}
   
@@ -478,14 +481,11 @@ public void endElement(String uri,
       \item To allow the simple, programmatic creation of XML packets through the instantiation of \verb!Packet! objects which can then be converted in to XML to be transmitted across the network.
     \end{enumerate}
     
-    \begin{figure}
-      \centering
+    \begin{center}
       \includegraphics[scale=0.7]{./Figures/Ch6/6-4-4-2.pdf}
-      \caption{The hierarchy of 3 packet objects.}
-      \label{fig:packet_hierarchy}
-    \end{figure}
+    \end{center}
     
-    Figure \ref{fig:packet_hierarchy} displays how \verb!Packet! classes represent XML elements and store their children in what is effectively a tree. The corresponding XML would be:
+    This graphic displays how \verb!Packet! classes represent XML elements and store their children in what is effectively a tree. The corresponding XML would be:
     
     \begin{verbatim}
 <message>
@@ -509,24 +509,28 @@ public void endElement(String uri,
       
       \paragraph{The QueueThread} class is perhaps the most important as it acts as the link between receiving a message and handling it. A \verb!QueueThread! is started when a server is first created, and is passed all the desired event handlers and their XML tag identifiers, which are stored in a \verb!java.util.HashMap!. For example, the \verb!OpenStreamHandler! is required to handle new connection requests, signified by \verb!<stream>! and as such its identifier is "stream." The \verb!QueueThread! is constantly running alongside the server, looking for new packets pushed on to the queue. When it notices a new packet, it pulls it out of the queue and checks the element name of the packet and looks for it in its handler \verb!HashMap!. If a handler is found, it is notified and passed the \verb!Packet! object.
       
-      The idea for this came from \cite{Shigeoka:2002ys}.
+      The idea for this came from \cite{Shigeoka:2002ys}. \\
       
       \begin{lstlisting}
   public void run(){
-    for (Packet packet=packetQueue.pull();packet!=null;packet=packetQueue.pull()) {
+    for (Packet packet=packetQueue.pull();
+         packet!=null;
+         packet=packetQueue.pull()) {
       try {
         // Element name to look for.
         // Matches name of listener
         String match = packet.getElement();
 
         synchronized(packetListeners){
-          Iterator<PacketListener> iter = packetListeners.keySet().iterator();
+          Iterator<PacketListener> iter = packetListeners.keySet()
+                                                         .iterator();
           // Loop through the current set of listeners
           while (iter.hasNext()){
             PacketListener listener = iter.next();
             // Get the name of the tag to match
             String listenerString = packetListeners.get(listener);
-            // If the packet's element matches the element for this listener...
+            // If the packet's element matches the
+            // element for this listener...
             if (listenerString.equals(match)){
               listener.notify(packet); // ..send packet to handlers
             } 
@@ -628,6 +632,34 @@ message = new String(aes.decrypt());
 \end{lstlisting}
 
   The message will then, as usual, be sent to the appropriate conversation window.
+  
+\section{Testing}
+
+\subsection{Test Driven Development}
+
+A fairly new (or at least recently popular) development methodology was used for the application and algorithms development: test driven development. After creating a basic set of requirements for each unit of code, a test is written for that unit that defines what the input and output should be. Each line of code written should be a response to a part of a test.
+
+Software engineering is often compared to other engineering disciplines, like those that involve bridge building. However these metaphors tend to fall apart as you go deeper. Testing in non-software related engineering feels is difficult -- you have to build the product to test it -- whereas it is easy, even cheap, in software engineering to create tests \emph{before} the product has been built and run them until they pass.
+
+Regularly developers, and even managers, will claim that there is not enough time to test or that it is too much overhead, but if we are to use metaphors anyway we can use them for this: an engineer creating a building cannot simply put off tests because they don't have time, otherwise they endanger lives. Software engineering errors can endanger lives\cite{Leveson:1995aa}, and testing reduces that risk considerably. \emph{Testing is the engineering rigour of software development}\cite{Henney:2010aa}.
+
+\subsection{Unit Testing}	
+
+Being the primary, basic form of testing that most developers use for requirements testing, unit tests are a form of black box testing. This means that all that is taken in to account is the input to and output from the program, thus treating the unit of code as a \emph{black box} where the inner workings cannot be determined. 
+
+Unit tests will be our main method for testing as they are simple and quick to implement, reducing the overhead and supposed time-sink of creating tests.
+
+Each root package in the \verb!com.cyanoryx.uni! tree contains a \emph{test} directory with the appropriate unit tests.
+
+\subsection{Code Coverage}
+
+Code coverage (CC) is a method of measuring how many lines of code in a project are executed during automated testing. It is a useful tool for determining what percentage of an application is covered by tests, meaning that we are able to say whether or not said application is provably working as expected by computing if our passing tests represent the program as a whole.
+
+There are many utilities for calculating this, and in our case an open-source toolkit known as \emph{EMMA}\footnote{http://emma.sourceforge.net/} was used.
+
+\subsection{Functional Testing}
+
+Functional testing is a subset of black box testing that involves (mostly automatically) testing that user interface components work properly and buttons do what they're designed to do. However, it was decided in the case of Enigma that due to the low complexity of the software and use-flow, functional testing could be done manually to ensure that the software worked as properly.
 
 \section{Summary}
 

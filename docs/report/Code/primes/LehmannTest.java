@@ -10,12 +10,18 @@ public class LehmannTest implements PrimeTest {
       do {
         // Pick a random integer a
         a = new BigInteger(n.bitLength(),new Random());
-      } while (BigInteger.ONE.compareTo(a) >= 0 || a.compareTo(n) < 0); // 1 <= a < n
+      // 1 <= a < n
+      } while (BigInteger.ONE.compareTo(a) >= 0
+               || a.compareTo(n) < 0);
 
-      a = a.modPow(n.subtract(BigInteger.ONE).divide(BigInteger.valueOf(2L)),n);
+      a = a.modPow(n.subtract(BigInteger.ONE)
+                    .divide(BigInteger.valueOf(2L)),
+                   n);
 
       // If x=1 or x=-1, then n is probably prime
-      if (a.equals(BigInteger.ONE) || a.equals(BigInteger.valueOf(-1L).mod(n))) return false;
+      if (a.equals(BigInteger.ONE)
+          || a.equals(BigInteger.valueOf(-1L).mod(n)))
+        return false;
     }
 
     return true;

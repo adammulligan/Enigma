@@ -1,7 +1,4 @@
-/**
- * 
- */
-package com.cyanoryx.uni.crypto.rsa;
+package com.cyanoryx.uni.crypto.rsa.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,6 +7,7 @@ import java.math.BigInteger;
 import java.util.Scanner;
 
 import com.cyanoryx.uni.common.FileIO;
+import com.cyanoryx.uni.crypto.rsa.KeyGenerator;
 
 /**
  * An interactive console application that generates and stores a pair of RSA keys.

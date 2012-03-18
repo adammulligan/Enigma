@@ -12,7 +12,9 @@ import java.security.SecureRandom;
  *
  */
 public class KeyGenerator {
-  public static int SIZE_DEFAULT = 256, SIZE_MAX = 16384, SIZE_MIN = 256;
+  public static int SIZE_DEFAULT = 256,
+                SIZE_MAX = 16384,
+                SIZE_MIN = 256;
   
   private int keysize = SIZE_DEFAULT;
   
@@ -55,7 +57,10 @@ public class KeyGenerator {
      * p is a large prime
      * q is a large prime
      */
-    this.p = (this.p == null || this.p.compareTo(BigInteger.ONE)==-1) ? pq[0] : this.p;
+    this.p = (this.p == null
+          || this.p.compareTo(BigInteger.ONE)==-1)
+             ? pq[0]
+             : this.p;
     BigInteger q = pq[1];
     
     // Private key exponent
@@ -74,7 +79,8 @@ public class KeyGenerator {
       BigInteger h;
       do {
         h = new BigInteger(p.bitLength()-1,new SecureRandom());
-        g = h.modPow((p.subtract(BigInteger.ONE)).divide(q),p); // h{(p-1)/q} mod p
+        // h{(p-1)/q} mod p
+        g = h.modPow((p.subtract(BigInteger.ONE)).divide(q),p);
       } while (h.compareTo(BigInteger.ONE)!=1 || // 1 < h
            h.compareTo(p.subtract(BigInteger.ONE))!=-1 || // h < p-1
            g.compareTo(BigInteger.ONE)!=1); // h{(p-1)/q} mod p > 1
@@ -116,7 +122,8 @@ public class KeyGenerator {
     if (size<SIZE_MAX) {
       this.keysize = size;
     } else {
-      throw new InternalError("Key size must adhere to "+SIZE_MIN+" < k < "+SIZE_MAX);
+      throw new InternalError("Key size must adhere " +
+      		"to "+SIZE_MIN+" < k < "+SIZE_MAX);
     }
   }
 }

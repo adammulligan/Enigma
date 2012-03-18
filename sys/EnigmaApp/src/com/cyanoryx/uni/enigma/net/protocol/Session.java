@@ -166,7 +166,7 @@ public class Session {
 				k.setKey(key);
 				aes.setKey(k);
 				
-				aes.setMode(Mode.CBC);
+				aes.setMode(Mode.ECB);
 				aes.setPlainText(body.getBytes());
 				
 				msg=Base64.encodeBytes(aes.encrypt());

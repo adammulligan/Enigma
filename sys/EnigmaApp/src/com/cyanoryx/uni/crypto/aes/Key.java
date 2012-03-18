@@ -3,6 +3,13 @@ package com.cyanoryx.uni.crypto.aes;
 import java.security.SecureRandom;
 import java.util.zip.DataFormatException;
 
+/**
+ * Object representation of an AES key that provides methods to generate and expand
+ * the key.
+ * 
+ * @author adammulligan
+ *
+ */
 public class Key {
   private byte[] key;
   private byte[] expanded_key;
@@ -23,6 +30,12 @@ public class Key {
     return this.key;
   }
   
+  /**
+   * Manually set a key rather than having it randomly generated.
+   * 
+   * @param key
+   * @throws DataFormatException
+   */
   public void setKey(byte[] key) throws DataFormatException {
     if (key.length!=this.getKeySize().getKeySizeBytes()) throw new DataFormatException("Key length does not much expected size ("+this.getKeySize().getKeySizeBytes()+")");
     this.key = key;
@@ -32,7 +45,12 @@ public class Key {
     return this.ksize;
   }
   
-  // TODO comment
+  /**
+   * Returns the expanded key required for the round key addition
+   * (process as defined in FIPS-197)
+   * 
+   * @return
+   */
   public byte[] getExpandedKey() {
     // If the key has already been expanded, return it rather than re-calculating
     if (expanded_key != null) return this.expanded_key;

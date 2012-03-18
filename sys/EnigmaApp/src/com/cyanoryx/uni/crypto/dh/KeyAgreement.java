@@ -57,7 +57,8 @@ public class KeyAgreement {
   /**
    * Generates KEK, as defined in RFC 2631
    * 
-   * @return KEK - byte array where KEK = ZZ || (OID || counter || Key Length)
+   * @return KEK - byte array where 
+   *   KEK = ZZ || (OID || counter || Key Length)
    */
   public byte[] generateKeyMaterial() {
     this.counter = this.counter.add(BigInteger.ONE);

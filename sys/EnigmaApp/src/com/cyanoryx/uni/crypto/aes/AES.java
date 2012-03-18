@@ -3,7 +3,7 @@ package com.cyanoryx.uni.crypto.aes;
 import java.util.zip.DataFormatException;
 
 /**
- * Base struct for AES implementation to use - for storing Plain/Ciphertext, IV, etc
+ * Main AES struct that stores plain/cipher text and encrypts/decrypts them
  * 
  * @author adammulligan
  *
@@ -46,6 +46,7 @@ public class AES {
 	}
 	
 	/**
+	 * Encrypts the currently stored plaintext using a pre-set key.
 	 * 
 	 * @return
 	 * @throws DataFormatException
@@ -58,9 +59,12 @@ public class AES {
 		int blocks      = this.plainText.length/16;
 		this.cipherText = new byte[this.plainText.length];
 		
+		// Loop through all blocks and run the rounds on them
 		for (int b=0;b<blocks;b++) {
+			// Get the b'th block of 16 bytes to be ciphered
 			byte[] curr_block = new byte[16];
 			System.arraycopy(this.plainText, b*16, curr_block, 0, 16);
+			// And cipher them
 			System.arraycopy(this.cipher(curr_block), 0, this.cipherText, b*16, 16);
 		}
 		
@@ -68,6 +72,7 @@ public class AES {
 	}
 	
 	/**
+	 * Decrypts the currently stored ciphertext using a pre-set key.
 	 * 
 	 * @return
 	 * @throws DataFormatException
@@ -78,9 +83,12 @@ public class AES {
 		int blocks     = this.cipherText.length/16;
 		this.plainText = new byte[this.cipherText.length];
 		
+		// Loop through all blocks and run the rounds on them
 		for (int b=0;b<blocks;b++) {
+			// Get the b'th block of 16 bytes to be invciphered
 			byte[] curr_block = new byte[16];
 			System.arraycopy(this.cipherText, b*16, curr_block, 0, 16);
+			// And invcipher them
 			System.arraycopy(this.invcipher(curr_block), 0, this.plainText, b*16, 16);
 		}
 		
@@ -88,6 +96,7 @@ public class AES {
 	}
 
 	/**
+	 * Encrypts a 16 byte block as defined by FIPS-197
 	 * 
 	 * @param block
 	 * @return
@@ -105,6 +114,7 @@ public class AES {
 			state = AES_Transformations.addRoundKey(state, this.getKey(), r);
 		}
 		
+		// Last round excludes mixcolumns
 		state = AES_Transformations.subBytes(state);
 		state = AES_Transformations.shiftRows(state);
 		state = AES_Transformations.addRoundKey(state, this.getKey(), this.getKey().getKeySize().getNumberOfRounds());
@@ -113,6 +123,7 @@ public class AES {
 	}
 	
 	/**
+	 * Decrypts a 16 byte block as defined by FIPS-197
 	 * 
 	 * @param block
 	 * @return
@@ -130,6 +141,7 @@ public class AES {
 			state = AES_Transformations.inverseMixColumns(state);
 		}
 		
+		// Last round excludes mixcolumns
 		state = AES_Transformations.invShiftRows(state);
 		state = AES_Transformations.invSubBytes(state);
 		state = AES_Transformations.inverseAddRoundKey(state, this.getKey(), 1);

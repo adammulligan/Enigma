@@ -2,6 +2,7 @@ package com.cyanoryx.uni.enigma.net.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.prefs.Preferences;
 import java.util.zip.DataFormatException;
 
@@ -104,6 +105,9 @@ public class AuthHandler implements PacketListener {
 		} catch (DataFormatException e) {
 			e.printStackTrace();
 		} catch (BadLocationException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -2,7 +2,8 @@ package com.adammulligan.uni;
 
 
 /**
- * An interactive console application that encrypts a file based on a provided RSA key pair.
+ * An interactive console application that encrypts
+ * a file based on a provided RSA key pair.
  * 
  * @author adammulligan
  *
@@ -42,7 +43,8 @@ public class Decrypt {
     this.plaintext = new BigInteger[converted_bytes.length];
 
     // The actual ecryption!
-    // Loop through the array of bigint bytes m, and create an array making c = m
+    // Loop through the array of bigint bytes m,
+    // and create an array making c = m
     for(int i=0;i<converted_bytes.length;i++) {
       this.plaintext[i] = converted_bytes[i].modPow(this.E, this.N);
     }

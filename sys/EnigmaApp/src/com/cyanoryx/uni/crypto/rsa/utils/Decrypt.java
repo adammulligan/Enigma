@@ -1,4 +1,4 @@
-package com.cyanoryx.uni.crypto.rsa;
+package com.cyanoryx.uni.crypto.rsa.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 import java.util.Scanner;
 
 import com.cyanoryx.uni.common.FileIO;
+import com.cyanoryx.uni.crypto.rsa.PrivateKey;
+import com.cyanoryx.uni.crypto.rsa.RSA_OAEP;
 
 public class Decrypt {
 	public static void main(String[] args) {
