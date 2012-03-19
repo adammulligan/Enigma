@@ -5,24 +5,28 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * A handler that deals with requests to log information to the log window
+ * 
+ * @author adammulligan
+ *
+ */
 public class LogHandler extends Handler {
 	public static LogHandler handler;
 	
 	private LogWindow window;
 	
 	private LogHandler() {
-		init();
+		setLevel(Level.INFO);
+	    setFilter(new LogFilter());
+	    setFormatter(new SimpleFormatter());
+	    
 		if (window==null) window = new LogWindow();
 	}
 	
 	public static synchronized LogHandler getInstance() {
+		// We are implementing the handler as a singleton
 		return (handler==null) ? new LogHandler() : handler;
-	}
-	
-	private void init() {
-		setLevel(Level.INFO);
-	    setFilter(new LogFilter());
-	    setFormatter(new SimpleFormatter());
 	}
 
 	@Override
@@ -39,8 +43,6 @@ public class LogHandler extends Handler {
 		return this.window;
 	}
 
-	@Override
 	public void close() throws SecurityException {}
-	@Override
 	public void flush() {}
 }

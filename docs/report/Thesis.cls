@@ -206,7 +206,7 @@
       \bigskip
       \bigskip
       {\large in the \par}
-      {\large \deptname \par}
+      {\large \deptname \\ Royal Holloway, University of London, TW20 0EX \par}
       \bigskip
       \bigskip
       \bigskip

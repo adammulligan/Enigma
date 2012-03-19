@@ -96,9 +96,11 @@ public class Connect extends JFrame {
     
     Random rng = new Random();
     
+    // Check if a default port has been set
     if (new AppPrefs().getPrefs().get("local_port", "").equalsIgnoreCase("")) {
 	    port = rng.nextInt(100) + 60000;
     } else {
+    	// And if it has, pick a random port in the event it's unavailable
     	try {
     		port = Integer.parseInt(new AppPrefs().getPrefs().get("local_port",""));
     		server = new Server(port,"localhost");

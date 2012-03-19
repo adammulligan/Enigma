@@ -31,6 +31,7 @@ task :build do
     FileUtils.cp('./bin/jar/Enigma.jar',enigma_loc)
     FileUtils.cp('./cert_id_rsa',enigma_loc)
     FileUtils.cp('./cert_id_rsa.pub',enigma_loc)
+    FileUtils.cp('./Enigma.properties',enigma_loc)
   end
 
   # LaTeX compilation
@@ -59,7 +60,7 @@ task :build do
 
   puts 'Tarring everything...'
   tgz = Zlib::GzipWriter.new(File.open(@tar_file, 'wb'))
-  Minitar.pack("./dist", tgz)
+  Minitar.pack(File.basename(@build_dir), tgz)
 
   puts "Results saved in #{@build_dir}, tarred to #{@tar_file}."
 end
