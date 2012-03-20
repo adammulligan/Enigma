@@ -18,6 +18,8 @@ task :build do
 
   Dir.mkdir(@build_dir) unless File.directory?(@build_dir)
 
+  FileUtils.cp('./README.md',@build_dir)
+
   Dir.chdir("sys/EnigmaApp") do
     enigma_loc = @build_dir+'/enigma';
     Dir.mkdir(enigma_loc)

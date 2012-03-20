@@ -4,7 +4,7 @@ My final year project, Enigma, a study in to algorithms based around prime numbe
 
 Please read the report for an in-depth introduction and discussion.
 
-Appendix D contains installation instructions. There is no need to compile the application yourself, however if you do wish to compile it, you may use the ant build file, found in `enigma/build.xml`.
+Appendix D contains installation instructions. There is no need to compile the application yourself, however if you do wish to compile it, you may use the ant build file, found in `enigma/build.xml`. The bundled jar was built on Mac OS X 10.7, however it should work on most operating systems.
 
 Files are stored as so:
 
@@ -12,7 +12,7 @@ Files are stored as so:
 * `latex_src/` - Source for the report.
 * `Thesis.pdf` - The report.
 
-# Licence
+## Licence
 
 The entirety of this project -- this include all programming code, documentation, data, reports, latex source code, imagery, and any other files -- is released under the GNU Lesser General Public Licence version 3 (LGPLv3).
 
