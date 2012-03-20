@@ -24,7 +24,7 @@ It is said a program listing should be documentation unto itself: the programmin
 
 As a major component of this project is to develop a library of cryptographic algorithms, having a clear and accurate listing of all available methods in the API is vital. Conveniently, Java and the Eclipse IDE are tightly integrated with \emph{JavaDoc}\footnote{http://java.sun.com/j2se/javadoc}, a documentation generator that automatically produces standardised API documentation in HTML format based on comments inserted in the code. The comment blocks -- distinguished using the format \verb!/** ... */! -- contain a method description, and a number of control sequences that give detailed information about what the method returns, the parameters it takes and other details such as exceptions thrown.
 
-JavaDoc outputs are bundled with the appropriate packages in the file tree, and manual technical documentation is found in the appendices. A requirements specification has been compiled in \emph{\textsection \ref{AppendixA}}.
+JavaDoc outputs are bundled with the appropriate packages in the file tree, and a manual is found in the appendices. A requirements specification has been compiled in \emph{\textsection \ref{AppendixA}}.
 
 \section{Application Development}
 
@@ -65,7 +65,7 @@ JavaDoc outputs are bundled with the appropriate packages in the file tree, and 
         \end{tabular}
       \end{center}
       
-      SWT appears initially simpler to use thanks to its use of the Model--View--Controller design pattern, the ability to "plug in" different look and feel settings, and so on, however it introduces the necessity to manage resources manually, rather than following the Java standard method of automatic resource disposal (known as the garbage collector).
+      SWT appears initially simpler to use thanks to its use of the Model--View--Controller design pattern, the ability to ``plug in" different look and feel settings, and so on, however it introduces the necessity to manage resources manually, rather than following the Java standard method of automatic resource disposal (known as the garbage collector).
       
       Swing was selected as the framework to be used, primarily due to its current prevalence over SWT. Purely comparing speed statistics, SWT comes out on top, however the community behind Swing is far larger and more important than the downsides introduced by using Swing, and clearly the balance of pros and cons is in Swing's favour.
       
@@ -76,7 +76,7 @@ JavaDoc outputs are bundled with the appropriate packages in the file tree, and 
     The application will have four main windows:
     
     \begin{enumerate}
-      \item Connect Window -- The main starting point of the application. Users will enter the IP address of another Enigma server, or select an address from a "recently connected" menu.
+      \item Connect Window -- The main starting point of the application. Users will enter the IP address of another Enigma server, or select an address from a ``recently connected" menu.
       \item Chat Window -- Where the actual communications will take place. It will consist of a main listing box to display a message history for the current conversation, and have an input box for sending messages. It will also contain options for: Regenerating session keys, changing the cipher type, changing the agreement cipher type, and viewing the log window for this session.
       \item Log Window -- Can be used to log info, warning and error messages that do not cause a general program crash.
       \item Preferences -- Used to modify basic preferences, like default ciphers, username, etc.
@@ -110,7 +110,7 @@ JavaDoc outputs are bundled with the appropriate packages in the file tree, and 
     
     Firstly, the Connect window is the main focal point of the application and as such the creation of a \verb!Connect! object signifies the start of the Enigma application. \verb!Connect#Connect()! creates a new \verb!Server! object with a random port number and initiates the process of creating the UI for the window.
     
-    As with most Swing-utilising classes, event handlers are used to process events triggered by user input -- such as a button press -- and in this case the main event handler will be that of the connect button, as seen in \ref{fig:connect_window}. When a valid IP address is input and the button is clicked, the \verb!connect()! method is run:
+    As with most Swing-utilising classes, event handlers are used to process events triggered by user input -- such as a button press -- and in this case the main event handler will be that of the connect button. When a valid IP address is input and the button is clicked, the \verb!connect()! method is run: \\
     
     \begin{lstlisting}
 private void connect(String address, String remote_port) {
@@ -166,7 +166,7 @@ private void connect(String address, String remote_port) {
 }
 \end{lstlisting}
     
-    Here we make use of a method \verb!Server#createClient()!, which is a bit of a misnomer based around a legacy concept within the application where a local user would run both a server and a "client," for sending and receiving data, respectively. This was designed as such due to some restrictions on the use of sockets (see \textsection\ref{sec:probs}), however this was removed for simplicity and due to the confusion introduced by running a "client" locally.
+    Here we make use of a method \verb!Server#createClient()!, which is a bit of a misnomer based around a legacy concept within the application where a local user would run both a server and a ``client," for sending and receiving data, respectively. This was designed as such due to some restrictions on the use of sockets, however this was removed for simplicity and due to the confusion introduced by running a ``client" locally.
     
     \verb!Server#createClient()! is a simple, static method that creates a \verb!Session! object with the supplied attributes and returns it, along with a \verb!Conversation! object for the chat window.
   
@@ -251,10 +251,10 @@ public synchronized void updateMessage(String name, String message)
     \begin{enumerate}
       \item \verb!ItemListener! -- boolean preferences use \verb!ItemListener#itemStateChanged()! to register for a checkbox state change.
       \item \verb!ActionListener! -- preferences with multiple choices implemented as drop down combo boxes register with \verb!ActionListener#actionPerformed()! to monitor item selection.
-      \item \verb!DocumentListener! -- string based preferences, such as user name, are monitored using the update registering methods in \verb!DocumentListener! to detect update, deleted or insert text.
+      \item \verb!DocumentListener! -- string based preferences, such as user name, are monitored using the update registering methods in \verb!DocumentListener! to detect updated, deleted or inserted text.
     \end{enumerate}
     
-    When an event is generated, the updated preference is stored, meaning that the user never has to press any "save" or "apply" buttons.
+    When an event is generated, the updated preference is stored, meaning that the user never has to press any ``save" or ``apply" buttons.
     
     In the future, it would perhaps be interesting to retrieve the list of available settings and their datatypes, and automatically generate a preference interface based on this. However, this may pose problems for preferences with multiple choices (like in drop down boxes), as all the options will not be saved in the preferences storage.
     
@@ -265,9 +265,9 @@ public synchronized void updateMessage(String name, String message)
   \subsection{Preferences}
   \label{subsec:prefs}
   
-  It is necessary to have some persistent data between application sessions, for example the user's display name and their cipher preferences. There are many simple and many complex methodologies to solve this problem, the simplest seemingly being saving preferences to a text file with a custom format. However, as with any proprietary format it will be non-portable from the outset, and likely difficult to maintain in the future. Large amounts of "boiler--plate" code will be required to manage aspects like text-encoding, storage location, file formats, and so on which will unnecessarily add to development time and likely create bugs.
+  It is necessary to have some persistent data between application sessions, for example the user's display name and their cipher preferences. There are many simple and many complex methodologies to solve this problem, the simplest seemingly being saving preferences to a text file with a custom format. However, as with any proprietary format it will be non-portable from the outset, and likely difficult to maintain in the future. Large amounts of ``boiler--plate" code will be required to manage aspects like text-encoding, storage location, file formats, and so on which will unnecessarily add to development time and likely create bugs.
   
-  The JDK comes with a class \emph{com.util.prefs.Preferences} for storing a collection of preference data. \verb!Preferences! stores data in a key-value persistent backing store that is independent of the system implementation. Given a "node" name, \verb!Preferences! will load data from the appropriate storage implementation, depending on the operating system. For example, it may store preferences in flat files, registries or even databases. This has one primary benefit: the developer does not need to concern themselves with the details of storage, but merely implement an application that creates a \verb!Preferences! object given a node name and \verb!Preferences! will handle the details.
+  The JDK comes with a class \emph{com.util.prefs.Preferences} for storing a collection of preference data. \verb!Preferences! stores data in a key-value persistent backing store that is independent of the system implementation. Given a ``node" name, \verb!Preferences! will load data from the appropriate storage implementation, depending on the operating system. For example, it may store preferences in flat files, registries or even databases. This has one primary benefit: the developer does not need to concern themselves with the details of storage, but merely implement an application that creates a \verb!Preferences! object given a node name and \verb!Preferences! will handle the details.
   
   More specifically, \verb!Preferences! has a static method \emph{userNodeForPackage(String name)} which returns a \verb!Preferences! object containing handles that reference the persistent backing store. This \verb!Preferences! objects provides helper methods such as \emph{get(String key, String default\_val)} that will programmatically return the value for the key \verb!key!, handling any errors and using the default value if necessary. 
   
@@ -282,8 +282,8 @@ public synchronized void updateMessage(String name, String message)
     \subsubsection{Usage}
     
     \begin{lstlisting}
-      Preferences p = new AppPrefs().getPrefs();
-      p.get("preference_name","test");
+Preferences p = new AppPrefs().getPrefs();
+p.get("preference_name","test");
 \end{lstlisting}
   
   \subsection{Internationalisation}
@@ -302,7 +302,7 @@ public synchronized void updateMessage(String name, String message)
   
   \subsection{Drawable Graphics}
   
-  Some elements of the user interface require the inclusion of local images and icons. For example, in the chat window the menu bar buttons contain representative icons rather than text. However, as with strings of text, hard-coded references to resources generally results in excessive maintenance if the resource location changes. As a solution to this, we will create a lightweight class modelled around the \emph{Android SDK} concept of "drawables." Drawables are graphic resources stored in the system, represented by an identifier which can be retrieved using the \verb!Drawable! class.\\
+  Some elements of the user interface require the inclusion of local images and icons. For example, in the chat window the menu bar buttons contain representative icons rather than text. However, as with strings of text, hard-coded references to resources generally results in excessive maintenance if the resource location changes. As a solution to this, we will create a lightweight class modelled around the \emph{Android SDK} concept of ``drawables." Drawables are graphic resources stored in the system, represented by an identifier which can be retrieved using the \verb!Drawable! class.\\
   
   \lstinputlisting{../../sys/EnigmaApp/src/com/cyanoryx/uni/enigma/utils/Drawable.java}
   
@@ -409,10 +409,10 @@ public synchronized void updateMessage(String name, String message)
       \item \verb!endElement(String uri,String localName,String name)! -- handles the closing tags for the current open element. 
     \end{enumerate}
     
-    Methods 1 and 2 create \verb!Packet! objects that represent their respective XML elements. In the case of \verb!startElement()!, when at depth 0 the only element possible is a root \verb!<stream>! and so a \verb!Packet! with element name "stream" is created and pushed on to the queue, along with the attributes passed down from the SAX parser: \\
+    Methods 1 and 2 create \verb!Packet! objects that represent their respective XML elements. In the case of \verb!startElement()!, when at depth 0 the only element possible is a root \verb!<stream>! and so a \verb!Packet! with element name ``stream" is created and pushed on to the queue, along with the attributes passed down from the SAX parser: \\
     
     \begin{lstlisting}
-    public void startElement(String namespace,
+public void startElement(String namespace,
                                  String localName,
                                  String name,
                                  Attributes attributes)
@@ -507,41 +507,41 @@ public void endElement(String uri,
       
       \paragraph{The PacketListener} class, or more accurately the interface, provides a notify method implemented by the event handlers (\textsection\ref{subsubsec:handlers}) which allows the \verb!QueueThread! (below) to notify said handlers when a packet is pulled from the queue.
       
-      \paragraph{The QueueThread} class is perhaps the most important as it acts as the link between receiving a message and handling it. A \verb!QueueThread! is started when a server is first created, and is passed all the desired event handlers and their XML tag identifiers, which are stored in a \verb!java.util.HashMap!. For example, the \verb!OpenStreamHandler! is required to handle new connection requests, signified by \verb!<stream>! and as such its identifier is "stream." The \verb!QueueThread! is constantly running alongside the server, looking for new packets pushed on to the queue. When it notices a new packet, it pulls it out of the queue and checks the element name of the packet and looks for it in its handler \verb!HashMap!. If a handler is found, it is notified and passed the \verb!Packet! object.
+      \paragraph{The QueueThread} class is perhaps the most important as it acts as the link between receiving a message and handling it. A \verb!QueueThread! is started when a server is first created, and is passed all the desired event handlers and their XML tag identifiers, which are stored in a \verb!java.util.HashMap!. For example, the \verb!OpenStreamHandler! is required to handle new connection requests, signified by \verb!<stream>! and as such its identifier is ``stream." The \verb!QueueThread! is constantly running alongside the server, looking for new packets pushed on to the queue. When it notices a new packet, it pulls it out of the queue and checks the element name of the packet and looks for it in its handler \verb!HashMap!. If a handler is found, it is notified and passed the \verb!Packet! object.
       
       The idea for this came from \cite{Shigeoka:2002ys}. \\
       
       \begin{lstlisting}
-  public void run(){
-    for (Packet packet=packetQueue.pull();
-         packet!=null;
-         packet=packetQueue.pull()) {
-      try {
-        // Element name to look for.
-        // Matches name of listener
-        String match = packet.getElement();
+public void run(){
+  for (Packet packet=packetQueue.pull();
+       packet!=null;
+       packet=packetQueue.pull()) {
+    try {
+      // Element name to look for.
+      // Matches name of listener
+      String match = packet.getElement();
 
-        synchronized(packetListeners){
-          Iterator<PacketListener> iter = packetListeners.keySet()
-                                                         .iterator();
-          // Loop through the current set of listeners
-          while (iter.hasNext()){
-            PacketListener listener = iter.next();
-            // Get the name of the tag to match
-            String listenerString = packetListeners.get(listener);
-            // If the packet's element matches the
-            // element for this listener...
-            if (listenerString.equals(match)){
-              listener.notify(packet); // ..send packet to handlers
-            } 
+      synchronized(packetListeners){
+        Iterator<PacketListener> iter = packetListeners.keySet()
+                                                       .iterator();
+        // Loop through the current set of listeners
+        while (iter.hasNext()){
+          PacketListener listener = iter.next();
+          // Get the name of the tag to match
+          String listenerString = packetListeners.get(listener);
+          // If the packet's element matches the
+          // element for this listener...
+          if (listenerString.equals(match)){
+            listener.notify(packet); // ..send packet to handlers
           } 
         } 
-      } catch (Exception e){
-        e.printStackTrace();
-      }
-    } 
+      } 
+    } catch (Exception e){
+      e.printStackTrace();
+    }
   } 
-      \end{lstlisting}
+} 
+\end{lstlisting}
       
       \verb!QueueThread! allows many packets to be sent to a server at once, with each being handled in order and none being lost.
     
@@ -579,7 +579,7 @@ public void endElement(String uri,
   
   \subsection{Interfaces and Abstraction}
   
-  One of the major points of the Enigma application is the ability to easily introduce new symmetric or asymmetric algorithms in to the application. To do this, we use a well known concept of object-oriented programming: abstraction. Abstraction, in its basic form, is the process of representing some data or logic but hiding the actual implementation. A good example of this is our \verb!LogHandler! earlier, which provides an abstraction of outputting log information -- the developer/program is provided with an interface with, for example, a \verb!log()! method that displays a supplied string in a log window. The implementation of the log function is irrelevant to the developer, all they need to know is that they can use it to reliably log information. Because of this, the logic behind logging data can be changed as necessary assuming it still has the same output -- this is known as a "black box."
+  One of the major points of the Enigma application is the ability to easily introduce new symmetric or asymmetric algorithms in to the application. To do this, we use a well known concept of object-oriented programming: abstraction. Abstraction, in its basic form, is the process of representing some data or logic but hiding the actual implementation. A good example of this is our \verb!LogHandler! earlier, which provides an abstraction of outputting log information -- the developer/program is provided with an interface with, for example, a \verb!log()! method that displays a supplied string in a log window. The implementation of the log function is irrelevant to the developer, all they need to know is that they can use it to reliably log information. Because of this, the logic behind logging data can be changed as necessary assuming it still has the same output -- this is known as a ``black box."
   
   In Java, abstraction is implemented using \emph{interfaces}. An interface defines methods along with their input and output data types, and any class that \emph{implements} this interface must create the logic for these methods. How are interfaces applicable to Enigma? Producing a program that encrypts data using multiple libraries can be difficult as each may have subtle differences in how they expect to receive and output data. For example, a block cipher $A$ may implement a \verb!encrypt()! method that takes portions of data as byte arrays, whereas a cipher $B$ may take the entire plaintext as \verb!String!. To solve this, an interface will be introduced with an \verb!encrypt! method that requires all implementing classes use it -- this results in a standard implementation of all algorithms, meaning a developer knows without a doubt what to input and what to expect back.
   
@@ -591,9 +591,9 @@ public void endElement(String uri,
   
   This is the standard flow for authentication and key agreement. This takes place primarily in \verb!Connect#connect()! and \verb!AuthHandler#notify()!, which can be found in \emph{com.cyanoryx.uni.enigma.gui} and \emph{com.cyanoryx.uni.enigma.net.server}, respectively.
   
-  \paragraph{Key Generation} is performed through an option in the toolbar -- Options > Generate Keys... -- and requires no user input other than having previously set the Certificate Authority's key location in the preferences.
+  \paragraph{Key Generation} is performed through an option in the toolbar -- Options $>$ Generate Keys... -- and requires no user input other than having previously set the Certificate Authority's key location in the preferences.
     
-  This utility automatically generates a public/private key pair for the user and then signs it with the Certificate Authority's private key to produce their own certificate which will be used by other entities to confirm their identities. In the Real World, user's would not have access to the private keys of the CA, however as this application is for research and will not utilise an actual CA we will assume the ownership of CA private keys.
+  This utility automatically generates a public/private key pair for the user and then signs it with the Certificate Authority's private key to produce their own certificate which will be used by other entities to confirm their identities. In the Real World, users would not have access to the private keys of the CA, however as this application is for research and will not utilise an actual CA we will assume the ownership of CA private keys.
   
   \subsection{Ciphers}
   
@@ -639,7 +639,7 @@ message = new String(aes.decrypt());
 
 A fairly new (or at least recently popular) development methodology was used for the application and algorithms development: test driven development. After creating a basic set of requirements for each unit of code, a test is written for that unit that defines what the input and output should be. Each line of code written should be a response to a part of a test.
 
-Software engineering is often compared to other engineering disciplines, like those that involve bridge building. However these metaphors tend to fall apart as you go deeper. Testing in non-software related engineering feels is difficult -- you have to build the product to test it -- whereas it is easy, even cheap, in software engineering to create tests \emph{before} the product has been built and run them until they pass.
+Software engineering is often compared to other engineering disciplines, like those that involve bridge building. However these metaphors tend to fall apart as you go deeper. Testing in non-software related engineering fields is difficult -- you have to build the product to test it -- whereas it is easy, even cheap, in software engineering to create tests \emph{before} the product has been built and run them until they pass.
 
 Regularly developers, and even managers, will claim that there is not enough time to test or that it is too much overhead, but if we are to use metaphors anyway we can use them for this: an engineer creating a building cannot simply put off tests because they don't have time, otherwise they endanger lives. Software engineering errors can endanger lives\cite{Leveson:1995aa}, and testing reduces that risk considerably. \emph{Testing is the engineering rigour of software development}\cite{Henney:2010aa}.
 

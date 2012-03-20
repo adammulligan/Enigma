@@ -208,7 +208,7 @@ CertDetails {
   UniqIdent,
   SubjectInfo { Name, Algorithm, Public Key }
 }
-  \end{lstlisting}
+\end{lstlisting}
   
   We create a class \verb!Certificate! for storing this information, as well as handling certificate files and exporting them. Within this class, Certificates are stored locally within private \verb!byte[]! fields, and are passed to the class using a \verb!java.util.HashTable<String,byte[]>! so that multiple parameter handling is not needed on either end.
   

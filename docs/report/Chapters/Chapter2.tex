@@ -10,9 +10,9 @@ Despite how it is portrayed or colloquially used, Information Security is an ent
 
 This can be proven using historical evidence: throughout history many complex systems of mechanisms, rules, and protocols have been developed to introduce information security to a system. As with modern day security, this cannot be achieved entirely through mathematical and cryptographic means -- it is more than just computational intractability.
 
-As such, stringent criteria for developing secure systems and protocol have been introduced. While institutes such as \emph{The British Computing Society} and \emph{Association for Computing Machinery} ensure their members follow a professional code of ethics, just as a doctor might, these information security criteria are of separate and equal importance. Indeed, there are now several international organisations that exist solely for the overseeing of cryptographic research and development (See: \emph{International Association for Cryptologic Research}).
+As such, stringent criteria for developing secure systems and protocol have been introduced. While institutes such as \emph{The British Computing Society} and \emph{Association for Computing Machinery} ensure their members follow a professional code of ethics, just as a doctor might, these information security criteria are of separate and equal importance. Indeed, there are now several international organisations that exist solely for overseeing cryptographic research and development (See: \emph{International Association for Cryptologic Research}).
 
-Often, as we will see, cryptographic systems are simplified for the purposes of presentation particularly for textbooks. This will be discussed further later, with regards to the differences and difficulties involved in developing systems that do not just follow a mathematical ``recipe," but also include information security values and other subtleties.
+Often, as we will see, cryptographic systems are simplified for the purposes of presentation particularly for textbooks. This is problematic and will be discussed further later, with regards to the differences and difficulties involved in developing systems that do not just follow a mathematical ``recipe," but also include information security values and other subtleties.
 
 The overall method of dealing with, and ensuring, information security is known as risk management. This encapsulates a large number of countermeasures (including cryptography) that reduce the risk of vulnerabilities in, and threats to, systems. We will only be encountering and discussing the technological areas of mitigation, however some of the solutions include\footnote{For an excellent resource regarding information security, both technical and non-technical, see \cite{Anderson:2008aa}}: access control, security policy, physical security, and asset management.
 
@@ -92,11 +92,11 @@ There are other considerations in key management to ensure confidentiality and i
 There are two types of authentication that are required in a secure application
 
 \begin{enumerate}
-	\item Message authentication
-	\item Entity authentication
+	\item Message authentication -- this allows an entity to send a message using a method that allows the receiver to detect any changes to the message while in transit.
+	\item Entity authentication -- this allows an entity to verify that the person sending or receiving messages to or from them are indeed who they claim to be.
 \end{enumerate}
 
-both of which require different protocols and algorithms. These terms have been defined in \textsection\ref{sec:objectives}.
+both of which require different protocols and algorithms.
 
 The methods of entity authentication are an interesting topic in themselves, with many, many protocols having been researched and created as the community tries to find a method that is both secure and easy for an entity to use. Some examples are: passwords, two-factor authentication, PINs, smart cards, biometrics, and so on. These are outside of the scope of this project -- we will be implementing two broad, yet specific methods of authentication.
 
@@ -115,12 +115,13 @@ When transmitting a message, the sender signs the message with their private key
 The first and most common implementation of digital signatures is RSA.
 
 \subsection{Public-key Certificates}
+\label{subsec:pub_key_cert}
 
 Digital signatures and a public-key infrastructure, however, are not enough by themselves. A very simple attack can be orchestrated similar to that during key agreement: Mallory, the attacker, could sign a modified message $A$ with her own private-key and then distribute her public-key, claiming it to be Alice's. To counter this, we can introduce a trusted third-party, known as a Certificate Authority (CA), who signs Alice's public-key with their own private-key. Most trusted CA's public keys come bundled with software such as browsers and operating systems.
 
 \begin{enumerate}
-	\item Certificate Authority signs Alice's public key with their private key.
-	\item The CA distributes its public key with major software.
+	\item The Certificate Authority signs Alice's public key with their private key.
+	\item The CA distributes its public key with major software, such as browsers and operating systems.
 	\item Bob receives Alice's message and signature, as well as her public key and signature.
 	\item Bob verifies Alice's public key with the CA's public key, and then verifies the message.
 \end{enumerate}
@@ -140,7 +141,7 @@ A hash function can be classed into two categories: keyed and unkeyed, taking bo
 
 Most commonly used are unkeyed, one-way hash functions. Some examples of which are: SHA-1, and MD5. In cryptography, hashes are commonly used for data integrity in combination with digital signatures. A message is hashed, and the fingerprint produced is signed by the entity. There are some algorithms designed specifically for this purpose, known generally as Message Authentication Codes (MACs) and Manipulation Detection Codes (MDCs).
 
-A sample of each of these four primitives will be implemented further in the report.
+A sample of the first three primitives will be implemented further in the report.
 
 \subsection{Complexity}
 \newtheorem{mathdef}{Definition}[section]
@@ -154,6 +155,8 @@ Computational complexity is a vast subject, mostly out of the scope of this repo
 \end{mathdef}
 
 An algorithm with a running time that cannot be bounded as such is known as an exponential-time algorithm. It is generally considered that polynomially-time algorithms are efficient, wheres exponential-time algorithms are inefficient.
+
+Computational complexity will not be used extensively this report, except in algorithm comparison, and as such only a basic knowledge of its notation is expected.
 
 \section{Moving On}
 

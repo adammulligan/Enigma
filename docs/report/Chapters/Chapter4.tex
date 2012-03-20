@@ -1,6 +1,6 @@
 % Chapter 4
 
-\chapter{Symmetric Cryptography} 
+\chapter{Symmetric Cryptography}
 \label{Chapter4}
 \lhead{Chapter 4. \emph{Symmetric Cryptography}} 
 
@@ -69,7 +69,7 @@ Symmetric key algorithms can be implemented in two forms: stream and block ciphe
       \item And perhaps most importantly, it is vastly more interesting to implement.
     \end{enumerate}
     
-    In reality, block ciphers and stream ciphers offer no security benefit over one another.
+    In reality, block ciphers and stream ciphers offer no security benefit over one another, except in some very specific situations.
 
 \section{AES}
   \subsection{Overview}
@@ -78,11 +78,11 @@ Symmetric key algorithms can be implemented in two forms: stream and block ciphe
   
   \subsection{Mathematical Preliminaries}
   
-  AES mostly utilises basic bitwise arithmetic on fixed-size blocks, and so the mathematics behind it is not particularly complex. An understanding of bitwise operators like XOR, bit shifts, logical operators is required, but all other concepts are explained. However, there is one concept that can be difficult to understand relative to the algorithm without explanation: finite fields.
+  AES mostly utilises basic bitwise arithmetic on fixed-size blocks, and so the mathematics behind it is not particularly complex. An understanding of bitwise operators like XOR, bit shifts, and logical operators is required, but all other concepts are explained. However, there is one concept that can be difficult to understand relative to the algorithm without explanation: finite fields.
   
     \subsubsection{Finite Fields}
     
-    Finite fields, like most things useful to cryptography, are an important part of number theory alongside cryptography. We have used them previously in the Diffie-Hellman protocol, however they were left with little explanation. 
+    Finite fields, like most things useful to cryptography, are an important part of number theory. We have used them previously in the Diffie-Hellman protocol, however they were left with little explanation. 
     
     Finite fields are, perhaps unsurprisingly, a type of field with a finite number of elements and are a subclass of two other algebraic structures:
     
@@ -115,7 +115,7 @@ Symmetric key algorithms can be implemented in two forms: stream and block ciphe
       \end{pmatrix}$
     \end{center}
     
-    The AES algorithm, like most modern symmetric block ciphers, consists of a number of "rounds" in which the block of data is transformed. We define this round transformation as \verb!Round(State,RoundKey)!, where State is the current 16 byte block selected out of the overall text and the RoundKey is a key derived from the input key using a key schedule as defined in \textsection\ref{subsubsec:aes_keys}. The number of rounds is dependent on the key size:
+    The AES algorithm, like most modern symmetric block ciphers, consists of a number of ``rounds" in which the block of data is transformed. We define this round transformation as \verb!Round(State,RoundKey)!, where State is the current 16 byte block selected out of the overall text and the RoundKey is a key derived from the input key using a key schedule as defined in \textsection\ref{subsubsec:aes_keys}. The number of rounds is dependent on the key size:
     
    
       \begin{center}
@@ -566,6 +566,7 @@ private byte[] cipher(byte[] block) throws DataFormatException {
   \verb!decrypt()! and \verb!invcipher()! work identically, except \verb!invcipher()! carries out the inverse transformations defined in \textsection\ref{subsubsec:aes_transformations}.
   
   These methods are contained within an object \verb!AES!, which upon instantiation requires the setting of a plain- or cipher-text and a key.
+  
   \subsection{Summary}
   
-  As we can see, AES is relatively simple to implement in an efficient way. 
+  As we can see, AES is relatively simple to implement in an efficient way. Now that we have an asymmetric algorithm and a symmetric algorithm, we need to implement a method of identifying entities.

@@ -2,14 +2,26 @@
 
 My final year project, Enigma, a study in to algorithms based around prime numbers and their uses. The application is a simple chat testbed that I use to test algorithms, and the report is a discussion of the engineering behind this and the algorithms.
 
-# Usage
+Please read the report for an in-depth introduction and discussion.
 
-Run the following command:
+Appendix D contains installation instructions. There is no need to compile the application yourself.
 
-`$ rake`
+Files are stored as so:
 
-This (will in the future) compile all the latex documents, compiles and builds a jar file and creates a neat distribution directory with all the things you would need to hand in a final year project on prime-number based cryptography.
+* `enigma/` - Source and compiled application.
+* `latex_src/` - Source for the report.
+* `Thesis.pdf` - The report.
 
 # Licence
 
 The entirety of this project -- this include all programming code, documentation, data, reports, latex source code, imagery, and any other files -- is released under the GNU Lesser General Public Licence version 3 (LGPLv3).
+
+# GitHub Info
+
+## Usage
+
+If you are building from GitHub, run the following command:
+
+`$ rake`
+
+This will compile all the latex documents, compile and build a jar file and creates a neat distribution directory with all the things you would need to hand in a final year project on prime-number based cryptography.
