@@ -6,6 +6,7 @@ import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Random;
 import java.util.zip.DataFormatException;
@@ -34,7 +35,8 @@ public class SpeedTest {
   												NoSuchPaddingException,
   												IllegalBlockSizeException,
   												BadPaddingException,
-  												InvalidKeySpecException {
+  												InvalidKeySpecException,
+  												NoSuchProviderException {
     System.out.println("=================================\nRSA Algorithms");
     byte[] tmp = new byte[16];
     new Random().nextBytes(tmp);
@@ -62,7 +64,7 @@ public class SpeedTest {
     KeyPair kp = kpg.genKeyPair();
     java.security.Key publicKey = kp.getPublic();
     
-    Cipher cipher = Cipher.getInstance("RSA");
+    Cipher cipher = Cipher.getInstance("RSA/None/OAEPWithSHA1AndMGF1Padding");
     cipher.init(Cipher.ENCRYPT_MODE, publicKey);
     
     rsa_dur_sum=0;

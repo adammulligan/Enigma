@@ -1,13 +1,9 @@
 package com.cyanoryx.uni.enigma.net.server;
 
 import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.prefs.Preferences;
-import java.util.zip.DataFormatException;
 
 import javax.swing.JOptionPane;
-import javax.swing.text.BadLocationException;
 
 import com.cyanoryx.uni.common.Base64;
 import com.cyanoryx.uni.crypto.aes.Key;
@@ -100,14 +96,7 @@ public class AuthHandler implements PacketListener {
 					}
 				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (DataFormatException e) {
-			e.printStackTrace();
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

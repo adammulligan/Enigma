@@ -23,6 +23,7 @@ task :build do
     Dir.mkdir(enigma_loc)
 
     FileUtils.cp_r('./dep',enigma_loc)
+    FileUtils.cp_r('./res',enigma_loc)
     FileUtils.cp_r('./src/',enigma_loc)
 
     puts 'Running ant...'
@@ -32,6 +33,7 @@ task :build do
     FileUtils.cp('./cert_id_rsa',enigma_loc)
     FileUtils.cp('./cert_id_rsa.pub',enigma_loc)
     FileUtils.cp('./Enigma.properties',enigma_loc)
+    FileUtils.cp('./build.xml',enigma_loc)
   end
 
   # LaTeX compilation

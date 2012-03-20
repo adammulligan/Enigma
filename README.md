@@ -4,7 +4,7 @@ My final year project, Enigma, a study in to algorithms based around prime numbe
 
 Please read the report for an in-depth introduction and discussion.
 
-Appendix D contains installation instructions. There is no need to compile the application yourself.
+Appendix D contains installation instructions. There is no need to compile the application yourself, however if you do wish to compile it, you may use the ant build file, found in `enigma/build.xml`.
 
 Files are stored as so:
 
@@ -25,3 +25,5 @@ If you are building from GitHub, run the following command:
 `$ rake`
 
 This will compile all the latex documents, compile and build a jar file and creates a neat distribution directory with all the things you would need to hand in a final year project on prime-number based cryptography.
+
+If you are not building from GitHub, rake will not work and you will have to use ant to build the jar file.

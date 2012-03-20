@@ -288,7 +288,6 @@ public class RSA_PSS {
      *     maskedDB are not all equal to zero, output "inconsistent" and
      *     stop.
      */
-    // TODO look into this
     byte[] H = new byte[this.md.getDigestLength()];
     System.arraycopy(EM, maskedDB.length, H, 0, this.md.getDigestLength());
     
