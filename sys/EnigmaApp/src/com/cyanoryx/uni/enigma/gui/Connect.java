@@ -99,6 +99,7 @@ public class Connect extends JFrame {
     // Check if a default port has been set
     if (new AppPrefs().getPrefs().get("local_port", "").equalsIgnoreCase("")) {
 	    port = rng.nextInt(100) + 60000;
+	    server = new Server(port,"localhost");
     } else {
     	// And if it has, pick a random port in the event it's unavailable
     	try {
@@ -393,6 +394,7 @@ public class Connect extends JFrame {
       prefs.put("last_connections",
                  address+":"+port+";"+prefs.get("last_connections",""));
     } catch (Exception e) {
+      e.printStackTrace();
       JOptionPane.showMessageDialog(Connect.this,
                                     "Could not connect - "+
                                     e.getCause()+" - "+

@@ -31,7 +31,7 @@ public class OpenStreamHandler implements PacketListener{
 			session.setID(packet.getID());
 			
 			Preferences p = new AppPrefs().getPrefs();
-
+			
 			// If there's no auth attribute, default to authenticated,
 			// if there is, use the value sent
 			// Always defaults to authenticated.
@@ -43,6 +43,7 @@ public class OpenStreamHandler implements PacketListener{
 
 			if (index.getSession(packet.getID())==null) {
 				if (session.getStatus()==Session.CONNECTED) {
+					System.out.println(session.getSocket().getInetAddress().getHostAddress());
 					Session s = Server.createClient(session.getSocket().getInetAddress().getHostAddress(),packet.getAttribute("return-port"),session.getLocalPort(),session.getUser(),session.getID());
 					s.setAuthenticated(auth);
 					s.setCipherType(CipherAlgorithm.AES);

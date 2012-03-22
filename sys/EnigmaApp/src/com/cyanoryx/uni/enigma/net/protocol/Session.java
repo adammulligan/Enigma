@@ -183,6 +183,8 @@ public class Session {
 		
 		if (body != null) packet.getChildren().add(new Packet("body",msg));
 		
+		packet.writeXML(new BufferedWriter(new OutputStreamWriter(System.out)));
+		System.out.println();
 		packet.writeXML(getWriter());
 	}
 	
